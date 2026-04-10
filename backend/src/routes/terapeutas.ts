@@ -215,7 +215,7 @@ router.get('/admin/repasses/resumo', requireAdmin, async (_req: Request, res: Re
   for (const a of data ?? []) {
     const tid = a.terapeuta_id as string
     if (!tid) continue
-    const nome = (a.terapeutas as { nome: string } | null)?.nome ?? 'Desconhecida'
+    const nome = (a.terapeutas as unknown as { nome: string } | null)?.nome ?? 'Desconhecida'
     const entry = map.get(tid) ?? { nome, total_repasse: 0, total_comissao: 0, por_pagar: 0 }
     entry.total_repasse += a.repasse_cents ?? 0
     entry.total_comissao += a.comissao_cents ?? 0
