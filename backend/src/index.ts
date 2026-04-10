@@ -16,6 +16,7 @@ import waitlistRouter from './routes/waitlist'
 import lojaRouter from './routes/loja'
 import agendamentoRouter from './routes/agendamento'
 import pacotesRouter from './routes/pacotes'
+import conteudoRouter from './routes/conteudo'
 
 const app = express()
 const PORT = process.env.PORT ?? 3001
@@ -55,6 +56,7 @@ app.use('/waitlist', waitlistRouter)
 app.use('/loja', lojaRouter)
 app.use('/agendamento', agendamentoRouter)
 app.use('/pacotes',     pacotesRouter)
+app.use('/conteudo',   conteudoRouter)
 
 // 404
 app.use((_req, res) => {
