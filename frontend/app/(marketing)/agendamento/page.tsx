@@ -180,8 +180,18 @@ function SeccaoPacotes() {
           </div>
         )}
 
-        {/* Pacotes regulares */}
-        <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+        {/* Pacotes — Em breve no App */}
+        <div className="max-w-xl mx-auto mb-12 rounded-2xl border border-cream-300 bg-cream-100/80 p-6 text-center">
+          <div className="h-10 w-10 rounded-xl bg-sage-100 flex items-center justify-center mx-auto mb-3">
+            <Sparkles className="h-5 w-5 text-sage-500" />
+          </div>
+          <h3 className="font-semibold text-gray-800 mb-1">Pacotes de sessões — Em breve</h3>
+          <p className="text-sm text-gray-500">Os pacotes de acompanhamento estarão disponíveis na App Euthy, que está a ser desenvolvida. Fique na lista de espera para ser dos primeiros a aceder.</p>
+          <a href="/euthy-lancamento" className="inline-block mt-4 text-sm font-medium text-sage-600 hover:underline">Entrar na lista de espera →</a>
+        </div>
+
+        {/* Pacotes regulares (oculto) */}
+        <div className="hidden grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
           {regulares.map((p) => (
             <div key={p.id} className={cn(
               'relative rounded-2xl border p-6 flex flex-col transition-all duration-200',

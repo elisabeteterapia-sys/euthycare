@@ -23,9 +23,25 @@ const PORT = process.env.PORT ?? 3001
 
 // Security & utilities
 app.use(helmet())
+
+const allowedOrigins = [
+  process.env.FRONTEND_URL ?? 'http://localhost:3000',
+  'https://euthycare.com',
+  'https://www.euthycare.com',
+  'http://localhost:3000',
+  'http://localhost:3001',
+]
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL ?? 'http://localhost:3000',
+    origin: (origin, callback) => {
+      // Permitir requests sem origin (Postman, mobile, server-to-server)
+      if (!origin) return callback(null, true)
+      if (allowedOrigins.some(o => origin.startsWith(o))) return callback(null, true)
+      // Permitir domínios Vercel do projecto
+      if (origin.includes('euthycare') && origin.includes('vercel.app')) return callback(null, true)
+      callback(new Error(`CORS blocked: ${origin}`))
+    },
     credentials: true,
   })
 )

@@ -1,6 +1,14 @@
-import { Router, Request, Response } from 'express'
+import { Router, Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '../lib/supabase'
-import { requireAdmin } from '../middleware/auth'
+
+function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  const secret = req.headers['x-admin-secret']
+  if (secret !== process.env.ADMIN_SECRET) {
+    res.status(403).json({ error: 'Forbidden' })
+    return
+  }
+  next()
+}
 
 const router = Router()
 
