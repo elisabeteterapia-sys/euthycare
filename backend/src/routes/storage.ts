@@ -42,8 +42,8 @@ router.post(
 )
 
 // DELETE /storage/:path — delete a file
-router.delete('/:filePath(*)', requireAuth, async (req: AuthRequest, res: Response) => {
-  const { filePath } = req.params
+router.delete('/*filePath', requireAuth, async (req: AuthRequest, res: Response) => {
+  const filePath = (req.params as Record<string, string>)['filePath']
   const userId = req.user!.id
 
   // Users can only delete their own files
