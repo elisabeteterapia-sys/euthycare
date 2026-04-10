@@ -90,7 +90,11 @@ function SeccaoPacotes() {
   const [hasExp, setHasExp]       = useState(false)
 
   useEffect(() => {
-    fetch(`${API}/pacotes`).then(r => r.json()).then(setPacotes).catch(() => null).finally(() => setLoading(false))
+    fetch(`${API}/pacotes`)
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data)) setPacotes(data) })
+      .catch(() => null)
+      .finally(() => setLoading(false))
   }, [])
 
   async function verificarEmail(email: string) {
