@@ -33,15 +33,14 @@ router.patch('/:chave', requireAdmin, async (req: Request, res: Response) => {
   const { chave } = req.params
   const { valor } = req.body as { valor: string }
 
-  if (!valor || typeof valor !== 'string') {
+  if (typeof valor !== 'string') {
     res.status(400).json({ error: 'valor é obrigatório' })
     return
   }
 
   const { error } = await supabaseAdmin
     .from('site_conteudo')
-    .update({ valor, updated_at: new Date().toISOString() })
-    .eq('chave', chave)
+    .upsert({ chave, valor, updated_at: new Date().toISOString() }, { onConflict: 'chave' })
 
   if (error) {
     res.status(500).json({ error: error.message })

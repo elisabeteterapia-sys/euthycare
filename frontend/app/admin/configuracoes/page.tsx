@@ -38,7 +38,7 @@ export default function AdminConfiguracoesPage() {
         fetch(`${API}/conteudo/${chave}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json', 'x-admin-secret': ADMIN_SECRET },
-          body: JSON.stringify({ valor: dados[chave] ?? '' }),
+          body: JSON.stringify({ valor: dados[chave] ?? 'false' }),
         })
       ))
       setSaved(true)
@@ -126,7 +126,7 @@ export default function AdminConfiguracoesPage() {
           ].map(n => (
             <div key={n.chave} className="flex items-center gap-4">
               <button
-                onClick={() => set(n.chave, dados[n.chave] === 'true' ? 'false' : 'true')}
+                onClick={() => set(n.chave, (dados[n.chave] ?? 'false') === 'true' ? 'false' : 'true')}
                 className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none ${dados[n.chave] === 'true' ? 'bg-sage-500' : 'bg-gray-300'}`}>
                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${dados[n.chave] === 'true' ? 'translate-x-6' : 'translate-x-1'}`} />
               </button>
