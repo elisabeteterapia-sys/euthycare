@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, CalendarDays, Users, ShoppingBag,
   FileText, Settings, LogOut, Leaf, ChevronRight, Mail, Type,
-  Lock, Eye, EyeOff,
+  Lock, Eye, EyeOff, UserRound,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -14,6 +14,7 @@ const ADMIN_SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET ?? ''
 
 const navItems = [
   { href: '/admin/dashboard',     icon: LayoutDashboard, label: 'Visão geral' },
+  { href: '/admin/terapeutas',    icon: UserRound,       label: 'Terapeutas' },
   { href: '/admin/agendamento',   icon: CalendarDays,    label: 'Agendamento' },
   { href: '/admin/utilizadores',  icon: Users,           label: 'Utilizadores' },
   { href: '/admin/waitlist',      icon: Mail,            label: 'Lista de espera' },

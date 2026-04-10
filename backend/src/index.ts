@@ -17,6 +17,7 @@ import lojaRouter from './routes/loja'
 import agendamentoRouter from './routes/agendamento'
 import pacotesRouter from './routes/pacotes'
 import conteudoRouter from './routes/conteudo'
+import terapeutasRouter from './routes/terapeutas'
 
 const app = express()
 const PORT = process.env.PORT ?? 3001
@@ -72,7 +73,8 @@ app.use('/waitlist', waitlistRouter)
 app.use('/loja', lojaRouter)
 app.use('/agendamento', agendamentoRouter)
 app.use('/pacotes',     pacotesRouter)
-app.use('/conteudo',   conteudoRouter)
+app.use('/conteudo',    conteudoRouter)
+app.use('/terapeutas', terapeutasRouter)
 
 // 404
 app.use((_req, res) => {
