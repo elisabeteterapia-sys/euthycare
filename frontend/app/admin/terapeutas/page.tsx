@@ -83,18 +83,24 @@ export default function AdminTerapeutasPage() {
   async function guardar() {
     setSaving(true)
     try {
-      if (editItem) {
-        await fetch(`${API}/terapeutas/admin/${editItem.id}`, {
-          method: 'PATCH', headers: h(), body: JSON.stringify(form),
-        })
-      } else {
-        await fetch(`${API}/terapeutas/admin`, {
-          method: 'POST', headers: h(), body: JSON.stringify(form),
-        })
+      const url = editItem
+        ? `${API}/terapeutas/admin/${editItem.id}`
+        : `${API}/terapeutas/admin`
+      const method = editItem ? 'PATCH' : 'POST'
+      const res = await fetch(url, { method, headers: h(), body: JSON.stringify(form) })
+      const text = await res.text()
+      if (!res.ok) {
+        let msg = text
+        try { msg = JSON.parse(text).error ?? text } catch { /* ignore */ }
+        alert(`Erro: ${msg}`)
+        setSaving(false)
+        return
       }
       setShowModal(false)
       await load()
-    } catch { /* ignore */ }
+    } catch (e) {
+      alert(`Erro de rede: ${(e as Error).message}`)
+    }
     setSaving(false)
   }
 
