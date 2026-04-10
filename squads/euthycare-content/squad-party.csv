@@ -1,0 +1,7 @@
+id,name,title,icon,execution,path
+rodrigo-radar,Rodrigo Radar,Pesquisador de Tendências,🔎,subagent,./agents/rodrigo-radar.agent.md
+fabio-feed,Fábio Feed,Criador de Instagram Feed,📸,inline,./agents/fabio-feed.agent.md
+vilma-viral,Vilma Viral,Criadora de Instagram Reels,🎬,subagent,./agents/vilma-viral.agent.md
+bruna-blog,Bruna Blog,Criadora de Blog Posts,✍️,subagent,./agents/bruna-blog.agent.md
+eduardo-email,Eduardo Email,Criador de Newsletter,📧,subagent,./agents/eduardo-email.agent.md
+carolina-critica,Carolina Crítica,Revisora de Conteúdo,✅,inline,./agents/carolina-critica.agent.md

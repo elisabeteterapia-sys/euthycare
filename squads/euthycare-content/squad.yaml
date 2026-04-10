@@ -1,0 +1,32 @@
+name: "Euthycare Content Squad"
+code: "euthycare-content"
+description: "Squad de produção de conteúdo para atrair e converter terapeutas como leads da plataforma Euthycare. Cobre Instagram Feed, Instagram Reels, Blog Post e Email Newsletter a partir de notícias e tendências do setor."
+icon: "📱"
+version: "1.0.0"
+created: "2026-04-09"
+
+skills:
+  - web_search
+  - web_fetch
+
+data:
+  - pipeline/data/research-brief.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+  - pipeline/data/tone-of-voice.md
+
+agents:
+  - agents/rodrigo-radar.agent.md
+  - agents/fabio-feed.agent.md
+  - agents/vilma-viral.agent.md
+  - agents/bruna-blog.agent.md
+  - agents/eduardo-email.agent.md
+  - agents/carolina-critica.agent.md
+
+pipeline: pipeline/pipeline.yaml
+
+memory:
+  squad: _memory/memories.md
+  runs: _memory/runs.md

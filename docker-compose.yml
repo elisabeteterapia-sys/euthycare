@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./backend/src:/app/src
+    restart: unless-stopped
+
+  # Local Supabase (optional — remove if using hosted Supabase)
+  # supabase:
+  #   image: supabase/postgres:15.1.0.147
+  #   ports:
+  #     - '5432:5432'
+  #   environment:
+  #     POSTGRES_PASSWORD: postgres
+  #   volumes:
+  #     - pg_data:/var/lib/postgresql/data
+
+# volumes:
+#   pg_data:

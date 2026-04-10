@@ -1,0 +1,30 @@
+squad_code: "roteiro-metaforas"
+purpose: "Gerar roteiros baseados em metáforas e orientar a edição de vídeos (±1 min e ±5 min) para múltiplas plataformas"
+domain: "content"
+
+company:
+  name: "Euthycare"
+  tone: "Moderno, entusiasmado, acessível e inovador"
+  products: "Plataforma SaaS para terapeutas — ferramentas de gestão e apoio à prática terapêutica"
+
+language: "Português (Brasil)"
+
+context:
+  audience: "Euthycare (marca) + terapeutas clientes da plataforma"
+  platforms: "Instagram e YouTube — todos os formatos disponíveis"
+  tone: "Reflexivo/poético, educativo/acessível e inspirador/motivacional"
+
+tools_needed:
+  - web_search
+  - web_fetch
+
+investigation:
+  enabled: false
+  profiles: []
+
+target_formats:
+  - instagram-reels
+  - instagram-feed
+  - instagram-stories
+  - youtube-shorts
+  - youtube-script

@@ -1,0 +1,43 @@
+# ─── Node ────────────────────────────────────────────────────
+node_modules/
+dist/
+.next/
+out/
+
+# ─── Environment (NUNCA commitar) ────────────────────────────
+.env
+.env.local
+.env.production
+.env.*.local
+
+# ─── Logs ────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+# ─── OS ──────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Editor ──────────────────────────────────────────────────
+.vscode/
+*.swp
+*.swo
+
+# ─── PM2 ─────────────────────────────────────────────────────
+.pm2/
+
+# ─── Opensquad (privado) ─────────────────────────────────────
+_opensquad/_browser_profile/
+_opensquad/_memory/
+squads/*/output/
+squads/*/_investigations/
+
+# ─── Playwright artifacts ─────────────────────────────────────
+.playwright-mcp/
+
+# ─── TypeScript build info ───────────────────────────────────
+*.tsbuildinfo
+next-env.d.ts
+
+# ─── Backend env (nunca commitar) ────────────────────────────
+backend/.env

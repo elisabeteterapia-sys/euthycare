@@ -1,0 +1,30 @@
+squad_code: "euthycare-content"
+purpose: "Produzir conteúdo para a Euthycare voltado à atração e conversão de leads potenciais (terapeutas que ainda não conhecem a plataforma)"
+domain: "content"
+
+company:
+  name: "Euthycare"
+  tone: "Moderno, entusiasmado, acessível e inovador"
+  products: "Plataforma SaaS para terapeutas e profissionais de saúde mental"
+
+language: "Português (Brasil)"
+
+context:
+  audience: "Leads potenciais — terapeutas que ainda não conhecem a plataforma, foco em atrair e converter"
+  platforms: "Instagram, Blog, Email"
+  tone: "Profissional e direto"
+
+tools_needed:
+  - "native: web browsing"
+  - "native: file reading/writing"
+  - "native: text generation"
+
+investigation:
+  enabled: false
+  profiles: []
+
+target_formats:
+  - "instagram-feed"
+  - "instagram-reels"
+  - "blog-post"
+  - "email-newsletter"

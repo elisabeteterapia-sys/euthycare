@@ -1,0 +1,90 @@
+name: "Euthycare Content Pipeline"
+squad: "euthycare-content"
+version: "1.0.0"
+
+steps:
+  - step: 1
+    name: "checkpoint-research-focus"
+    type: checkpoint
+    file: steps/step-01-checkpoint-research-focus.md
+
+  - step: 2
+    name: "buscar-noticias"
+    type: agent
+    agent: rodrigo-radar
+    execution: subagent
+    file: steps/step-02-buscar-noticias.md
+
+  - step: 3
+    name: "checkpoint-selecionar-noticia"
+    type: checkpoint
+    file: steps/step-03-checkpoint-selecionar-noticia.md
+
+  - step: 4
+    name: "gerar-angulos"
+    type: agent
+    agent: fabio-feed
+    execution: inline
+    file: steps/step-04-gerar-angulos.md
+
+  - step: 5
+    name: "checkpoint-selecionar-angulo"
+    type: checkpoint
+    file: steps/step-05-checkpoint-selecionar-angulo.md
+
+  - step: 6
+    name: "criar-instagram-feed"
+    type: agent
+    agent: fabio-feed
+    execution: subagent
+    parallel_group: content-creation
+    file: steps/step-06-criar-instagram-feed.md
+
+  - step: 7
+    name: "criar-instagram-reels"
+    type: agent
+    agent: vilma-viral
+    execution: subagent
+    parallel_group: content-creation
+    file: steps/step-07-criar-instagram-reels.md
+
+  - step: 8
+    name: "criar-blog-post"
+    type: agent
+    agent: bruna-blog
+    execution: subagent
+    parallel_group: content-creation
+    file: steps/step-08-criar-blog-post.md
+
+  - step: 9
+    name: "criar-email-newsletter"
+    type: agent
+    agent: eduardo-email
+    execution: subagent
+    parallel_group: content-creation
+    file: steps/step-09-criar-email-newsletter.md
+
+  - step: 10
+    name: "checkpoint-aprovar-conteudo"
+    type: checkpoint
+    file: steps/step-10-checkpoint-aprovar-conteudo.md
+
+  - step: 11
+    name: "revisar-conteudo"
+    type: agent
+    agent: carolina-critica
+    execution: inline
+    on_reject: 6
+    file: steps/step-11-revisar-conteudo.md
+
+  - step: 12
+    name: "checkpoint-aprovacao-final"
+    type: checkpoint
+    file: steps/step-12-checkpoint-aprovacao-final.md
+
+checkpoints:
+  - step-01-checkpoint-research-focus
+  - step-03-checkpoint-selecionar-noticia
+  - step-05-checkpoint-selecionar-angulo
+  - step-10-checkpoint-aprovar-conteudo
+  - step-12-checkpoint-aprovacao-final

@@ -1,0 +1,36 @@
+Crie um backend SaaS completo baseado nas seguintes regras:
+
+- Arquitetura multi-tenant usando clinica_id
+- Node.js + Express (ou NestJS)
+- Banco PostgreSQL
+- ORM: Prisma
+
+Funcionalidades obrigatórias:
+- Autenticação JWT
+- CRUD de:
+  - clínicas
+  - usuários (admin_clinica, terapeuta, paciente)
+  - pacientes
+  - sessões
+
+Regras:
+- Todas queries devem filtrar por clinica_id
+- Terapeutas só acessam seus pacientes
+- Admin gerencia tudo da clínica
+
+Billing:
+- Planos: essencial, profissional, premium
+- Trial de 30 dias
+- Limite de terapeutas por plano
+- Tabela de assinaturas e pagamentos
+
+Extras:
+- Middleware para validar plano ativo
+- Estrutura pronta para integração com Stripe
+
+Gere:
+- Estrutura de pastas
+- Schema Prisma completo
+- Rotas principais
+- Middleware de autenticação
+
