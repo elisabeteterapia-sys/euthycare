@@ -66,6 +66,73 @@ function isAdmin(req: Request): boolean {
   return req.headers['x-admin-secret'] === secret
 }
 
+// Token expiry: 7 days from payment
+const TOKEN_EXPIRY_DAYS = 7
+
+async function sendDownloadEmail(
+  to: string,
+  productName: string,
+  token: string,
+  expiresAt: string,
+): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    console.warn('[email] RESEND_API_KEY not set — skipping email')
+    return
+  }
+
+  const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000'
+  const downloadLink = `${frontendUrl}/loja/download/${token}`
+  const expiryDate = new Date(expiresAt).toLocaleDateString('pt-PT', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  })
+
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'EuthyCare <noreply@euthycare.com>',
+      to: [to],
+      subject: `O seu download está pronto — ${productName}`,
+      html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:40px 20px;color:#333">
+          <h2 style="color:#1a1a1a;margin-bottom:8px">Obrigado pela sua compra! 🌿</h2>
+          <p style="color:#555;margin-bottom:24px">
+            O seu acesso ao <strong>${productName}</strong> está pronto para download.
+          </p>
+          <div style="background:#f5f0eb;border-radius:12px;padding:28px;text-align:center;margin-bottom:24px">
+            <p style="margin:0 0 20px;color:#555;font-size:14px">
+              Clique no botão para transferir o seu PDF:
+            </p>
+            <a href="${downloadLink}"
+               style="background:#4a7c59;color:white;padding:14px 36px;border-radius:8px;
+                      text-decoration:none;font-weight:600;font-size:15px;display:inline-block">
+              Transferir PDF
+            </a>
+          </div>
+          <p style="color:#888;font-size:13px;margin:8px 0">
+            ⏳ Este link expira a <strong>${expiryDate}</strong> (${TOKEN_EXPIRY_DAYS} dias).
+          </p>
+          <p style="color:#888;font-size:13px;margin:8px 0">
+            📥 Pode fazer download até ${MAX_DOWNLOADS_PER_TOKEN} vezes.
+          </p>
+          <p style="color:#888;font-size:13px;margin:8px 0">
+            Guarde o ficheiro localmente após o download.
+          </p>
+          <hr style="border:none;border-top:1px solid #e8e0d8;margin:28px 0">
+          <p style="color:#aaa;font-size:12px;text-align:center">
+            EuthyCare — Problemas? Contacte
+            <a href="mailto:geral@euthycare.com" style="color:#4a7c59">geral@euthycare.com</a>
+          </p>
+        </div>
+      `,
+    }),
+  }).catch(err => console.error('[email] failed to send:', err))
+}
+
 // ── GET /loja/produtos ────────────────────────────────────────
 
 router.get('/produtos', async (_req: Request, res: Response) => {
@@ -183,15 +250,18 @@ router.get('/pedido/:sessionId', async (req: Request, res: Response) => {
   const customerEmail = stripeSession.customer_details?.email ?? stripeSession.customer_email ?? ''
 
   // Upsert pedido as paid
+  const expiresAt = new Date(Date.now() + TOKEN_EXPIRY_DAYS * 24 * 60 * 60 * 1000).toISOString()
+
   const { data: pedido, error: pedErr } = await supabaseAdmin
     .from('pedidos')
     .update({
       status:                 'paid',
       usuario_email:          customerEmail,
       stripe_payment_intent:  stripeSession.payment_intent as string ?? null,
+      token_expira_em:        expiresAt,
     })
     .eq('stripe_session_id', sessionId)
-    .select('download_token, produto_id')
+    .select('download_token, produto_id, email_enviado')
     .single()
 
   if (pedErr || !pedido) {
@@ -206,11 +276,21 @@ router.get('/pedido/:sessionId', async (req: Request, res: Response) => {
     .eq('id', pedido.produto_id)
     .single()
 
+  // Send email only once (avoid duplicates on page refresh)
+  if (!pedido.email_enviado && customerEmail) {
+    await supabaseAdmin.from('pedidos')
+      .update({ email_enviado: true })
+      .eq('stripe_session_id', sessionId)
+    sendDownloadEmail(customerEmail, produto?.nome ?? 'Produto', String(pedido.download_token), expiresAt)
+      .catch(err => console.error('[email]', err))
+  }
+
   res.json({
     status:         'paid',
     download_token: pedido.download_token,
     produto_nome:   produto?.nome ?? '',
     email:          customerEmail,
+    expira_em:      expiresAt,
   })
 })
 
@@ -259,7 +339,7 @@ router.get('/download/:token', async (req: Request, res: Response) => {
   // ── 1. Resolve pedido ─────────────────────────────────────────
   const { data: pedido, error: pedErr } = await supabaseAdmin
     .from('pedidos')
-    .select('id, status, produto_id, usuario_email, download_count')
+    .select('id, status, produto_id, usuario_email, download_count, token_expira_em')
     .eq('download_token', token)
     .single()
 
@@ -273,6 +353,15 @@ router.get('/download/:token', async (req: Request, res: Response) => {
   if (pedido.status !== 'paid') {
     await logFailure(pedido.id, pedido.produto_id, pedido.usuario_email, 'pagamento_nao_confirmado')
     res.status(403).json({ error: 'Pagamento não confirmado.' })
+    return
+  }
+
+  // ── 2b. Check token expiry ────────────────────────────────────
+  if (pedido.token_expira_em && new Date(pedido.token_expira_em) < new Date()) {
+    await logFailure(pedido.id, pedido.produto_id, pedido.usuario_email, 'token_expirado')
+    res.status(410).json({
+      error: `O link de download expirou (válido por ${TOKEN_EXPIRY_DAYS} dias). Contacte o suporte.`,
+    })
     return
   }
 
@@ -369,19 +458,123 @@ router.post('/webhook/stripe', async (req: Request, res: Response) => {
     const session = event.data.object as Stripe.Checkout.Session
     if (session.payment_status === 'paid') {
       const email = session.customer_details?.email ?? session.customer_email ?? ''
-      await supabaseAdmin
+      const expiresAt = new Date(Date.now() + TOKEN_EXPIRY_DAYS * 24 * 60 * 60 * 1000).toISOString()
+
+      const { data: updated } = await supabaseAdmin
         .from('pedidos')
         .update({
           status:                'paid',
           usuario_email:         email,
           stripe_payment_intent: session.payment_intent as string ?? null,
+          token_expira_em:       expiresAt,
         })
         .eq('stripe_session_id', session.id)
         .eq('status', 'pending') // only update if not already processed
+        .select('download_token, produto_id, email_enviado')
+        .single()
+
+      // Backup email via webhook (case success page was never reached)
+      if (updated && !updated.email_enviado && email) {
+        const { data: prod } = await supabaseAdmin
+          .from('produtos').select('nome').eq('id', updated.produto_id).single()
+        await supabaseAdmin.from('pedidos')
+          .update({ email_enviado: true }).eq('stripe_session_id', session.id)
+        sendDownloadEmail(email, prod?.nome ?? 'Produto', String(updated.download_token), expiresAt)
+          .catch(err => console.error('[webhook email]', err))
+      }
     }
   }
 
   res.json({ received: true })
+})
+
+// ── Admin: list ALL products (incl. inactive) ─────────────────
+
+router.get('/admin/produtos', async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: 'Acesso restrito.' }); return }
+
+  const { data, error } = await supabaseAdmin
+    .from('produtos')
+    .select('*')
+    .order('ordem', { ascending: true })
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ produtos: data })
+})
+
+// ── Admin: create product ─────────────────────────────────────
+
+router.post('/admin/produto', async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: 'Acesso restrito.' }); return }
+
+  const { nome, descricao, conteudo, preco_cents, capa_url, arquivo_url, tipo, ordem } = req.body as Record<string, string | number>
+
+  if (!nome || !preco_cents) {
+    res.status(400).json({ error: 'nome e preco_cents são obrigatórios.' })
+    return
+  }
+
+  const { data, error } = await supabaseAdmin
+    .from('produtos')
+    .insert({ nome, descricao: descricao ?? '', conteudo: conteudo ?? '', preco_cents, capa_url, arquivo_url, tipo: tipo ?? 'pdf', ordem: ordem ?? 0, ativo: true })
+    .select()
+    .single()
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ produto: data })
+})
+
+// ── Admin: update product ─────────────────────────────────────
+
+router.patch('/admin/produto/:id', async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: 'Acesso restrito.' }); return }
+
+  const { id } = req.params
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const updates: Record<string, any> = { ...req.body }
+  delete updates.id
+  delete updates.criado_em
+
+  const { data, error } = await supabaseAdmin
+    .from('produtos')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ produto: data })
+})
+
+// ── Admin: delete product ─────────────────────────────────────
+
+router.delete('/admin/produto/:id', async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: 'Acesso restrito.' }); return }
+
+  const { id } = req.params
+  const { error } = await supabaseAdmin.from('produtos').delete().eq('id', id)
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ ok: true })
+})
+
+// ── Admin: signed upload URL for PDF / cover image ────────────
+
+router.post('/admin/upload-url', async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: 'Acesso restrito.' }); return }
+
+  const { filename, tipo } = req.body as { filename: string; tipo: 'pdf' | 'capa' }
+  if (!filename) { res.status(400).json({ error: 'filename é obrigatório.' }); return }
+
+  const folder = tipo === 'capa' ? 'capas' : 'pdfs'
+  const safeName = filename.replace(/[^a-z0-9._-]/gi, '_')
+  const path = `${folder}/${Date.now()}-${safeName}`
+
+  const { data, error } = await supabaseAdmin.storage
+    .from(BUCKET)
+    .createSignedUploadUrl(path)
+
+  if (error || !data) { res.status(500).json({ error: 'Erro ao gerar URL de upload.' }); return }
+  res.json({ signedUrl: data.signedUrl, path, token: data.token })
 })
 
 // ── Admin: list orders ────────────────────────────────────────
