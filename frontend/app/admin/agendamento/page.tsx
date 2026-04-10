@@ -56,8 +56,11 @@ interface Bloqueio {
 // ─── Helper ──────────────────────────────────────────────────
 async function api<T>(path: string, opts: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API}${path}`, { ...opts, headers: { ...adminHeaders(), ...(opts.headers ?? {}) } })
-  const json = await res.json()
-  if (!res.ok) throw new Error(json.error ?? 'Erro')
+  const text = await res.text()
+  if (!text) throw new Error('Resposta vazia do servidor')
+  let json: unknown
+  try { json = JSON.parse(text) } catch { throw new Error('Resposta inválida do servidor') }
+  if (!res.ok) throw new Error((json as { error?: string }).error ?? 'Erro')
   return json as T
 }
 
