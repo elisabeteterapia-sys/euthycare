@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
-  { href: '/euthy-lancamento', label: 'Home', exact: true },
+  { href: '/', label: 'Home', exact: true },
   { href: '/agendamento', label: 'Consultas' },
   { href: '/loja', label: 'Loja' },
   { href: '/blog', label: 'Blog' },
