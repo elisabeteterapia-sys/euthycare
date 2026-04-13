@@ -126,7 +126,7 @@ router.get('/cal/:token', async (req: Request, res: Response) => {
   const { token } = req.params
 
   const { data: terapeuta, error } = await supabaseAdmin
-    .from('terapeutas')
+    .from('terapeutas_api')
     .select('id, nome, duracao_min')
     .eq('calendario_token', token)
     .single()
@@ -171,7 +171,7 @@ router.get('/cal/:token', async (req: Request, res: Response) => {
 // ── POST /terapeutas/me/renovar-calendario — novo token ───────
 router.post('/me/renovar-calendario', requireTerapeuta, async (req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin
-    .from('terapeutas')
+    .from('terapeutas_api')
     .update({ calendario_token: crypto.randomUUID() })
     .eq('id', req.terapeutaId!)
     .select('calendario_token')
@@ -189,7 +189,7 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 
   const { data, error } = await supabaseAdmin
-    .from('terapeutas')
+    .from('terapeutas_api')
     .select('id, nome, email, senha_hash, ativo')
     .eq('email', email.toLowerCase().trim())
     .single()
@@ -216,7 +216,7 @@ router.post('/login', async (req: Request, res: Response) => {
 // ── GET /terapeutas/me ────────────────────────────────────────
 router.get('/me', requireTerapeuta, async (req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin
-    .from('terapeutas')
+    .from('terapeutas_api')
     .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, email, calendario_token')
     .eq('id', req.terapeutaId!)
     .single()
@@ -275,7 +275,7 @@ router.get('/me/repasses', requireTerapeuta, async (req: Request, res: Response)
 // ── GET /terapeutas ───────────────────────────────────────────
 router.get('/', async (_req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin
-    .from('terapeutas')
+    .from('terapeutas_api')
     .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min')
     .eq('ativo', true)
     .order('nome')
@@ -288,7 +288,7 @@ router.get('/', async (_req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
   const { id } = req.params
   const { data, error } = await supabaseAdmin
-    .from('terapeutas')
+    .from('terapeutas_api')
     .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min')
     .eq('id', id)
     .eq('ativo', true)
@@ -383,7 +383,7 @@ router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
   if (senha) insertData.senha_hash = await bcrypt.hash(senha, 10)
 
   const { data, error } = await supabaseAdmin
-    .from('terapeutas')
+    .from('terapeutas_api')
     .insert(insertData)
     .select()
     .single()
@@ -401,7 +401,7 @@ router.patch('/admin/:id', requireAdmin, async (req: Request, res: Response) => 
   delete updates.criado_em
 
   const { data, error } = await supabaseAdmin
-    .from('terapeutas')
+    .from('terapeutas_api')
     .update(updates)
     .eq('id', id)
     .select()
@@ -413,7 +413,7 @@ router.patch('/admin/:id', requireAdmin, async (req: Request, res: Response) => 
 
 // ── Admin: eliminar terapeuta ─────────────────────────────────
 router.delete('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
-  const { error } = await supabaseAdmin.from('terapeutas').delete().eq('id', req.params.id)
+  const { error } = await supabaseAdmin.from('terapeutas_api').delete().eq('id', req.params.id)
   if (error) { res.status(500).json({ error: error.message }); return }
   res.json({ ok: true })
 })
@@ -477,7 +477,7 @@ router.patch('/admin/:id/senha', requireAdmin, async (req: Request, res: Respons
   }
   const hash = await bcrypt.hash(senha, 10)
   const { error } = await supabaseAdmin
-    .from('terapeutas')
+    .from('terapeutas_api')
     .update({ senha_hash: hash })
     .eq('id', req.params.id)
 
