@@ -118,7 +118,7 @@ router.get('/me/agenda', requireTerapeuta, async (req: Request, res: Response) =
   const [agendamentos, bloqueios] = await Promise.all([
     supabaseAdmin
       .from('agendamentos')
-      .select('id, hora, status, nome_cliente, email_cliente, notas')
+      .select('id, hora, status, nome_cliente, email_cliente, notas, video_url')
       .eq('terapeuta_id', id)
       .eq('data', dataParam)
       .order('hora'),

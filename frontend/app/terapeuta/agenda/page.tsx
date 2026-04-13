@@ -22,6 +22,7 @@ interface Agendamento {
   nome_cliente: string
   email_cliente: string
   notas?: string
+  video_url?: string
 }
 
 interface Bloqueio {
@@ -120,20 +121,32 @@ export default function TerapeutaAgenda() {
       ) : (
         <div className="space-y-3">
           {agendamentos.map(a => (
-            <button
+            <div
               key={a.id}
-              onClick={() => setSelected(a)}
-              className="w-full bg-white rounded-2xl border border-sage-100 p-4 flex items-center gap-4 hover:shadow-card transition-shadow text-left"
+              className="bg-white rounded-2xl border border-sage-100 p-4 flex items-center gap-4 hover:shadow-card transition-shadow"
             >
-              <div className="text-2xl font-bold text-sage-400 w-16 text-center">{a.hora.slice(0, 5)}</div>
-              <div className="flex-1">
-                <p className="font-semibold text-sage-800">{a.nome_cliente}</p>
-                <p className="text-sm text-sage-500">{a.email_cliente}</p>
-              </div>
-              <span className={`text-xs font-medium px-3 py-1 rounded-full border ${STATUS_COLOR[a.status]}`}>
+              <button onClick={() => setSelected(a)} className="flex items-center gap-4 flex-1 text-left min-w-0">
+                <div className="text-2xl font-bold text-sage-400 w-16 text-center flex-shrink-0">{a.hora.slice(0, 5)}</div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sage-800">{a.nome_cliente}</p>
+                  <p className="text-sm text-sage-500 truncate">{a.email_cliente}</p>
+                </div>
+              </button>
+              <span className={`text-xs font-medium px-3 py-1 rounded-full border flex-shrink-0 ${STATUS_COLOR[a.status]}`}>
                 {a.status.charAt(0).toUpperCase() + a.status.slice(1)}
               </span>
-            </button>
+              {a.video_url && (
+                <a
+                  href={a.video_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-shrink-0 flex items-center gap-1.5 bg-sage-400 hover:bg-sage-500 text-white text-xs font-semibold px-3 py-2 rounded-xl transition-colors"
+                  title="Entrar na videochamada"
+                >
+                  🎥 Iniciar
+                </a>
+              )}
+            </div>
           ))}
         </div>
       )}
@@ -171,9 +184,19 @@ export default function TerapeutaAgenda() {
                 </div>
               )}
             </dl>
+            {selected.video_url && (
+              <a
+                href={selected.video_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 flex items-center justify-center gap-2 w-full bg-sage-400 hover:bg-sage-500 text-white font-semibold rounded-xl py-3 text-sm transition-colors"
+              >
+                <span>🎥</span> Entrar na videochamada
+              </a>
+            )}
             <button
               onClick={() => setSelected(null)}
-              className="mt-6 w-full bg-sage-100 hover:bg-sage-200 text-sage-700 font-semibold rounded-xl py-2.5 text-sm transition-colors"
+              className="mt-3 w-full bg-sage-100 hover:bg-sage-200 text-sage-700 font-semibold rounded-xl py-2.5 text-sm transition-colors"
             >
               Fechar
             </button>

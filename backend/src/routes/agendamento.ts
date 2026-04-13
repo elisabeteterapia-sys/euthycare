@@ -46,23 +46,78 @@ function gerarSlots(horaInicio: string, horaFim: string): string[] {
   return slots
 }
 
-/** Envia e-mail de confirmação (placeholder — conectar provedor de e-mail) */
-async function enviarConfirmacao(params: {
-  nome: string
-  email: string
-  data: string
-  hora: string
+const RESEND_KEY = process.env.RESEND_API_KEY
+const FROM_EMAIL = 'noreply@euthycare.com'
+
+function fmtDataHora(data: string, hora: string) {
+  const d = new Date(data + 'T12:00:00')
+  const dataFmt = d.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  return { dataFmt, hora: hora.slice(0, 5) }
+}
+
+async function sendEmail(to: string, subject: string, html: string) {
+  if (!RESEND_KEY) { console.warn('[email] RESEND_API_KEY não definida'); return }
+  const r = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: FROM_EMAIL, to, subject, html }),
+  })
+  if (!r.ok) console.error('[email] Resend error:', await r.text())
+}
+
+async function enviarConfirmacaoCliente(params: {
+  nome: string; email: string; data: string; hora: string; videoUrl: string
 }) {
-  // TODO: integrar Resend / Nodemailer / SendGrid
-  // Exemplo com Resend:
-  // await resend.emails.send({
-  //   from: 'noreply@euthycare.com',
-  //   to: params.email,
-  //   subject: `Agendamento confirmado — ${params.data} às ${params.hora}`,
-  //   html: `<p>Olá ${params.nome}, o seu agendamento foi recebido.</p>`,
-  // })
-  console.log(
-    `[agendamento] Confirmação para ${params.email} — ${params.data} às ${params.hora}`
+  const { dataFmt, hora } = fmtDataHora(params.data, params.hora)
+  await sendEmail(
+    params.email,
+    `Consulta confirmada — ${dataFmt} às ${hora}`,
+    `
+    <div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#2d4534">
+      <h2 style="color:#5c8a6b">EuthyCare</h2>
+      <p>Olá <strong>${params.nome}</strong>,</p>
+      <p>A sua consulta está confirmada:</p>
+      <div style="background:#f2f7f4;border-radius:12px;padding:16px 20px;margin:20px 0">
+        <p style="margin:0"><strong>Data:</strong> ${dataFmt}</p>
+        <p style="margin:8px 0 0"><strong>Hora:</strong> ${hora}</p>
+      </div>
+      <p>O link para a sua videochamada:</p>
+      <a href="${params.videoUrl}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:600;margin:8px 0">
+        Entrar na videochamada
+      </a>
+      <p style="font-size:13px;color:#7b9e87">Guarde este link — funciona directamente no browser, sem instalar nada.<br>Entre alguns minutos antes da hora marcada.</p>
+      <hr style="border:none;border-top:1px solid #e0ede5;margin:24px 0">
+      <p style="font-size:12px;color:#97c2a8">EuthyCare · euthycare.com</p>
+    </div>
+    `
+  )
+}
+
+async function enviarNotificacaoTerapeuta(params: {
+  emailTerapeuta: string; nomeTerapeuta: string
+  nomeCliente: string; data: string; hora: string; videoUrl: string
+}) {
+  const { dataFmt, hora } = fmtDataHora(params.data, params.hora)
+  await sendEmail(
+    params.emailTerapeuta,
+    `Nova consulta agendada — ${params.nomeCliente}`,
+    `
+    <div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#2d4534">
+      <h2 style="color:#5c8a6b">EuthyCare</h2>
+      <p>Olá <strong>${params.nomeTerapeuta}</strong>,</p>
+      <p>Foi agendada uma nova consulta:</p>
+      <div style="background:#f2f7f4;border-radius:12px;padding:16px 20px;margin:20px 0">
+        <p style="margin:0"><strong>Cliente:</strong> ${params.nomeCliente}</p>
+        <p style="margin:8px 0 0"><strong>Data:</strong> ${dataFmt}</p>
+        <p style="margin:8px 0 0"><strong>Hora:</strong> ${hora}</p>
+      </div>
+      <a href="${params.videoUrl}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:600;margin:8px 0">
+        Link da videochamada
+      </a>
+      <hr style="border:none;border-top:1px solid #e0ede5;margin:24px 0">
+      <p style="font-size:12px;color:#97c2a8">EuthyCare · euthycare.com</p>
+    </div>
+    `
   )
 }
 
@@ -229,12 +284,49 @@ router.post('/', async (req: Request, res: Response) => {
     return
   }
 
-  // Enviar e-mail de confirmação (não bloqueia a resposta)
-  enviarConfirmacao({ nome: nome_cliente, email: email_cliente, data, hora }).catch(
-    err => console.error('[agendamento] Erro ao enviar e-mail:', err)
-  )
+  // Gerar URL da videochamada Jitsi e guardar no agendamento
+  const videoUrl = `https://meet.jit.si/euthycare-${novo.id}`
+  await supabaseAdmin
+    .from('agendamentos')
+    .update({ video_url: videoUrl })
+    .eq('id', novo.id)
 
-  res.status(201).json({ agendamento: novo })
+  const agendamentoFinal = { ...novo, video_url: videoUrl }
+
+  // Enviar emails (não bloqueia a resposta)
+  ;(async () => {
+    try {
+      await enviarConfirmacaoCliente({ nome: nome_cliente, email: email_cliente, data, hora, videoUrl })
+
+      // Notificar terapeuta se tiver terapeuta_id
+      const tid = (novo as Record<string, unknown>).terapeuta_id as string | undefined
+      if (tid) {
+        const { data: t } = await supabaseAdmin
+          .from('terapeutas')
+          .select('nome, email')
+          .eq('id', tid)
+          .single()
+        if (t?.email) {
+          await enviarNotificacaoTerapeuta({
+            emailTerapeuta: t.email, nomeTerapeuta: t.nome,
+            nomeCliente: nome_cliente, data, hora, videoUrl,
+          })
+        }
+      } else {
+        const adminEmail = process.env.ADMIN_EMAIL
+        if (adminEmail) {
+          await enviarNotificacaoTerapeuta({
+            emailTerapeuta: adminEmail, nomeTerapeuta: 'Terapeuta',
+            nomeCliente: nome_cliente, data, hora, videoUrl,
+          })
+        }
+      }
+    } catch (e) {
+      console.error('[agendamento] Erro ao enviar emails:', e)
+    }
+  })()
+
+  res.status(201).json({ agendamento: agendamentoFinal })
 })
 
 // ═══════════════════════════════════════════════════════════════
