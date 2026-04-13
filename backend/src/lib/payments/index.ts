@@ -1,4 +1,4 @@
-a // ─── Payment Provider Registry ────────────────────────────────
+// ─── Payment Provider Registry ────────────────────────────────
 // Stripe is the active provider. Local methods (MBWay, Multibanco)
 // are stub-registered but flagged inactive until enabled via env.
 //

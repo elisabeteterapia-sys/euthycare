@@ -2,14 +2,23 @@
 // GET  /terapeutas              — lista terapeutas activas (público)
 // GET  /terapeutas/:id          — perfil da terapeuta (público)
 // GET  /terapeutas/:id/slots    — slots disponíveis ?data=YYYY-MM-DD (público)
+// POST /terapeutas/login        — login da terapeuta (retorna JWT)
+// GET  /terapeutas/me           — perfil próprio (JWT)
+// GET  /terapeutas/me/agenda    — agenda própria ?data=YYYY-MM-DD (JWT)
+// GET  /terapeutas/me/repasses  — repasses/comissões próprios (JWT)
 // POST /terapeutas/admin        — criar terapeuta (admin)
 // PATCH /terapeutas/admin/:id   — editar terapeuta (admin)
 // DELETE /terapeutas/admin/:id  — eliminar terapeuta (admin)
 // GET  /terapeutas/admin/repasses — resumo de comissões/repasses (admin)
 // POST /terapeutas/admin/:id/marcar-repasse — marcar repasse como pago (admin)
+// PATCH /terapeutas/admin/:id/senha — definir/alterar senha (admin)
 
 import { Router, Request, Response, NextFunction } from 'express'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { supabaseAdmin } from '../lib/supabase'
+
+const JWT_SECRET = process.env.TERAPEUTA_JWT_SECRET ?? 'euthycare-terapeuta-secret-change-me'
 
 function requireAdmin(req: Request, res: Response, next: NextFunction) {
   const secret = req.headers['x-admin-secret']
@@ -18,6 +27,25 @@ function requireAdmin(req: Request, res: Response, next: NextFunction) {
     return
   }
   next()
+}
+
+// Extend Request to carry terapeuta id after JWT verification
+declare module 'express-serve-static-core' {
+  interface Request { terapeutaId?: string }
+}
+
+function requireTerapeuta(req: Request, res: Response, next: NextFunction) {
+  const auth = req.headers['authorization']
+  if (!auth?.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Token não fornecido' }); return
+  }
+  try {
+    const payload = jwt.verify(auth.slice(7), JWT_SECRET) as { sub: string }
+    req.terapeutaId = payload.sub
+    next()
+  } catch {
+    res.status(401).json({ error: 'Token inválido ou expirado' })
+  }
 }
 
 function gerarSlots(horaInicio: string, horaFim: string, intervaloMin = 60): string[] {
@@ -33,6 +61,97 @@ function gerarSlots(horaInicio: string, horaFim: string, intervaloMin = 60): str
 }
 
 const router = Router()
+
+// ── POST /terapeutas/login ────────────────────────────────────
+router.post('/login', async (req: Request, res: Response) => {
+  const { email, senha } = req.body
+  if (!email || !senha) {
+    res.status(400).json({ error: 'email e senha obrigatórios' }); return
+  }
+
+  const { data, error } = await supabaseAdmin
+    .from('terapeutas')
+    .select('id, nome, email, senha_hash, ativo')
+    .eq('email', email.toLowerCase().trim())
+    .single()
+
+  if (error || !data) {
+    res.status(401).json({ error: 'Credenciais inválidas' }); return
+  }
+  if (!data.ativo) {
+    res.status(403).json({ error: 'Conta inativa. Contacte a administração.' }); return
+  }
+  if (!data.senha_hash) {
+    res.status(401).json({ error: 'Senha não definida. Contacte a administração.' }); return
+  }
+
+  const ok = await bcrypt.compare(senha, data.senha_hash)
+  if (!ok) {
+    res.status(401).json({ error: 'Credenciais inválidas' }); return
+  }
+
+  const token = jwt.sign({ sub: data.id, nome: data.nome }, JWT_SECRET, { expiresIn: '7d' })
+  res.json({ token, terapeuta: { id: data.id, nome: data.nome, email: data.email } })
+})
+
+// ── GET /terapeutas/me ────────────────────────────────────────
+router.get('/me', requireTerapeuta, async (req: Request, res: Response) => {
+  const { data, error } = await supabaseAdmin
+    .from('terapeutas')
+    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, email')
+    .eq('id', req.terapeutaId!)
+    .single()
+
+  if (error || !data) { res.status(404).json({ error: 'Terapeuta não encontrada' }); return }
+  res.json({ terapeuta: data })
+})
+
+// ── GET /terapeutas/me/agenda?data=YYYY-MM-DD ─────────────────
+router.get('/me/agenda', requireTerapeuta, async (req: Request, res: Response) => {
+  const { data: dataParam } = req.query
+  const id = req.terapeutaId!
+
+  if (!dataParam || typeof dataParam !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(dataParam)) {
+    res.status(400).json({ error: 'Parâmetro "data" obrigatório no formato YYYY-MM-DD' }); return
+  }
+
+  const [agendamentos, bloqueios] = await Promise.all([
+    supabaseAdmin
+      .from('agendamentos')
+      .select('id, hora, status, nome_cliente, email_cliente, notas')
+      .eq('terapeuta_id', id)
+      .eq('data', dataParam)
+      .order('hora'),
+    supabaseAdmin
+      .from('bloqueios_agenda')
+      .select('hora_inicio, hora_fim')
+      .eq('terapeuta_id', id)
+      .eq('data', dataParam),
+  ])
+
+  res.json({
+    data: dataParam,
+    agendamentos: agendamentos.data ?? [],
+    bloqueios: bloqueios.data ?? [],
+  })
+})
+
+// ── GET /terapeutas/me/repasses ───────────────────────────────
+router.get('/me/repasses', requireTerapeuta, async (req: Request, res: Response) => {
+  const { data, error } = await supabaseAdmin
+    .from('agendamentos')
+    .select('id, data, hora, valor_cobrado_cents, repasse_cents, comissao_cents, repasse_pago, nome_cliente')
+    .eq('terapeuta_id', req.terapeutaId!)
+    .eq('status', 'confirmado')
+    .order('data', { ascending: false })
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+
+  const total_repasse = (data ?? []).reduce((s, a) => s + (a.repasse_cents ?? 0), 0)
+  const por_pagar = (data ?? []).reduce((s, a) => a.repasse_pago ? s : s + (a.repasse_cents ?? 0), 0)
+
+  res.json({ agendamentos: data ?? [], total_repasse, por_pagar })
+})
 
 // ── GET /terapeutas ───────────────────────────────────────────
 router.get('/', async (_req: Request, res: Response) => {
@@ -127,21 +246,26 @@ router.get('/:id/slots', async (req: Request, res: Response) => {
 
 // ── Admin: criar terapeuta ────────────────────────────────────
 router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
-  const { nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem } = req.body
+  const { nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, email, senha } = req.body
 
   if (!nome) { res.status(400).json({ error: 'nome é obrigatório.' }); return }
 
+  const insertData: Record<string, unknown> = {
+    nome, titulo: titulo ?? '', bio: bio ?? '',
+    foto_url: foto_url ?? null,
+    especialidades: especialidades ?? '',
+    preco_cents: preco_cents ?? 2500,
+    duracao_min: duracao_min ?? 50,
+    comissao_percentagem: comissao_percentagem ?? 20,
+    ativo: true,
+  }
+
+  if (email) insertData.email = email.toLowerCase().trim()
+  if (senha) insertData.senha_hash = await bcrypt.hash(senha, 10)
+
   const { data, error } = await supabaseAdmin
     .from('terapeutas')
-    .insert({
-      nome, titulo: titulo ?? '', bio: bio ?? '',
-      foto_url: foto_url ?? null,
-      especialidades: especialidades ?? '',
-      preco_cents: preco_cents ?? 2500,
-      duracao_min: duracao_min ?? 50,
-      comissao_percentagem: comissao_percentagem ?? 20,
-      ativo: true,
-    })
+    .insert(insertData)
     .select()
     .single()
 
@@ -224,6 +348,22 @@ router.get('/admin/repasses/resumo', requireAdmin, async (_req: Request, res: Re
   }
 
   res.json({ repasses: Object.fromEntries(map) })
+})
+
+// ── Admin: definir/alterar senha da terapeuta ─────────────────
+router.patch('/admin/:id/senha', requireAdmin, async (req: Request, res: Response) => {
+  const { senha } = req.body
+  if (!senha || senha.length < 6) {
+    res.status(400).json({ error: 'Senha deve ter no mínimo 6 caracteres' }); return
+  }
+  const hash = await bcrypt.hash(senha, 10)
+  const { error } = await supabaseAdmin
+    .from('terapeutas')
+    .update({ senha_hash: hash })
+    .eq('id', req.params.id)
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ ok: true })
 })
 
 // ── Admin: marcar repasses como pagos ─────────────────────────

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Plus, Pencil, Trash2, EyeOff, Eye, X, Loader2, Check, Euro } from 'lucide-react'
+import { Plus, Pencil, Trash2, EyeOff, Eye, X, Loader2, Check, Euro, KeyRound } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 const SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET ?? ''
@@ -21,11 +21,13 @@ interface Terapeuta {
   duracao_min: number
   comissao_percentagem: number
   ativo: boolean
+  email?: string
 }
 
 const emptyForm = {
   nome: '', titulo: '', bio: '', foto_url: '',
   especialidades: '', preco_cents: 2500, duracao_min: 50, comissao_percentagem: 20,
+  email: '', senha: '',
 }
 
 const DIAS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
@@ -50,6 +52,10 @@ export default function AdminTerapeutasPage() {
   const [disps, setDisps] = useState<Disp[]>([])
   const [savingDisp, setSavingDisp] = useState(false)
   const [savedDisp, setSavedDisp] = useState(false)
+  const [credTab, setCredTab] = useState<Terapeuta | null>(null)
+  const [credSenha, setCredSenha] = useState('')
+  const [credSaving, setCredSaving] = useState(false)
+  const [credOk, setCredOk] = useState(false)
 
   async function load() {
     setLoading(true)
@@ -76,8 +82,34 @@ export default function AdminTerapeutasPage() {
       foto_url: t.foto_url ?? '', especialidades: t.especialidades,
       preco_cents: t.preco_cents, duracao_min: t.duracao_min,
       comissao_percentagem: t.comissao_percentagem,
+      email: t.email ?? '', senha: '',
     })
     setShowModal(true)
+  }
+
+  async function guardarCredenciais() {
+    if (!credTab || !credSenha.trim()) return
+    setCredSaving(true)
+    // Save email if changed
+    await fetch(`${API}/terapeutas/admin/${credTab.id}`, {
+      method: 'PATCH', headers: h(),
+      body: JSON.stringify({ email: credTab.email }),
+    })
+    // Save password
+    const r = await fetch(`${API}/terapeutas/admin/${credTab.id}/senha`, {
+      method: 'PATCH', headers: h(),
+      body: JSON.stringify({ senha: credSenha }),
+    })
+    setCredSaving(false)
+    if (r.ok) {
+      setCredOk(true)
+      setTimeout(() => setCredOk(false), 2000)
+      setCredSenha('')
+      await load()
+    } else {
+      const j = await r.json()
+      alert(j.error ?? 'Erro ao guardar')
+    }
   }
 
   async function guardar() {
@@ -87,7 +119,10 @@ export default function AdminTerapeutasPage() {
         ? `${API}/terapeutas/admin/${editItem.id}`
         : `${API}/terapeutas/admin`
       const method = editItem ? 'PATCH' : 'POST'
-      const res = await fetch(url, { method, headers: h(), body: JSON.stringify(form) })
+      // Don't send empty senha on edit
+      const payload = { ...form }
+      if (editItem && !payload.senha) delete (payload as Record<string, unknown>).senha
+      const res = await fetch(url, { method, headers: h(), body: JSON.stringify(payload) })
       const text = await res.text()
       if (!res.ok) {
         let msg = text
@@ -212,6 +247,10 @@ export default function AdminTerapeutasPage() {
                 className="px-2 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-cream-300 hover:text-gray-800 transition-colors">
                 Horários
               </button>
+              <button onClick={() => { setCredTab(t); setCredSenha(''); setCredOk(false) }} title="Credenciais de acesso"
+                className="p-1.5 rounded-lg hover:bg-cream-300 text-gray-400 hover:text-gray-700 transition-colors">
+                <KeyRound className="h-4 w-4" />
+              </button>
               <button onClick={() => openEdit(t)} title="Editar"
                 className="p-1.5 rounded-lg hover:bg-cream-300 text-gray-400 hover:text-gray-700 transition-colors">
                 <Pencil className="h-4 w-4" />
@@ -276,6 +315,54 @@ export default function AdminTerapeutasPage() {
                 {savingDisp ? <><Loader2 className="h-4 w-4 animate-spin" /> A guardar…</>
                   : savedDisp ? <><Check className="h-4 w-4" /> Guardado!</>
                   : 'Guardar horários'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Credentials modal */}
+      {credTab && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b border-cream-200">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Credenciais — {credTab.nome}</h3>
+                <p className="text-xs text-gray-400 mt-0.5">Acesso ao portal da terapeuta</p>
+              </div>
+              <button onClick={() => setCredTab(null)}><X className="h-5 w-5 text-gray-400" /></button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Email de login</label>
+                <input
+                  type="email"
+                  value={credTab.email ?? ''}
+                  onChange={e => setCredTab(prev => prev ? { ...prev, email: e.target.value } : prev)}
+                  className="w-full h-10 px-3 rounded-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-sage-400"
+                  placeholder="email@exemplo.com"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Nova senha</label>
+                <input
+                  type="password"
+                  value={credSenha}
+                  onChange={e => setCredSenha(e.target.value)}
+                  className="w-full h-10 px-3 rounded-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-sage-400"
+                  placeholder="Mínimo 6 caracteres"
+                />
+              </div>
+              <div className="bg-sage-50 rounded-xl p-3 text-xs text-gray-600">
+                <p>A terapeuta acederá em: <strong>euthycare.com/terapeuta/login</strong></p>
+              </div>
+            </div>
+            <div className="flex gap-3 justify-end p-6 border-t border-cream-200">
+              <Button variant="outline" size="sm" onClick={() => setCredTab(null)}>Cancelar</Button>
+              <Button size="sm" onClick={guardarCredenciais} disabled={credSaving || !credSenha.trim()} className="gap-2 min-w-[140px]">
+                {credSaving ? <><Loader2 className="h-4 w-4 animate-spin" /> A guardar…</>
+                  : credOk ? <><Check className="h-4 w-4" /> Guardado!</>
+                  : 'Guardar credenciais'}
               </Button>
             </div>
           </div>
@@ -347,6 +434,22 @@ export default function AdminTerapeutasPage() {
                   <p>Repasse à terapeuta: <strong>{(form.preco_cents * (100 - form.comissao_percentagem) / 10000).toFixed(2)}€</strong></p>
                 </div>
               )}
+
+              <div className="border-t border-cream-200 pt-4">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Acesso ao portal (opcional)</p>
+                <div className="space-y-3">
+                  <F label="Email de login" value={form.email} onChange={v => setForm(f => ({ ...f, email: v }))} placeholder="email@exemplo.com" />
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                      {editItem ? 'Nova senha (deixe em branco para não alterar)' : 'Senha inicial'}
+                    </label>
+                    <input type="password" value={form.senha}
+                      onChange={e => setForm(f => ({ ...f, senha: e.target.value }))}
+                      placeholder="Mínimo 6 caracteres"
+                      className="w-full h-10 px-3 rounded-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-sage-400" />
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="flex gap-3 justify-end p-6 border-t border-cream-200">
               <Button variant="outline" size="sm" onClick={() => setShowModal(false)}>Cancelar</Button>
