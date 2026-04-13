@@ -23,14 +23,15 @@ import pool from '../lib/pgClient'
 
 // Helper: query terapeutas via direct pg (bypasses PostgREST schema cache)
 async function pgQuery(sql: string, params: unknown[] = []) {
-  const client = await pool.connect()
+  let client: import('pg').PoolClient | undefined
   try {
+    client = await pool.connect()
     const res = await client.query(sql, params)
     return { rows: res.rows, error: null }
   } catch (e) {
     return { rows: [], error: (e as Error).message }
   } finally {
-    client.release()
+    client?.release()
   }
 }
 
