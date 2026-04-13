@@ -1,16 +1,8 @@
 'use client'
 
-import { useEffect, useState, createContext, useContext } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-
-interface TerapeutaInfo {
-  id: string
-  nome: string
-  email: string
-}
-
-const TerapeutaCtx = createContext<TerapeutaInfo | null>(null)
-export function useTerapeuta() { return useContext(TerapeutaCtx) }
+import { TerapeutaCtx, type TerapeutaInfo } from './context'
 
 export default function TerapeutaLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
