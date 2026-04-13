@@ -3,6 +3,7 @@ import { Router, Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { supabaseAdmin } from '../lib/supabase'
+import { pgQuery } from '../lib/pgClient'
 
 const JWT_SECRET = process.env.TERAPEUTA_JWT_SECRET ?? 'euthycare-terapeuta-secret-change-me'
 
@@ -44,7 +45,6 @@ function gerarSlots(horaInicio: string, horaFim: string, intervaloMin = 60): str
   return slots
 }
 
-// ── iCal helpers ──────────────────────────────────────────────
 function toIcsDt(data: string, hora: string) {
   return data.replace(/-/g, '') + 'T' + hora.slice(0, 5).replace(':', '') + '00'
 }
@@ -89,32 +89,29 @@ function buildIcal(events: Array<{
 
 const router = Router()
 
-// ── GET /terapeutas/cal/:token — feed iCal público ────────────
+// ── GET /terapeutas/cal/:token ────────────────────────────────
 router.get('/cal/:token', async (req: Request, res: Response) => {
   const { token } = req.params
-  const { data, error } = await supabaseAdmin.rpc('fn_terapeuta_por_token', { p_token: token })
-  if (error || !data?.length) { res.status(404).send('Calendário não encontrado'); return }
-  const terapeuta = data[0]
+  const { rows, error } = await pgQuery(
+    `SELECT id, nome, duracao_min FROM terapeutas WHERE calendario_token = $1`, [token]
+  )
+  if (error || !rows.length) { res.status(404).send('Calendário não encontrado'); return }
+  const terapeuta = rows[0]
 
   const hoje = new Date().toISOString().slice(0, 10)
   const limite = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
-
   const { data: agendamentos } = await supabaseAdmin
-    .from('agendamentos')
-    .select('id, data, hora, status, nome_cliente, video_url')
-    .eq('terapeuta_id', terapeuta.id)
-    .not('status', 'eq', 'cancelado')
-    .gte('data', hoje).lte('data', limite)
-    .order('data').order('hora')
+    .from('agendamentos').select('id, data, hora, status, nome_cliente, video_url')
+    .eq('terapeuta_id', terapeuta.id).not('status', 'eq', 'cancelado')
+    .gte('data', hoje).lte('data', limite).order('data').order('hora')
 
   const events = (agendamentos ?? []).map((a: Record<string, unknown>) => ({
     uid: a.id as string, data: a.data as string, hora: a.hora as string,
-    duracaoMin: (terapeuta.duracao_min as number) ?? 50,
+    duracaoMin: terapeuta.duracao_min ?? 50,
     nomeCliente: a.nome_cliente as string,
     videoUrl: (a.video_url as string | null) ?? undefined,
     status: a.status as string,
   }))
-
   const ical = buildIcal(events, terapeuta.nome)
   res.setHeader('Content-Type', 'text/calendar; charset=utf-8')
   res.setHeader('Content-Disposition', 'inline; filename="euthycare.ics"')
@@ -124,38 +121,44 @@ router.get('/cal/:token', async (req: Request, res: Response) => {
 
 // ── POST /terapeutas/me/renovar-calendario ────────────────────
 router.post('/me/renovar-calendario', requireTerapeuta, async (req: Request, res: Response) => {
-  const { data, error } = await supabaseAdmin.rpc('fn_renovar_calendario', { p_id: req.terapeutaId! })
+  const newToken = crypto.randomUUID()
+  const { error } = await pgQuery(
+    `UPDATE terapeutas SET calendario_token = $1 WHERE id = $2`, [newToken, req.terapeutaId!]
+  )
   if (error) { res.status(500).json({ error: 'Erro ao renovar token' }); return }
-  res.json({ calendario_token: data })
+  res.json({ calendario_token: newToken })
 })
 
 // ── POST /terapeutas/login ────────────────────────────────────
 router.post('/login', async (req: Request, res: Response) => {
   const { email, senha } = req.body
   if (!email || !senha) { res.status(400).json({ error: 'email e senha obrigatórios' }); return }
-
-  const { data, error } = await supabaseAdmin.rpc('fn_terapeuta_login', { p_email: email })
-  if (error || !data?.length) { res.status(401).json({ error: 'Credenciais inválidas' }); return }
-  const t = data[0]
-
+  const { rows, error } = await pgQuery(
+    `SELECT id, nome, email, senha_hash, ativo FROM terapeutas WHERE email = $1`,
+    [email.toLowerCase().trim()]
+  )
+  if (error || !rows.length) { res.status(401).json({ error: 'Credenciais inválidas' }); return }
+  const t = rows[0]
   if (!t.ativo) { res.status(403).json({ error: 'Conta inativa. Contacte a administração.' }); return }
   if (!t.senha_hash) { res.status(401).json({ error: 'Senha não definida. Contacte a administração.' }); return }
-
   const ok = await bcrypt.compare(senha, t.senha_hash)
   if (!ok) { res.status(401).json({ error: 'Credenciais inválidas' }); return }
-
   const token = jwt.sign({ sub: t.id, nome: t.nome }, JWT_SECRET, { expiresIn: '7d' })
   res.json({ token, terapeuta: { id: t.id, nome: t.nome, email: t.email } })
 })
 
 // ── GET /terapeutas/me ────────────────────────────────────────
 router.get('/me', requireTerapeuta, async (req: Request, res: Response) => {
-  const { data, error } = await supabaseAdmin.rpc('fn_terapeuta_me', { p_id: req.terapeutaId! })
-  if (error || !data?.length) { res.status(404).json({ error: 'Terapeuta não encontrada' }); return }
-  res.json({ terapeuta: data[0] })
+  const { rows, error } = await pgQuery(
+    `SELECT id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min,
+     comissao_percentagem, email, calendario_token FROM terapeutas WHERE id = $1`,
+    [req.terapeutaId!]
+  )
+  if (error || !rows.length) { res.status(404).json({ error: 'Terapeuta não encontrada' }); return }
+  res.json({ terapeuta: rows[0] })
 })
 
-// ── GET /terapeutas/me/agenda?data=YYYY-MM-DD ─────────────────
+// ── GET /terapeutas/me/agenda ─────────────────────────────────
 router.get('/me/agenda', requireTerapeuta, async (req: Request, res: Response) => {
   const { data: dataParam } = req.query
   const id = req.terapeutaId!
@@ -167,8 +170,7 @@ router.get('/me/agenda', requireTerapeuta, async (req: Request, res: Response) =
       .select('id, hora, status, nome_cliente, email_cliente, notas, video_url')
       .eq('terapeuta_id', id).eq('data', dataParam).order('hora'),
     supabaseAdmin.from('bloqueios_agenda')
-      .select('hora_inicio, hora_fim')
-      .eq('terapeuta_id', id).eq('data', dataParam),
+      .select('hora_inicio, hora_fim').eq('terapeuta_id', id).eq('data', dataParam),
   ])
   res.json({ data: dataParam, agendamentos: agendamentos.data ?? [], bloqueios: bloqueios.data ?? [] })
 })
@@ -188,19 +190,25 @@ router.get('/me/repasses', requireTerapeuta, async (req: Request, res: Response)
 
 // ── GET /terapeutas ───────────────────────────────────────────
 router.get('/', async (_req: Request, res: Response) => {
-  const { data, error } = await supabaseAdmin.rpc('fn_terapeutas_lista')
-  if (error) { res.status(500).json({ error: error.message }); return }
-  res.json({ terapeutas: data ?? [] })
+  const { rows, error } = await pgQuery(
+    `SELECT id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min
+     FROM terapeutas WHERE ativo = true ORDER BY nome`
+  )
+  if (error) { res.status(500).json({ error }); return }
+  res.json({ terapeutas: rows })
 })
 
 // ── GET /terapeutas/:id ───────────────────────────────────────
 router.get('/:id', async (req: Request, res: Response) => {
-  const { data, error } = await supabaseAdmin.rpc('fn_terapeuta_por_id', { p_id: req.params.id })
-  if (error || !data?.length) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
-  res.json({ terapeuta: data[0] })
+  const { rows, error } = await pgQuery(
+    `SELECT id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min
+     FROM terapeutas WHERE id = $1 AND ativo = true`, [req.params.id]
+  )
+  if (error || !rows.length) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
+  res.json({ terapeuta: rows[0] })
 })
 
-// ── GET /terapeutas/:id/slots?data=YYYY-MM-DD ─────────────────
+// ── GET /terapeutas/:id/slots ─────────────────────────────────
 router.get('/:id/slots', async (req: Request, res: Response) => {
   const { id } = req.params
   const { data: dataParam } = req.query
@@ -224,8 +232,7 @@ router.get('/:id/slots', async (req: Request, res: Response) => {
   for (const b of bloqueios ?? []) {
     if (b.hora_inicio && b.hora_fim) gerarSlots(b.hora_inicio, b.hora_fim).forEach(s => bloqueadosSlots.add(s))
   }
-  const livres = [...new Set(todosSlots)].sort().filter(s => !ocupados.has(s) && !bloqueadosSlots.has(s))
-  res.json({ data: dataParam, slots: livres })
+  res.json({ data: dataParam, slots: [...new Set(todosSlots)].sort().filter(s => !ocupados.has(s) && !bloqueadosSlots.has(s)) })
 })
 
 // ── Admin: criar terapeuta ────────────────────────────────────
@@ -234,41 +241,41 @@ router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
   if (!nome) { res.status(400).json({ error: 'nome é obrigatório.' }); return }
   const emailVal = email ? email.toLowerCase().trim() : null
   const senhaHash = senha ? await bcrypt.hash(senha, 10) : null
-  const { data, error } = await supabaseAdmin.rpc('fn_terapeuta_criar', {
-    p_nome: nome, p_titulo: titulo ?? '', p_bio: bio ?? '',
-    p_foto_url: foto_url ?? null, p_especialidades: especialidades ?? '',
-    p_preco_cents: preco_cents ?? 2500, p_duracao_min: duracao_min ?? 50,
-    p_comissao: comissao_percentagem ?? 20, p_email: emailVal, p_senha_hash: senhaHash,
-  })
-  if (error) { res.status(500).json({ error: error.message }); return }
-  res.status(201).json({ terapeuta: data?.[0] ?? {} })
+  const { rows, error } = await pgQuery(
+    `INSERT INTO terapeutas (nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, ativo, email, senha_hash)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,true,$9,$10) RETURNING *`,
+    [nome, titulo ?? '', bio ?? '', foto_url ?? null, especialidades ?? '',
+     preco_cents ?? 2500, duracao_min ?? 50, comissao_percentagem ?? 20, emailVal, senhaHash]
+  )
+  if (error) { res.status(500).json({ error }); return }
+  res.status(201).json({ terapeuta: rows[0] })
 })
 
 // ── Admin: editar terapeuta ───────────────────────────────────
 router.patch('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
   const { id } = req.params
   const b = req.body
-  const { data, error } = await supabaseAdmin.rpc('fn_terapeuta_actualizar', {
-    p_id: id,
-    p_nome: b.nome ?? null, p_titulo: b.titulo ?? null, p_bio: b.bio ?? null,
-    p_foto_url: b.foto_url ?? null, p_especialidades: b.especialidades ?? null,
-    p_preco_cents: b.preco_cents ?? null, p_duracao_min: b.duracao_min ?? null,
-    p_comissao: b.comissao_percentagem ?? null,
-    p_ativo: b.ativo !== undefined ? b.ativo : null,
-    p_email: b.email ?? null,
-  })
-  if (b.senha) {
-    const hash = await bcrypt.hash(b.senha, 10)
-    await supabaseAdmin.rpc('fn_terapeuta_senha', { p_id: id, p_hash: hash })
+  const fields: string[] = []
+  const vals: unknown[] = []
+  let i = 1
+  const allowed = ['nome','titulo','bio','foto_url','especialidades','preco_cents','duracao_min','comissao_percentagem','ativo','email']
+  for (const k of allowed) {
+    if (k in b) { fields.push(`${k} = $${i++}`); vals.push(b[k]) }
   }
-  if (error) { res.status(500).json({ error: error.message }); return }
-  res.json({ terapeuta: data?.[0] ?? {} })
+  if (b.senha) { fields.push(`senha_hash = $${i++}`); vals.push(await bcrypt.hash(b.senha, 10)) }
+  if (fields.length === 0) { res.status(400).json({ error: 'Nenhum campo para actualizar' }); return }
+  vals.push(id)
+  const { rows, error } = await pgQuery(
+    `UPDATE terapeutas SET ${fields.join(', ')} WHERE id = $${i} RETURNING *`, vals
+  )
+  if (error) { res.status(500).json({ error }); return }
+  res.json({ terapeuta: rows[0] })
 })
 
 // ── Admin: eliminar terapeuta ─────────────────────────────────
 router.delete('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
-  const { error } = await supabaseAdmin.rpc('fn_terapeuta_eliminar', { p_id: req.params.id })
-  if (error) { res.status(500).json({ error: error.message }); return }
+  const { error } = await pgQuery(`DELETE FROM terapeutas WHERE id = $1`, [req.params.id])
+  if (error) { res.status(500).json({ error }); return }
   res.json({ ok: true })
 })
 
@@ -316,8 +323,8 @@ router.patch('/admin/:id/senha', requireAdmin, async (req: Request, res: Respons
   const { senha } = req.body
   if (!senha || senha.length < 6) { res.status(400).json({ error: 'Senha deve ter no mínimo 6 caracteres' }); return }
   const hash = await bcrypt.hash(senha, 10)
-  const { error } = await supabaseAdmin.rpc('fn_terapeuta_senha', { p_id: req.params.id, p_hash: hash })
-  if (error) { res.status(500).json({ error: error.message }); return }
+  const { error } = await pgQuery(`UPDATE terapeutas SET senha_hash = $1 WHERE id = $2`, [hash, req.params.id])
+  if (error) { res.status(500).json({ error }); return }
   res.json({ ok: true })
 })
 
