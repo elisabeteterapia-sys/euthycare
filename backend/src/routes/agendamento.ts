@@ -55,20 +55,107 @@ function fmtDataHora(data: string, hora: string) {
   return { dataFmt, hora: hora.slice(0, 5) }
 }
 
-async function sendEmail(to: string, subject: string, html: string) {
+/** Converte data+hora para formato ICS: YYYYMMDDTHHMMSS */
+function toIcsDate(data: string, hora: string) {
+  return data.replace(/-/g, '') + 'T' + hora.replace(':', '') + '00'
+}
+
+/** Adiciona minutos a uma hora HH:MM, devolve HH:MM */
+function addMin(hora: string, min: number) {
+  const [h, m] = hora.split(':').map(Number)
+  const total = h * 60 + m + min
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`
+}
+
+/** Gera conteúdo .ics para um agendamento */
+function gerarIcs(params: {
+  uid: string; data: string; hora: string; duracaoMin: number
+  titulo: string; descricao: string; videoUrl: string
+}) {
+  const inicio = toIcsDate(params.data, params.hora)
+  const fim    = toIcsDate(params.data, addMin(params.hora, params.duracaoMin))
+  const now    = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15)
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//EuthyCare//PT',
+    'CALSCALE:GREGORIAN',
+    'METHOD:REQUEST',
+    'BEGIN:VEVENT',
+    `UID:${params.uid}@euthycare.com`,
+    `DTSTAMP:${now}`,
+    `DTSTART;TZID=Europe/Lisbon:${inicio}`,
+    `DTEND;TZID=Europe/Lisbon:${fim}`,
+    `SUMMARY:${params.titulo}`,
+    `DESCRIPTION:${params.descricao.replace(/\n/g, '\\n')}`,
+    `LOCATION:Online (Videochamada)`,
+    `URL:${params.videoUrl}`,
+    'STATUS:CONFIRMED',
+    'BEGIN:VALARM',
+    'TRIGGER:-PT15M',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:Lembrete da consulta EuthyCare',
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n')
+}
+
+/** Gera link directo para adicionar ao Google Calendar */
+function googleCalendarUrl(params: {
+  data: string; hora: string; duracaoMin: number
+  titulo: string; descricao: string; videoUrl: string
+}) {
+  const inicio = toIcsDate(params.data, params.hora)
+  const fim    = toIcsDate(params.data, addMin(params.hora, params.duracaoMin))
+  const p = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: params.titulo,
+    dates: `${inicio}/${fim}`,
+    details: params.descricao,
+    location: `Online (Videochamada) — ${params.videoUrl}`,
+    ctz: 'Europe/Lisbon',
+  })
+  return `https://calendar.google.com/calendar/render?${p.toString()}`
+}
+
+async function sendEmail(to: string, subject: string, html: string, icsContent?: string) {
   if (!RESEND_KEY) { console.warn('[email] RESEND_API_KEY não definida'); return }
+  const body: Record<string, unknown> = { from: FROM_EMAIL, to, subject, html }
+  if (icsContent) {
+    body.attachments = [{
+      filename: 'consulta-euthycare.ics',
+      content: Buffer.from(icsContent).toString('base64'),
+    }]
+  }
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: FROM_EMAIL, to, subject, html }),
+    body: JSON.stringify(body),
   })
   if (!r.ok) console.error('[email] Resend error:', await r.text())
 }
 
 async function enviarConfirmacaoCliente(params: {
-  nome: string; email: string; data: string; hora: string; videoUrl: string
+  uid: string; nome: string; email: string; data: string; hora: string
+  videoUrl: string; duracaoMin?: number
 }) {
   const { dataFmt, hora } = fmtDataHora(params.data, params.hora)
+  const duracao = params.duracaoMin ?? 50
+  const descricao = `Consulta EuthyCare\nData: ${dataFmt} às ${hora}\nVideochamada: ${params.videoUrl}`
+  const gcUrl = googleCalendarUrl({
+    data: params.data, hora: params.hora, duracaoMin: duracao,
+    titulo: 'Consulta EuthyCare',
+    descricao,
+    videoUrl: params.videoUrl,
+  })
+  const ics = gerarIcs({
+    uid: params.uid, data: params.data, hora: params.hora, duracaoMin: duracao,
+    titulo: 'Consulta EuthyCare',
+    descricao,
+    videoUrl: params.videoUrl,
+  })
+
   await sendEmail(
     params.email,
     `Consulta confirmada — ${dataFmt} às ${hora}`,
@@ -80,27 +167,57 @@ async function enviarConfirmacaoCliente(params: {
       <div style="background:#f2f7f4;border-radius:12px;padding:16px 20px;margin:20px 0">
         <p style="margin:0"><strong>Data:</strong> ${dataFmt}</p>
         <p style="margin:8px 0 0"><strong>Hora:</strong> ${hora}</p>
+        <p style="margin:8px 0 0"><strong>Duração:</strong> ${duracao} minutos</p>
       </div>
-      <p>O link para a sua videochamada:</p>
-      <a href="${params.videoUrl}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:600;margin:8px 0">
-        Entrar na videochamada
-      </a>
-      <p style="font-size:13px;color:#7b9e87">Guarde este link — funciona directamente no browser, sem instalar nada.<br>Entre alguns minutos antes da hora marcada.</p>
+      <table cellpadding="0" cellspacing="0" style="margin:8px 0">
+        <tr>
+          <td style="padding-right:8px">
+            <a href="${params.videoUrl}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:12px 20px;border-radius:10px;font-weight:600;font-size:14px">
+              🎥 Entrar na videochamada
+            </a>
+          </td>
+          <td>
+            <a href="${gcUrl}" style="display:inline-block;background:#4285f4;color:#fff;text-decoration:none;padding:12px 20px;border-radius:10px;font-weight:600;font-size:14px">
+              📅 Adicionar ao Google Calendar
+            </a>
+          </td>
+        </tr>
+      </table>
+      <p style="font-size:13px;color:#7b9e87;margin-top:16px">
+        O ficheiro de calendário (.ics) está em anexo — funciona com Google Calendar, Apple Calendar e Outlook.<br>
+        Entre na videochamada alguns minutos antes da hora marcada.
+      </p>
       <hr style="border:none;border-top:1px solid #e0ede5;margin:24px 0">
       <p style="font-size:12px;color:#97c2a8">EuthyCare · euthycare.com</p>
     </div>
-    `
+    `,
+    ics
   )
 }
 
 async function enviarNotificacaoTerapeuta(params: {
-  emailTerapeuta: string; nomeTerapeuta: string
-  nomeCliente: string; data: string; hora: string; videoUrl: string
+  uid: string; emailTerapeuta: string; nomeTerapeuta: string
+  nomeCliente: string; data: string; hora: string; videoUrl: string; duracaoMin?: number
 }) {
   const { dataFmt, hora } = fmtDataHora(params.data, params.hora)
+  const duracao = params.duracaoMin ?? 50
+  const descricao = `Cliente: ${params.nomeCliente}\nVideochamada: ${params.videoUrl}`
+  const gcUrl = googleCalendarUrl({
+    data: params.data, hora: params.hora, duracaoMin: duracao,
+    titulo: `Consulta — ${params.nomeCliente}`,
+    descricao,
+    videoUrl: params.videoUrl,
+  })
+  const ics = gerarIcs({
+    uid: params.uid + '-t', data: params.data, hora: params.hora, duracaoMin: duracao,
+    titulo: `Consulta — ${params.nomeCliente}`,
+    descricao,
+    videoUrl: params.videoUrl,
+  })
+
   await sendEmail(
     params.emailTerapeuta,
-    `Nova consulta agendada — ${params.nomeCliente}`,
+    `Nova consulta — ${params.nomeCliente} · ${dataFmt} às ${hora}`,
     `
     <div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#2d4534">
       <h2 style="color:#5c8a6b">EuthyCare</h2>
@@ -110,14 +227,28 @@ async function enviarNotificacaoTerapeuta(params: {
         <p style="margin:0"><strong>Cliente:</strong> ${params.nomeCliente}</p>
         <p style="margin:8px 0 0"><strong>Data:</strong> ${dataFmt}</p>
         <p style="margin:8px 0 0"><strong>Hora:</strong> ${hora}</p>
+        <p style="margin:8px 0 0"><strong>Duração:</strong> ${duracao} minutos</p>
       </div>
-      <a href="${params.videoUrl}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:600;margin:8px 0">
-        Link da videochamada
-      </a>
+      <table cellpadding="0" cellspacing="0" style="margin:8px 0">
+        <tr>
+          <td style="padding-right:8px">
+            <a href="${params.videoUrl}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:12px 20px;border-radius:10px;font-weight:600;font-size:14px">
+              🎥 Link da videochamada
+            </a>
+          </td>
+          <td>
+            <a href="${gcUrl}" style="display:inline-block;background:#4285f4;color:#fff;text-decoration:none;padding:12px 20px;border-radius:10px;font-weight:600;font-size:14px">
+              📅 Adicionar ao Google Calendar
+            </a>
+          </td>
+        </tr>
+      </table>
+      <p style="font-size:13px;color:#7b9e87;margin-top:16px">O ficheiro .ics está em anexo.</p>
       <hr style="border:none;border-top:1px solid #e0ede5;margin:24px 0">
       <p style="font-size:12px;color:#97c2a8">EuthyCare · euthycare.com</p>
     </div>
-    `
+    `,
+    ics
   )
 }
 
@@ -296,30 +427,36 @@ router.post('/', async (req: Request, res: Response) => {
   // Enviar emails (não bloqueia a resposta)
   ;(async () => {
     try {
-      await enviarConfirmacaoCliente({ nome: nome_cliente, email: email_cliente, data, hora, videoUrl })
-
-      // Notificar terapeuta se tiver terapeuta_id
+      // Buscar duração da terapeuta, se existir
       const tid = (novo as Record<string, unknown>).terapeuta_id as string | undefined
+      let duracaoMin = 50
+      let terapeutaEmail: string | undefined
+      let terapeutaNome = 'Terapeuta'
+
       if (tid) {
         const { data: t } = await supabaseAdmin
           .from('terapeutas')
-          .select('nome, email')
+          .select('nome, email, duracao_min')
           .eq('id', tid)
           .single()
-        if (t?.email) {
-          await enviarNotificacaoTerapeuta({
-            emailTerapeuta: t.email, nomeTerapeuta: t.nome,
-            nomeCliente: nome_cliente, data, hora, videoUrl,
-          })
+        if (t) {
+          duracaoMin = t.duracao_min ?? 50
+          terapeutaEmail = t.email
+          terapeutaNome = t.nome
         }
-      } else {
-        const adminEmail = process.env.ADMIN_EMAIL
-        if (adminEmail) {
-          await enviarNotificacaoTerapeuta({
-            emailTerapeuta: adminEmail, nomeTerapeuta: 'Terapeuta',
-            nomeCliente: nome_cliente, data, hora, videoUrl,
-          })
-        }
+      }
+
+      await enviarConfirmacaoCliente({
+        uid: novo.id, nome: nome_cliente, email: email_cliente,
+        data, hora, videoUrl, duracaoMin,
+      })
+
+      const destTerapeuta = terapeutaEmail ?? process.env.ADMIN_EMAIL
+      if (destTerapeuta) {
+        await enviarNotificacaoTerapeuta({
+          uid: novo.id, emailTerapeuta: destTerapeuta, nomeTerapeuta: terapeutaNome,
+          nomeCliente: nome_cliente, data, hora, videoUrl, duracaoMin,
+        })
       }
     } catch (e) {
       console.error('[agendamento] Erro ao enviar emails:', e)
