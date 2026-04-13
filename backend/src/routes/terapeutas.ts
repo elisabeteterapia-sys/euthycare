@@ -2,10 +2,12 @@
 // GET  /terapeutas              — lista terapeutas activas (público)
 // GET  /terapeutas/:id          — perfil da terapeuta (público)
 // GET  /terapeutas/:id/slots    — slots disponíveis ?data=YYYY-MM-DD (público)
+// GET  /terapeutas/cal/:token   — feed iCal da terapeuta (token secreto, sem auth)
 // POST /terapeutas/login        — login da terapeuta (retorna JWT)
 // GET  /terapeutas/me           — perfil próprio (JWT)
 // GET  /terapeutas/me/agenda    — agenda própria ?data=YYYY-MM-DD (JWT)
 // GET  /terapeutas/me/repasses  — repasses/comissões próprios (JWT)
+// POST /terapeutas/me/renovar-calendario — novo token de calendário (JWT)
 // POST /terapeutas/admin        — criar terapeuta (admin)
 // PATCH /terapeutas/admin/:id   — editar terapeuta (admin)
 // DELETE /terapeutas/admin/:id  — eliminar terapeuta (admin)
@@ -60,7 +62,124 @@ function gerarSlots(horaInicio: string, horaFim: string, intervaloMin = 60): str
   return slots
 }
 
+// ── iCal helpers ──────────────────────────────────────────────
+function toIcsDt(data: string, hora: string) {
+  return data.replace(/-/g, '') + 'T' + hora.slice(0, 5).replace(':', '') + '00'
+}
+
+function addMinutes(hora: string, min: number) {
+  const [h, m] = hora.split(':').map(Number)
+  const total = h * 60 + m + min
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`
+}
+
+function buildIcal(events: Array<{
+  uid: string; data: string; hora: string; duracaoMin: number
+  nomeCliente: string; videoUrl?: string; status: string
+}>, terapeutaNome: string) {
+  const now = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15)
+  const lines: string[] = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//EuthyCare//PT',
+    'CALSCALE:GREGORIAN',
+    'X-WR-CALNAME:EuthyCare — ' + terapeutaNome,
+    'X-WR-TIMEZONE:Europe/Lisbon',
+    'METHOD:PUBLISH',
+  ]
+
+  for (const e of events) {
+    const inicio = toIcsDt(e.data, e.hora)
+    const fim    = toIcsDt(e.data, addMinutes(e.hora, e.duracaoMin))
+    const desc   = e.videoUrl
+      ? `Videochamada: ${e.videoUrl}\\nCliente: ${e.nomeCliente}`
+      : `Cliente: ${e.nomeCliente}`
+
+    lines.push(
+      'BEGIN:VEVENT',
+      `UID:${e.uid}@euthycare.com`,
+      `DTSTAMP:${now}`,
+      `DTSTART;TZID=Europe/Lisbon:${inicio}`,
+      `DTEND;TZID=Europe/Lisbon:${fim}`,
+      `SUMMARY:Consulta — ${e.nomeCliente}`,
+      `DESCRIPTION:${desc}`,
+      'LOCATION:Online (Videochamada)',
+      ...(e.videoUrl ? [`URL:${e.videoUrl}`] : []),
+      `STATUS:${e.status === 'confirmado' ? 'CONFIRMED' : 'TENTATIVE'}`,
+      'BEGIN:VALARM',
+      'TRIGGER:-PT15M',
+      'ACTION:DISPLAY',
+      'DESCRIPTION:Consulta em 15 minutos',
+      'END:VALARM',
+      'END:VEVENT',
+    )
+  }
+
+  lines.push('END:VCALENDAR')
+  return lines.join('\r\n')
+}
+
 const router = Router()
+
+// ── GET /terapeutas/cal/:token — feed iCal público (token secreto) ──
+router.get('/cal/:token', async (req: Request, res: Response) => {
+  const { token } = req.params
+
+  const { data: terapeuta, error } = await supabaseAdmin
+    .from('terapeutas')
+    .select('id, nome, duracao_min')
+    .eq('calendario_token', token)
+    .single()
+
+  if (error || !terapeuta) {
+    res.status(404).send('Calendário não encontrado')
+    return
+  }
+
+  // Agendamentos não cancelados dos próximos 6 meses
+  const hoje = new Date().toISOString().slice(0, 10)
+  const limite = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+
+  const { data: agendamentos } = await supabaseAdmin
+    .from('agendamentos')
+    .select('id, data, hora, status, nome_cliente, video_url')
+    .eq('terapeuta_id', terapeuta.id)
+    .not('status', 'eq', 'cancelado')
+    .gte('data', hoje)
+    .lte('data', limite)
+    .order('data')
+    .order('hora')
+
+  const events = (agendamentos ?? []).map(a => ({
+    uid: a.id,
+    data: a.data,
+    hora: a.hora,
+    duracaoMin: terapeuta.duracao_min ?? 50,
+    nomeCliente: a.nome_cliente,
+    videoUrl: a.video_url ?? undefined,
+    status: a.status,
+  }))
+
+  const ical = buildIcal(events, terapeuta.nome)
+
+  res.setHeader('Content-Type', 'text/calendar; charset=utf-8')
+  res.setHeader('Content-Disposition', 'inline; filename="euthycare.ics"')
+  res.setHeader('Cache-Control', 'no-cache, no-store')
+  res.send(ical)
+})
+
+// ── POST /terapeutas/me/renovar-calendario — novo token ───────
+router.post('/me/renovar-calendario', requireTerapeuta, async (req: Request, res: Response) => {
+  const { data, error } = await supabaseAdmin
+    .from('terapeutas')
+    .update({ calendario_token: crypto.randomUUID() })
+    .eq('id', req.terapeutaId!)
+    .select('calendario_token')
+    .single()
+
+  if (error || !data) { res.status(500).json({ error: 'Erro ao renovar token' }); return }
+  res.json({ calendario_token: data.calendario_token })
+})
 
 // ── POST /terapeutas/login ────────────────────────────────────
 router.post('/login', async (req: Request, res: Response) => {
@@ -98,7 +217,7 @@ router.post('/login', async (req: Request, res: Response) => {
 router.get('/me', requireTerapeuta, async (req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin
     .from('terapeutas')
-    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, email')
+    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, email, calendario_token')
     .eq('id', req.terapeutaId!)
     .single()
 

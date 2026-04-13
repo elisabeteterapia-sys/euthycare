@@ -78,6 +78,9 @@ export default function TerapeutaLayout({ children }: { children: React.ReactNod
             <a href="/terapeuta/repasses" className="text-sm font-medium text-sage-600 hover:text-sage-800 transition-colors">
               Repasses
             </a>
+            <a href="/terapeuta/calendario" className="text-sm font-medium text-sage-600 hover:text-sage-800 transition-colors">
+              Calendário
+            </a>
             <button
               onClick={logout}
               className="text-sm text-red-500 hover:text-red-700 transition-colors"
