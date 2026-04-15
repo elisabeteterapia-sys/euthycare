@@ -147,6 +147,25 @@ router.post('/login', async (req: Request, res: Response) => {
   res.json({ token, terapeuta: { id: t.id, nome: t.nome, email: t.email } })
 })
 
+// ── PATCH /terapeutas/me ─────────────────────────────────────
+router.patch('/me', requireTerapeuta, async (req: Request, res: Response) => {
+  const b = req.body
+  const fields: string[] = []
+  const vals: unknown[] = []
+  let i = 1
+  const allowed = ['nome', 'titulo', 'bio', 'foto_url', 'especialidades']
+  for (const k of allowed) {
+    if (k in b) { fields.push(`${k} = $${i++}`); vals.push(b[k]) }
+  }
+  if (fields.length === 0) { res.status(400).json({ error: 'Nenhum campo para actualizar' }); return }
+  vals.push(req.terapeutaId!)
+  const { rows, error } = await pgQuery(
+    `UPDATE terapeutas SET ${fields.join(', ')} WHERE id = $${i} RETURNING id, nome, titulo, bio, foto_url, especialidades, email`, vals
+  )
+  if (error) { res.status(500).json({ error }); return }
+  res.json({ terapeuta: rows[0] })
+})
+
 // ── GET /terapeutas/me ────────────────────────────────────────
 router.get('/me', requireTerapeuta, async (req: Request, res: Response) => {
   const { rows, error } = await pgQuery(

@@ -41,3 +41,4 @@ next-env.d.ts
 
 # ─── Backend env (nunca commitar) ────────────────────────────
 backend/.env
+.claude/settings.local.json
