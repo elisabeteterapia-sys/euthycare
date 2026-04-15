@@ -106,29 +106,40 @@ router.post('/checkout', async (req: Request, res: Response) => {
     }
   }
 
-  const session = await stripe.checkout.sessions.create({
-    mode: 'payment',
-    customer_email: email,
-    line_items: [{
-      price_data: {
-        currency: pacote.moeda.toLowerCase(),
-        product_data: {
-          name:        `${pacote.nome} — ${pacote.numero_sessoes} sessões`,
-          description: pacote.descricao ?? undefined,
-          metadata:    { pacote_id: pacote.id },
+  if (!process.env.STRIPE_SECRET_KEY) {
+    res.status(500).json({ error: 'Pagamento não configurado. Contacte o suporte.' }); return
+  }
+
+  let session: Stripe.Checkout.Session
+  try {
+    session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      customer_email: email,
+      line_items: [{
+        price_data: {
+          currency: pacote.moeda.toLowerCase(),
+          product_data: {
+            name:        `${pacote.nome} — ${pacote.numero_sessoes} sessões`,
+            description: pacote.descricao ?? undefined,
+            metadata:    { pacote_id: pacote.id },
+          },
+          unit_amount: Math.round(pacote.preco * 100),
         },
-        unit_amount: Math.round(pacote.preco * 100),
+        quantity: 1,
+      }],
+      metadata: {
+        pacote_id:    pacote.id,
+        cliente_email: email,
+        cliente_nome:  nome ?? '',
       },
-      quantity: 1,
-    }],
-    metadata: {
-      pacote_id:    pacote.id,
-      cliente_email: email,
-      cliente_nome:  nome ?? '',
-    },
-    success_url: success_url + '?session_id={CHECKOUT_SESSION_ID}',
-    cancel_url:  cancel_url ?? success_url,
-  })
+      success_url: success_url + '?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url:  cancel_url ?? success_url,
+    })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Erro ao criar sessão de pagamento'
+    console.error('[pacotes/checkout] Stripe error:', msg)
+    res.status(500).json({ error: msg }); return
+  }
 
   res.json({ url: session.url })
 })
