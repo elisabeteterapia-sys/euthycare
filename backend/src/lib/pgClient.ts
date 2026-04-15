@@ -23,7 +23,7 @@ async function createPool(): Promise<Pool> {
     })
   } catch (e) {
     console.warn('[db] IPv4 resolve failed, retrying with family:4:', (e as Error).message)
-    return new Pool({ connectionString: connStr, ssl: { rejectUnauthorized: false }, family: 4 })
+    return new Pool({ connectionString: connStr, ssl: { rejectUnauthorized: false }, family: 4 } as ConstructorParameters<typeof Pool>[0])
   }
 }
 
