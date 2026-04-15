@@ -54,7 +54,7 @@ router.post('/', async (req: Request, res: Response) => {
       return
     }
     console.error('[/waitlist]', error)
-    res.status(500).json({ error: 'Erro ao guardar. Tente novamente.' })
+    res.status(500).json({ error: error.message ?? 'Erro ao guardar. Tente novamente.' })
     return
   }
 
