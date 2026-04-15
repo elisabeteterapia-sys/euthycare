@@ -5,6 +5,7 @@
 
 import { Router, Request, Response } from 'express'
 import { supabaseAdmin } from '../lib/supabase'
+import { restInsert } from '../lib/supabaseRest'
 
 const router = Router()
 
@@ -37,23 +38,23 @@ router.post('/', async (req: Request, res: Response) => {
 
   const tipoValido = ['terapeuta', 'clinica'].includes(tipo_usuario) ? tipo_usuario : 'terapeuta'
 
-  const { data, error } = await supabaseAdmin.rpc('inserir_waitlist', {
-    p_nome:        nome.trim(),
-    p_email:       email.trim().toLowerCase(),
-    p_tipo_usuario: tipoValido,
-    p_source:      source.slice(0, 64),
-    p_metadata:    metadata,
+  const { data, error } = await restInsert('waitlist', {
+    nome:        nome.trim(),
+    email:       email.trim().toLowerCase(),
+    tipo_usuario: tipoValido,
+    source:      source.slice(0, 64),
+    metadata,
   })
 
   if (error) {
+    // Duplicate email (unique constraint)
+    const msg = typeof error === 'object' && (error as Record<string,unknown>).message as string
+    if (msg?.includes('duplicate') || msg?.includes('unique') || (error as Record<string,unknown>).code === '23505') {
+      res.json({ success: true, message: 'Já está na lista!' })
+      return
+    }
     console.error('[/waitlist]', error)
-    res.status(500).json({ error: error.message ?? 'Erro ao guardar. Tente novamente.' })
-    return
-  }
-
-  // A função retorna {ja_existe: true} em caso de email duplicado
-  if ((data as Record<string, unknown>)?.ja_existe) {
-    res.json({ success: true, message: 'Já está na lista!' })
+    res.status(500).json({ error: msg ?? 'Erro ao guardar. Tente novamente.' })
     return
   }
 

@@ -3,6 +3,7 @@ import { Router, Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { supabaseAdmin } from '../lib/supabase'
+import { restInsert, restUpdate, restDelete } from '../lib/supabaseRest'
 
 const JWT_SECRET = process.env.TERAPEUTA_JWT_SECRET ?? 'euthycare-terapeuta-secret-change-me'
 
@@ -245,14 +246,13 @@ router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
   if (!nome) { res.status(400).json({ error: 'nome é obrigatório.' }); return }
   const emailVal = email ? email.toLowerCase().trim() : null
   const senhaHash = senha ? await bcrypt.hash(senha, 10) : null
-  const { data, error } = await supabaseAdmin.rpc('inserir_terapeuta', {
-    p_nome: nome, p_titulo: titulo ?? '', p_bio: bio ?? '',
-    p_foto_url: foto_url ?? null, p_especialidades: especialidades ?? '',
-    p_preco_cents: preco_cents ?? 2500, p_duracao_min: duracao_min ?? 50,
-    p_comissao_percentagem: comissao_percentagem ?? 20,
-    p_email: emailVal, p_senha_hash: senhaHash,
+  const { data, error } = await restInsert('terapeutas', {
+    nome, titulo: titulo ?? '', bio: bio ?? '', foto_url: foto_url ?? null,
+    especialidades: especialidades ?? '', preco_cents: preco_cents ?? 2500,
+    duracao_min: duracao_min ?? 50, comissao_percentagem: comissao_percentagem ?? 20,
+    ativo: true, email: emailVal, senha_hash: senhaHash,
   })
-  if (error) { res.status(500).json({ error: error.message }); return }
+  if (error) { res.status(500).json({ error: error.message ?? JSON.stringify(error) }); return }
   res.status(201).json({ terapeuta: data })
 })
 
@@ -265,15 +265,15 @@ router.patch('/admin/:id', requireAdmin, async (req: Request, res: Response) => 
   for (const k of allowed) { if (k in b) update[k] = b[k] }
   if (b.senha) update['senha_hash'] = await bcrypt.hash(b.senha, 10)
   if (Object.keys(update).length === 0) { res.status(400).json({ error: 'Nenhum campo para actualizar' }); return }
-  const { data, error } = await supabaseAdmin.from('terapeutas').update(update).eq('id', id).select().single()
-  if (error) { res.status(500).json({ error: error.message }); return }
+  const { data, error } = await restUpdate('terapeutas', id, update)
+  if (error) { res.status(500).json({ error: (error as Record<string,unknown>).message ?? JSON.stringify(error) }); return }
   res.json({ terapeuta: data })
 })
 
 // ── Admin: eliminar terapeuta ─────────────────────────────────
 router.delete('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
-  const { error } = await supabaseAdmin.from('terapeutas').delete().eq('id', req.params.id)
-  if (error) { res.status(500).json({ error: error.message }); return }
+  const { error } = await restDelete('terapeutas', req.params.id)
+  if (error) { res.status(500).json({ error: (error as Record<string,unknown>).message ?? JSON.stringify(error) }); return }
   res.json({ ok: true })
 })
 
@@ -321,8 +321,8 @@ router.patch('/admin/:id/senha', requireAdmin, async (req: Request, res: Respons
   const { senha } = req.body
   if (!senha || senha.length < 6) { res.status(400).json({ error: 'Senha deve ter no mínimo 6 caracteres' }); return }
   const hash = await bcrypt.hash(senha, 10)
-  const { error } = await supabaseAdmin.from('terapeutas').update({ senha_hash: hash }).eq('id', req.params.id)
-  if (error) { res.status(500).json({ error: error.message }); return }
+  const { error } = await restUpdate('terapeutas', req.params.id, { senha_hash: hash })
+  if (error) { res.status(500).json({ error: (error as Record<string,unknown>).message ?? JSON.stringify(error) }); return }
   res.json({ ok: true })
 })
 
