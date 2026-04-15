@@ -1,30 +1,46 @@
 import { Pool, PoolClient } from 'pg'
 import { resolve4 } from 'dns/promises'
+import { lookup } from 'dns'
 import { URL } from 'url'
+
+async function resolveIPv4(hostname: string): Promise<string> {
+  // Try resolve4 first
+  try {
+    const [ip] = await resolve4(hostname)
+    console.log(`[db] ${hostname} → ${ip} (resolve4)`)
+    return ip
+  } catch { /* continue */ }
+
+  // Try dns.lookup with family 4
+  try {
+    const ip = await new Promise<string>((resolve, reject) =>
+      lookup(hostname, { family: 4 }, (err, addr) => err ? reject(err) : resolve(addr))
+    )
+    console.log(`[db] ${hostname} → ${ip} (lookup family:4)`)
+    return ip
+  } catch { /* continue */ }
+
+  console.warn(`[db] IPv4 resolution failed for ${hostname}, using hostname`)
+  return hostname
+}
 
 async function createPool(): Promise<Pool> {
   const connStr = process.env.DATABASE_URL
   if (!connStr) throw new Error('DATABASE_URL is not set')
 
-  try {
-    const url = new URL(connStr)
-    const hostname = url.hostname
-    // Force IPv4 — Supabase pooler has A records but Railway may resolve AAAA first
-    const [ipv4] = await resolve4(hostname)
-    console.log(`[db] ${hostname} → ${ipv4} (IPv4)`)
-    return new Pool({
-      host: ipv4,
-      port: parseInt(url.port) || 5432,
-      database: url.pathname.replace(/^\//, ''),
-      user: url.username,
-      password: decodeURIComponent(url.password),
-      ssl: { rejectUnauthorized: false, servername: hostname },
-      max: 5,
-    })
-  } catch (e) {
-    console.warn('[db] IPv4 resolve failed, retrying with family:4:', (e as Error).message)
-    return new Pool({ connectionString: connStr, ssl: { rejectUnauthorized: false }, family: 4 } as ConstructorParameters<typeof Pool>[0])
-  }
+  const url = new URL(connStr)
+  const hostname = url.hostname
+  const host = await resolveIPv4(hostname)
+
+  return new Pool({
+    host,
+    port: parseInt(url.port) || 5432,
+    database: url.pathname.replace(/^\//, ''),
+    user: url.username,
+    password: decodeURIComponent(url.password),
+    ssl: { rejectUnauthorized: false, servername: hostname },
+    max: 5,
+  })
 }
 
 const poolPromise = createPool()
