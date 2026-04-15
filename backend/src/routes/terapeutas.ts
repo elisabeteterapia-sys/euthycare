@@ -92,11 +92,10 @@ const router = Router()
 // ── GET /terapeutas/cal/:token ────────────────────────────────
 router.get('/cal/:token', async (req: Request, res: Response) => {
   const { token } = req.params
-  const { rows, error } = await pgQuery(
-    `SELECT id, nome, duracao_min FROM terapeutas WHERE calendario_token = $1`, [token]
-  )
-  if (error || !rows.length) { res.status(404).send('Calendário não encontrado'); return }
-  const terapeuta = rows[0]
+  const { data, error } = await supabaseAdmin.from('terapeutas')
+    .select('id, nome, duracao_min').eq('calendario_token', token).single()
+  if (error || !data) { res.status(404).send('Calendário não encontrado'); return }
+  const terapeuta = data
 
   const hoje = new Date().toISOString().slice(0, 10)
   const limite = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
@@ -122,9 +121,8 @@ router.get('/cal/:token', async (req: Request, res: Response) => {
 // ── POST /terapeutas/me/renovar-calendario ────────────────────
 router.post('/me/renovar-calendario', requireTerapeuta, async (req: Request, res: Response) => {
   const newToken = crypto.randomUUID()
-  const { error } = await pgQuery(
-    `UPDATE terapeutas SET calendario_token = $1 WHERE id = $2`, [newToken, req.terapeutaId!]
-  )
+  const { error } = await supabaseAdmin.from('terapeutas')
+    .update({ calendario_token: newToken }).eq('id', req.terapeutaId!)
   if (error) { res.status(500).json({ error: 'Erro ao renovar token' }); return }
   res.json({ calendario_token: newToken })
 })
@@ -133,12 +131,10 @@ router.post('/me/renovar-calendario', requireTerapeuta, async (req: Request, res
 router.post('/login', async (req: Request, res: Response) => {
   const { email, senha } = req.body
   if (!email || !senha) { res.status(400).json({ error: 'email e senha obrigatórios' }); return }
-  const { rows, error } = await pgQuery(
-    `SELECT id, nome, email, senha_hash, ativo FROM terapeutas WHERE email = $1`,
-    [email.toLowerCase().trim()]
-  )
-  if (error || !rows.length) { res.status(401).json({ error: 'Credenciais inválidas' }); return }
-  const t = rows[0]
+  const { data, error } = await supabaseAdmin.from('terapeutas')
+    .select('id, nome, email, senha_hash, ativo').eq('email', email.toLowerCase().trim()).single()
+  if (error || !data) { res.status(401).json({ error: 'Credenciais inválidas' }); return }
+  const t = data
   if (!t.ativo) { res.status(403).json({ error: 'Conta inativa. Contacte a administração.' }); return }
   if (!t.senha_hash) { res.status(401).json({ error: 'Senha não definida. Contacte a administração.' }); return }
   const ok = await bcrypt.compare(senha, t.senha_hash)
@@ -150,31 +146,23 @@ router.post('/login', async (req: Request, res: Response) => {
 // ── PATCH /terapeutas/me ─────────────────────────────────────
 router.patch('/me', requireTerapeuta, async (req: Request, res: Response) => {
   const b = req.body
-  const fields: string[] = []
-  const vals: unknown[] = []
-  let i = 1
   const allowed = ['nome', 'titulo', 'bio', 'foto_url', 'especialidades']
-  for (const k of allowed) {
-    if (k in b) { fields.push(`${k} = $${i++}`); vals.push(b[k]) }
-  }
-  if (fields.length === 0) { res.status(400).json({ error: 'Nenhum campo para actualizar' }); return }
-  vals.push(req.terapeutaId!)
-  const { rows, error } = await pgQuery(
-    `UPDATE terapeutas SET ${fields.join(', ')} WHERE id = $${i} RETURNING id, nome, titulo, bio, foto_url, especialidades, email`, vals
-  )
-  if (error) { res.status(500).json({ error }); return }
-  res.json({ terapeuta: rows[0] })
+  const update: Record<string, unknown> = {}
+  for (const k of allowed) { if (k in b) update[k] = b[k] }
+  if (Object.keys(update).length === 0) { res.status(400).json({ error: 'Nenhum campo para actualizar' }); return }
+  const { data, error } = await supabaseAdmin.from('terapeutas')
+    .update(update).eq('id', req.terapeutaId!).select('id, nome, titulo, bio, foto_url, especialidades, email').single()
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ terapeuta: data })
 })
 
 // ── GET /terapeutas/me ────────────────────────────────────────
 router.get('/me', requireTerapeuta, async (req: Request, res: Response) => {
-  const { rows, error } = await pgQuery(
-    `SELECT id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min,
-     comissao_percentagem, email, calendario_token FROM terapeutas WHERE id = $1`,
-    [req.terapeutaId!]
-  )
-  if (error || !rows.length) { res.status(404).json({ error: 'Terapeuta não encontrada' }); return }
-  res.json({ terapeuta: rows[0] })
+  const { data, error } = await supabaseAdmin.from('terapeutas')
+    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, email, calendario_token')
+    .eq('id', req.terapeutaId!).single()
+  if (error || !data) { res.status(404).json({ error: 'Terapeuta não encontrada' }); return }
+  res.json({ terapeuta: data })
 })
 
 // ── GET /terapeutas/me/agenda ─────────────────────────────────
@@ -209,22 +197,20 @@ router.get('/me/repasses', requireTerapeuta, async (req: Request, res: Response)
 
 // ── GET /terapeutas ───────────────────────────────────────────
 router.get('/', async (_req: Request, res: Response) => {
-  const { rows, error } = await pgQuery(
-    `SELECT id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min
-     FROM terapeutas WHERE ativo = true ORDER BY nome`
-  )
-  if (error) { res.status(500).json({ error }); return }
-  res.json({ terapeutas: rows })
+  const { data, error } = await supabaseAdmin.from('terapeutas')
+    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, ativo, email')
+    .eq('ativo', true).order('nome')
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ terapeutas: data ?? [] })
 })
 
 // ── GET /terapeutas/:id ───────────────────────────────────────
 router.get('/:id', async (req: Request, res: Response) => {
-  const { rows, error } = await pgQuery(
-    `SELECT id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min
-     FROM terapeutas WHERE id = $1 AND ativo = true`, [req.params.id]
-  )
-  if (error || !rows.length) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
-  res.json({ terapeuta: rows[0] })
+  const { data, error } = await supabaseAdmin.from('terapeutas')
+    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min')
+    .eq('id', req.params.id).eq('ativo', true).single()
+  if (error || !data) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
+  res.json({ terapeuta: data })
 })
 
 // ── GET /terapeutas/:id/slots ─────────────────────────────────
@@ -260,41 +246,35 @@ router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
   if (!nome) { res.status(400).json({ error: 'nome é obrigatório.' }); return }
   const emailVal = email ? email.toLowerCase().trim() : null
   const senhaHash = senha ? await bcrypt.hash(senha, 10) : null
-  const { rows, error } = await pgQuery(
-    `INSERT INTO terapeutas (nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, ativo, email, senha_hash)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,true,$9,$10) RETURNING *`,
-    [nome, titulo ?? '', bio ?? '', foto_url ?? null, especialidades ?? '',
-     preco_cents ?? 2500, duracao_min ?? 50, comissao_percentagem ?? 20, emailVal, senhaHash]
-  )
-  if (error) { res.status(500).json({ error }); return }
-  res.status(201).json({ terapeuta: rows[0] })
+  const { data, error } = await supabaseAdmin.from('terapeutas').insert({
+    nome, titulo: titulo ?? '', bio: bio ?? '', foto_url: foto_url ?? null,
+    especialidades: especialidades ?? '', preco_cents: preco_cents ?? 2500,
+    duracao_min: duracao_min ?? 50, comissao_percentagem: comissao_percentagem ?? 20,
+    ativo: true, email: emailVal, senha_hash: senhaHash,
+  }).select().single()
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.status(201).json({ terapeuta: data })
 })
 
 // ── Admin: editar terapeuta ───────────────────────────────────
 router.patch('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
   const { id } = req.params
   const b = req.body
-  const fields: string[] = []
-  const vals: unknown[] = []
-  let i = 1
   const allowed = ['nome','titulo','bio','foto_url','especialidades','preco_cents','duracao_min','comissao_percentagem','ativo','email']
-  for (const k of allowed) {
-    if (k in b) { fields.push(`${k} = $${i++}`); vals.push(b[k]) }
-  }
-  if (b.senha) { fields.push(`senha_hash = $${i++}`); vals.push(await bcrypt.hash(b.senha, 10)) }
-  if (fields.length === 0) { res.status(400).json({ error: 'Nenhum campo para actualizar' }); return }
-  vals.push(id)
-  const { rows, error } = await pgQuery(
-    `UPDATE terapeutas SET ${fields.join(', ')} WHERE id = $${i} RETURNING *`, vals
-  )
-  if (error) { res.status(500).json({ error }); return }
-  res.json({ terapeuta: rows[0] })
+  const update: Record<string, unknown> = {}
+  for (const k of allowed) { if (k in b) update[k] = b[k] }
+  if (b.senha) update.senha_hash = await bcrypt.hash(b.senha, 10)
+  if (Object.keys(update).length === 0) { res.status(400).json({ error: 'Nenhum campo para actualizar' }); return }
+  const { data, error } = await supabaseAdmin.from('terapeutas')
+    .update(update).eq('id', id).select().single()
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ terapeuta: data })
 })
 
 // ── Admin: eliminar terapeuta ─────────────────────────────────
 router.delete('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
-  const { error } = await pgQuery(`DELETE FROM terapeutas WHERE id = $1`, [req.params.id])
-  if (error) { res.status(500).json({ error }); return }
+  const { error } = await supabaseAdmin.from('terapeutas').delete().eq('id', req.params.id)
+  if (error) { res.status(500).json({ error: error.message }); return }
   res.json({ ok: true })
 })
 
@@ -342,8 +322,8 @@ router.patch('/admin/:id/senha', requireAdmin, async (req: Request, res: Respons
   const { senha } = req.body
   if (!senha || senha.length < 6) { res.status(400).json({ error: 'Senha deve ter no mínimo 6 caracteres' }); return }
   const hash = await bcrypt.hash(senha, 10)
-  const { error } = await pgQuery(`UPDATE terapeutas SET senha_hash = $1 WHERE id = $2`, [hash, req.params.id])
-  if (error) { res.status(500).json({ error }); return }
+  const { error } = await supabaseAdmin.from('terapeutas').update({ senha_hash: hash }).eq('id', req.params.id)
+  if (error) { res.status(500).json({ error: error.message }); return }
   res.json({ ok: true })
 })
 
