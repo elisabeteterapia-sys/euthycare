@@ -245,12 +245,13 @@ router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
   if (!nome) { res.status(400).json({ error: 'nome é obrigatório.' }); return }
   const emailVal = email ? email.toLowerCase().trim() : null
   const senhaHash = senha ? await bcrypt.hash(senha, 10) : null
-  const { data, error } = await supabaseAdmin.from('terapeutas').insert({
-    nome, titulo: titulo ?? '', bio: bio ?? '', foto_url: foto_url ?? null,
-    especialidades: especialidades ?? '', preco_cents: preco_cents ?? 2500,
-    duracao_min: duracao_min ?? 50, comissao_percentagem: comissao_percentagem ?? 20,
-    ativo: true, email: emailVal, senha_hash: senhaHash,
-  }).select().single()
+  const { data, error } = await supabaseAdmin.rpc('inserir_terapeuta', {
+    p_nome: nome, p_titulo: titulo ?? '', p_bio: bio ?? '',
+    p_foto_url: foto_url ?? null, p_especialidades: especialidades ?? '',
+    p_preco_cents: preco_cents ?? 2500, p_duracao_min: duracao_min ?? 50,
+    p_comissao_percentagem: comissao_percentagem ?? 20,
+    p_email: emailVal, p_senha_hash: senhaHash,
+  })
   if (error) { res.status(500).json({ error: error.message }); return }
   res.status(201).json({ terapeuta: data })
 })
