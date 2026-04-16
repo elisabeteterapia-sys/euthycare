@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useTerapeuta } from '../context'
-import { Loader2, Check } from 'lucide-react'
+import { Loader2, Check, Upload, Camera } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
@@ -30,6 +30,7 @@ export default function TerapeutaPerfil() {
   const [form, setForm] = useState({
     nome: '', titulo: '', bio: '', foto_url: '', especialidades: '',
   })
+  const [uploadingFoto, setUploadingFoto] = useState(false)
 
   useEffect(() => {
     const token = sessionStorage.getItem('terapeuta_token')
@@ -50,6 +51,24 @@ export default function TerapeutaPerfil() {
       })
       .finally(() => setLoading(false))
   }, [])
+
+  async function uploadFoto(file: File) {
+    setUploadingFoto(true)
+    try {
+      const token = sessionStorage.getItem('terapeuta_token')
+      const fd = new FormData()
+      fd.append('foto', file)
+      const r = await fetch(`${API}/terapeutas/me/upload-foto`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd,
+      })
+      const d = await r.json()
+      if (!r.ok) { setErro(d.error ?? 'Erro ao fazer upload'); return }
+      setForm(f => ({ ...f, foto_url: d.url }))
+    } catch { setErro('Erro de ligação') }
+    finally { setUploadingFoto(false) }
+  }
 
   async function guardar() {
     setErro('')
@@ -81,18 +100,28 @@ export default function TerapeutaPerfil() {
       <h1 className="text-2xl font-bold text-sage-800 mb-6">O meu perfil</h1>
 
       <div className="bg-white rounded-2xl border border-sage-100 shadow-soft overflow-hidden">
-        {/* Avatar */}
+        {/* Avatar com upload */}
         <div className="bg-sage-50 px-6 py-8 flex items-center gap-5 border-b border-sage-100">
-          <div className="h-20 w-20 rounded-full bg-sage-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
+          <label className="relative h-20 w-20 rounded-full bg-sage-200 flex items-center justify-center flex-shrink-0 overflow-hidden cursor-pointer group">
             {form.foto_url
               ? <img src={form.foto_url} alt={form.nome} className="h-20 w-20 object-cover" />
               : <span className="text-3xl font-bold text-sage-500">{form.nome.charAt(0)}</span>
             }
-          </div>
+            {/* Overlay ao hover */}
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+              {uploadingFoto
+                ? <Loader2 className="h-6 w-6 text-white animate-spin" />
+                : <Camera className="h-6 w-6 text-white" />
+              }
+            </div>
+            <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden"
+              onChange={e => { const f = e.target.files?.[0]; if (f) uploadFoto(f) }} />
+          </label>
           <div>
             <p className="font-bold text-sage-800 text-lg">{form.nome || '—'}</p>
             <p className="text-sage-500 text-sm">{form.titulo || '—'}</p>
             <p className="text-sage-400 text-xs mt-1">{perfil?.email}</p>
+            <p className="text-sage-300 text-xs mt-0.5">Clique na foto para alterar</p>
           </div>
         </div>
 
@@ -109,10 +138,6 @@ export default function TerapeutaPerfil() {
           <Field label="Biografia" value={form.bio}
             onChange={v => setForm(f => ({ ...f, bio: v }))}
             placeholder="Apresentação para os clientes..." textarea />
-          <Field label="URL da foto (opcional)" value={form.foto_url}
-            onChange={v => setForm(f => ({ ...f, foto_url: v }))}
-            placeholder="https://..." />
-
           {/* Info só leitura */}
           {perfil && (
             <div className="mt-2 pt-4 border-t border-sage-100 grid grid-cols-3 gap-4 text-center">

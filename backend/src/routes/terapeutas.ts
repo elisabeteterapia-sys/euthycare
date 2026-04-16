@@ -146,6 +146,25 @@ router.post('/login', async (req: Request, res: Response) => {
   res.json({ token, terapeuta: { id: t.id, nome: t.nome, email: t.email } })
 })
 
+// ── POST /terapeutas/me/upload-foto ──────────────────────────
+router.post('/me/upload-foto', requireTerapeuta, upload.single('foto'), async (req: Request, res: Response) => {
+  if (!req.file) { res.status(400).json({ error: 'Nenhum ficheiro enviado' }); return }
+  const allowed = ['image/png', 'image/jpeg', 'image/webp']
+  if (!allowed.includes(req.file.mimetype)) {
+    res.status(400).json({ error: 'Formato inválido. Use PNG, JPG ou WebP.' }); return
+  }
+  const ext  = req.file.mimetype === 'image/png' ? 'png' : req.file.mimetype === 'image/webp' ? 'webp' : 'jpg'
+  const path = `terapeutas/${req.terapeutaId}-${Date.now()}.${ext}`
+  const { error } = await supabaseAdmin.storage.from('uploads').upload(path, req.file.buffer, {
+    contentType: req.file.mimetype, upsert: true,
+  })
+  if (error) { res.status(500).json({ error: error.message }); return }
+  const { data } = supabaseAdmin.storage.from('uploads').getPublicUrl(path)
+  // Actualizar foto_url no perfil automaticamente
+  await supabaseAdmin.from('terapeutas').update({ foto_url: data.publicUrl }).eq('id', req.terapeutaId!)
+  res.status(201).json({ url: data.publicUrl })
+})
+
 // ── PATCH /terapeutas/me ─────────────────────────────────────
 router.patch('/me', requireTerapeuta, async (req: Request, res: Response) => {
   const b = req.body
