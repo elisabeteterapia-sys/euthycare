@@ -119,6 +119,10 @@ router.post('/checkout', async (req: Request, res: Response) => {
     ? `${siteBase}/agendamento`
     : (cancel_url ?? success_url.split('?')[0])
 
+  console.log('[pacotes/checkout] siteBase:', JSON.stringify(siteBase))
+  console.log('[pacotes/checkout] safeSuccess:', JSON.stringify(safeSuccess))
+  console.log('[pacotes/checkout] safeCancel:', JSON.stringify(safeCancel))
+
   let session: Stripe.Checkout.Session
   try {
     session = await stripe.checkout.sessions.create({
