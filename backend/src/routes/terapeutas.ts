@@ -149,20 +149,11 @@ router.post('/login', async (req: Request, res: Response) => {
 // ── POST /terapeutas/me/upload-foto ──────────────────────────
 router.post('/me/upload-foto', requireTerapeuta, upload.single('foto'), async (req: Request, res: Response) => {
   if (!req.file) { res.status(400).json({ error: 'Nenhum ficheiro enviado' }); return }
-  const allowed = ['image/png', 'image/jpeg', 'image/webp']
-  if (!allowed.includes(req.file.mimetype)) {
-    res.status(400).json({ error: 'Formato inválido. Use PNG, JPG ou WebP.' }); return
-  }
-  const ext  = req.file.mimetype === 'image/png' ? 'png' : req.file.mimetype === 'image/webp' ? 'webp' : 'jpg'
-  const path = `terapeutas/${req.terapeutaId}-${Date.now()}.${ext}`
-  const { error } = await supabaseAdmin.storage.from('uploads').upload(path, req.file.buffer, {
-    contentType: req.file.mimetype, upsert: true,
-  })
-  if (error) { res.status(500).json({ error: error.message }); return }
-  const { data } = supabaseAdmin.storage.from('uploads').getPublicUrl(path)
-  // Actualizar foto_url no perfil automaticamente
-  await supabaseAdmin.from('terapeutas').update({ foto_url: data.publicUrl }).eq('id', req.terapeutaId!)
-  res.status(201).json({ url: data.publicUrl })
+  const result = await uploadParaStorage(req.file, `terapeutas/${req.terapeutaId}`)
+  if ('error' in result) { res.status(400).json({ error: result.error }); return }
+  // Usar restUpdate para garantir bypass de RLS
+  await restUpdate('terapeutas', req.terapeutaId!, { foto_url: result.url })
+  res.status(201).json({ url: result.url })
 })
 
 // ── PATCH /terapeutas/me ─────────────────────────────────────
@@ -279,21 +270,26 @@ router.get('/:id/slots', async (req: Request, res: Response) => {
   res.json({ data: dataParam, slots: [...new Set(todosSlots)].sort().filter(s => !ocupados.has(s) && !bloqueadosSlots.has(s)) })
 })
 
+// ── Função auxiliar: upload para storage ─────────────────────
+async function uploadParaStorage(file: Express.Multer.File, prefixo: string): Promise<{ url: string } | { error: string }> {
+  const allowed = ['image/png', 'image/jpeg', 'image/webp']
+  if (!allowed.includes(file.mimetype)) return { error: 'Formato inválido. Use PNG, JPG ou WebP.' }
+  const ext  = file.mimetype === 'image/png' ? 'png' : file.mimetype === 'image/webp' ? 'webp' : 'jpg'
+  const path = `${prefixo}/${Date.now()}.${ext}`
+  const { error } = await supabaseAdmin.storage.from('uploads').upload(path, file.buffer, {
+    contentType: file.mimetype, upsert: true,
+  })
+  if (error) return { error: error.message }
+  const { data } = supabaseAdmin.storage.from('uploads').getPublicUrl(path)
+  return { url: data.publicUrl }
+}
+
 // ── Admin: upload de foto ─────────────────────────────────────
 router.post('/admin/upload-foto', requireAdmin, upload.single('foto'), async (req: Request, res: Response) => {
   if (!req.file) { res.status(400).json({ error: 'Nenhum ficheiro enviado' }); return }
-  const allowed = ['image/png', 'image/jpeg', 'image/webp']
-  if (!allowed.includes(req.file.mimetype)) {
-    res.status(400).json({ error: 'Formato inválido. Use PNG, JPG ou WebP.' }); return
-  }
-  const ext  = req.file.mimetype === 'image/png' ? 'png' : req.file.mimetype === 'image/webp' ? 'webp' : 'jpg'
-  const path = `terapeutas/${Date.now()}.${ext}`
-  const { error } = await supabaseAdmin.storage.from('uploads').upload(path, req.file.buffer, {
-    contentType: req.file.mimetype, upsert: false,
-  })
-  if (error) { res.status(500).json({ error: error.message }); return }
-  const { data } = supabaseAdmin.storage.from('uploads').getPublicUrl(path)
-  res.status(201).json({ url: data.publicUrl })
+  const result = await uploadParaStorage(req.file, 'terapeutas')
+  if ('error' in result) { res.status(400).json({ error: result.error }); return }
+  res.status(201).json({ url: result.url })
 })
 
 // ── Admin: criar terapeuta ────────────────────────────────────
