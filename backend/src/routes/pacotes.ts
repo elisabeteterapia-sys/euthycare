@@ -110,18 +110,9 @@ router.post('/checkout', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Pagamento não configurado. Contacte o suporte.' }); return
   }
 
-  // Construir URLs de retorno — usar SITE_URL do backend se disponível
-  const siteBase = (process.env.FRONTEND_URL ?? process.env.SITE_URL ?? '').replace(/\/$/, '')
-  const safeSuccess = siteBase
-    ? `${siteBase}/agendamento?sucesso=1`
-    : success_url.split('?')[0] + '?sucesso=1'
-  const safeCancel  = siteBase
-    ? `${siteBase}/agendamento`
-    : (cancel_url ?? success_url.split('?')[0])
-
-  console.log('[pacotes/checkout] siteBase:', JSON.stringify(siteBase))
-  console.log('[pacotes/checkout] safeSuccess:', JSON.stringify(safeSuccess))
-  console.log('[pacotes/checkout] safeCancel:', JSON.stringify(safeCancel))
+  // URLs fixos de retorno — domínio de produção
+  const safeSuccess = 'https://euthycare.com/agendamento?sucesso=1'
+  const safeCancel  = 'https://euthycare.com/agendamento'
 
   let session: Stripe.Checkout.Session
   try {
