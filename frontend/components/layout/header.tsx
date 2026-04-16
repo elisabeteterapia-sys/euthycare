@@ -59,11 +59,11 @@ export function Header() {
           <Link href="/login">
             <Button variant="ghost" size="sm">Entrar</Button>
           </Link>
-          <Link href="/agendamento">
-            <Button variant="outline" size="sm">Agendar consulta</Button>
+          <Link href="/cadastro">
+            <Button variant="outline" size="sm">Criar conta</Button>
           </Link>
-          <Link href="/euthy-lancamento#lista">
-            <Button size="sm">Lista de espera</Button>
+          <Link href="/agendamento">
+            <Button size="sm">Agendar consulta</Button>
           </Link>
         </div>
 
@@ -101,10 +101,10 @@ export function Header() {
 
           <div className="flex flex-col gap-2 pt-3 mt-2 border-t border-cream-300">
             <Link href="/agendamento" onClick={() => setOpen(false)}>
-              <Button variant="outline" size="sm" className="w-full">Agendar consulta</Button>
+              <Button size="sm" className="w-full">Agendar consulta</Button>
             </Link>
-            <Link href="/euthy-lancamento#lista" onClick={() => setOpen(false)}>
-              <Button size="sm" className="w-full">Lista de espera</Button>
+            <Link href="/cadastro" onClick={() => setOpen(false)}>
+              <Button variant="outline" size="sm" className="w-full">Criar conta</Button>
             </Link>
             <Link href="/login" onClick={() => setOpen(false)}>
               <Button variant="ghost" size="sm" className="w-full">Entrar na conta</Button>

@@ -38,12 +38,12 @@ export default function CadastroPage() {
 
   return (
     <div className="animate-fade-in">
-      <h1 className="text-3xl font-bold text-gray-900 mb-1">Crie sua conta</h1>
-      <p className="text-gray-400 text-sm mb-8">Comece gratuitamente, sem cartão de crédito.</p>
+      <h1 className="text-3xl font-bold text-gray-900 mb-1">Criar conta</h1>
+      <p className="text-gray-400 text-sm mb-8">Registe-se para agendar as suas consultas.</p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <Input label="Nome completo" type="text" placeholder="Dra. Ana Lima" value={form.name} onChange={set('name')} required />
-        <Input label="E-mail profissional" type="email" placeholder="voce@consultorio.com" value={form.email} onChange={set('email')} required />
+        <Input label="Nome completo" type="text" placeholder="O seu nome" value={form.name} onChange={set('name')} required />
+        <Input label="E-mail" type="email" placeholder="o-seu@email.com" value={form.email} onChange={set('email')} required />
         <Input
           label="Senha"
           type="password"
