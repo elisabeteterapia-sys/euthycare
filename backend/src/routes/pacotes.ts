@@ -132,7 +132,7 @@ router.post('/checkout', async (req: Request, res: Response) => {
         cliente_email: email,
         cliente_nome:  nome ?? '',
       },
-      success_url: success_url + '?session_id={CHECKOUT_SESSION_ID}',
+      success_url: success_url + (success_url.includes('?') ? '&' : '?') + 'session_id={CHECKOUT_SESSION_ID}',
       cancel_url:  cancel_url ?? success_url,
     })
   } catch (err) {
