@@ -18,6 +18,7 @@ import agendamentoRouter from './routes/agendamento'
 import pacotesRouter from './routes/pacotes'
 import conteudoRouter from './routes/conteudo'
 import terapeutasRouter from './routes/terapeutas'
+import blogRouter from './routes/blog'
 
 const app = express()
 const PORT = process.env.PORT ?? 3001
@@ -75,6 +76,7 @@ app.use('/agendamento', agendamentoRouter)
 app.use('/pacotes',     pacotesRouter)
 app.use('/conteudo',    conteudoRouter)
 app.use('/terapeutas', terapeutasRouter)
+app.use('/blog',       blogRouter)
 
 // 404
 app.use((_req, res) => {
