@@ -55,7 +55,7 @@ export default function AdminConteudoPage() {
   async function saveEdit(chave: string) {
     setSaving(true)
     try {
-      await fetch(`${API}/conteudo/${chave}`, {
+      const r = await fetch(`${API}/conteudo/${chave}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -63,11 +63,19 @@ export default function AdminConteudoPage() {
         },
         body: JSON.stringify({ valor: editValue }),
       })
+      const d = await r.json()
+      if (!r.ok) {
+        alert(d.error ?? 'Erro ao guardar. Tente novamente.')
+        setSaving(false)
+        return
+      }
       setDados(prev => ({ ...prev, [chave]: editValue }))
       setSaved(chave)
       setEditingKey(null)
       setTimeout(() => setSaved(null), 2000)
-    } catch { /* ignore */ }
+    } catch {
+      alert('Erro de ligação. Tente novamente.')
+    }
     setSaving(false)
   }
 
