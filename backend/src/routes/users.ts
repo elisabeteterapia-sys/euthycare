@@ -39,4 +39,24 @@ router.patch('/me', requireAuth, async (req: AuthRequest, res: Response) => {
   res.json(data)
 })
 
+// GET /users/admin — listar todos os utilizadores (admin only)
+import { Request } from 'express'
+router.get('/admin', async (req: Request, res: Response) => {
+  if (req.headers['x-admin-secret'] !== process.env.ADMIN_SECRET) {
+    res.status(403).json({ error: 'Acesso restrito.' }); return
+  }
+
+  const limit  = Math.min(parseInt(req.query.limit  as string ?? '100', 10), 500)
+  const offset = parseInt(req.query.offset as string ?? '0', 10)
+
+  const { data, error, count } = await supabaseAdmin
+    .from('profiles')
+    .select('id, email, name, avatar_url, created_at, stripe_subscription_status', { count: 'exact' })
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1)
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ total: count, offset, limit, utilizadores: data })
+})
+
 export default router
