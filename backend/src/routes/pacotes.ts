@@ -74,10 +74,10 @@ router.get('/creditos', async (req: Request, res: Response) => {
 
 // ─── POST /pacotes/checkout — criar sessão Stripe ────────────
 router.post('/checkout', async (req: Request, res: Response) => {
-  const { pacote_id, email, nome, success_url, cancel_url } = req.body
+  const { pacote_id, email, nome, terapeuta_id, terapeuta_slug } = req.body
 
-  if (!pacote_id || !email || !success_url) {
-    res.status(400).json({ error: 'pacote_id, email e success_url são obrigatórios' }); return
+  if (!pacote_id || !email) {
+    res.status(400).json({ error: 'pacote_id e email são obrigatórios' }); return
   }
 
   const { data: pacote, error: errPacote } = await supabaseAdmin
@@ -110,9 +110,12 @@ router.post('/checkout', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Pagamento não configurado. Contacte o suporte.' }); return
   }
 
-  // URLs fixos de retorno — domínio de produção
-  const safeSuccess = 'https://euthycare.com/agendamento?sucesso=1'
-  const safeCancel  = 'https://euthycare.com/agendamento'
+  // URLs de retorno: página da terapeuta ou agendamento geral
+  const base = terapeuta_slug
+    ? `https://euthycare.com/t/${terapeuta_slug}`
+    : 'https://euthycare.com/agendamento'
+  const safeSuccess = `${base}?sucesso=1`
+  const safeCancel  = base
 
   let session: Stripe.Checkout.Session
   try {
@@ -132,9 +135,10 @@ router.post('/checkout', async (req: Request, res: Response) => {
         quantity: 1,
       }],
       metadata: {
-        pacote_id:    pacote.id,
+        pacote_id:     pacote.id,
         cliente_email: email,
         cliente_nome:  nome ?? '',
+        terapeuta_id:  terapeuta_id ?? '',
       },
       success_url: safeSuccess,
       cancel_url:  safeCancel,
@@ -163,7 +167,7 @@ router.post('/webhook', async (req: Request, res: Response) => {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
-    const { pacote_id, cliente_email, cliente_nome } = session.metadata ?? {}
+    const { pacote_id, cliente_email, cliente_nome, terapeuta_id } = session.metadata ?? {}
 
     if (!pacote_id || !cliente_email) {
       res.json({ received: true }); return
@@ -181,8 +185,9 @@ router.post('/webhook', async (req: Request, res: Response) => {
 
       await supabaseAdmin.from('creditos_cliente').insert({
         cliente_email,
-        cliente_nome:     cliente_nome ?? '',
+        cliente_nome:      cliente_nome ?? '',
         pacote_id,
+        terapeuta_id:      terapeuta_id || null,
         sessoes_total:     pacote.numero_sessoes,
         sessoes_restantes: pacote.numero_sessoes,
         validade:          validade.toISOString().slice(0, 10),

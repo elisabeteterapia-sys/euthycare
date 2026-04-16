@@ -195,6 +195,22 @@ router.get('/me/repasses', requireTerapeuta, async (req: Request, res: Response)
   res.json({ agendamentos: data ?? [], total_repasse, por_pagar })
 })
 
+// ── GET /terapeutas/slug/:slug — perfil público por slug ──────
+router.get('/slug/:slug', async (req: Request, res: Response) => {
+  const { slug } = req.params
+  const { data, error } = await supabaseAdmin.from('terapeutas')
+    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem')
+    .eq('slug', slug).eq('ativo', true).single()
+  if (error || !data) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
+
+  // Pacotes específicos desta terapeuta
+  const { data: pacotes } = await supabaseAdmin.from('pacotes')
+    .select('id, tipo, nome, numero_sessoes, duracao_min, preco, moeda, validade_dias, destaque, descricao')
+    .eq('terapeuta_id', data.id).eq('ativo', true).order('preco')
+
+  res.json({ terapeuta: data, pacotes: pacotes ?? [] })
+})
+
 // ── GET /terapeutas ───────────────────────────────────────────
 router.get('/', async (_req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin.from('terapeutas')
@@ -246,11 +262,14 @@ router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
   if (!nome) { res.status(400).json({ error: 'nome é obrigatório.' }); return }
   const emailVal = email ? email.toLowerCase().trim() : null
   const senhaHash = senha ? await bcrypt.hash(senha, 10) : null
+  const { nome: n, ...rest } = req.body
+  const slugVal = rest.slug ? String(rest.slug).toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') : null
   const { data, error } = await restInsert('terapeutas', {
     nome, titulo: titulo ?? '', bio: bio ?? '', foto_url: foto_url ?? null,
     especialidades: especialidades ?? '', preco_cents: preco_cents ?? 2500,
     duracao_min: duracao_min ?? 50, comissao_percentagem: comissao_percentagem ?? 20,
     ativo: true, email: emailVal, senha_hash: senhaHash,
+    slug: slugVal,
   })
   if (error) { res.status(500).json({ error: (error as Record<string,unknown>).message ?? JSON.stringify(error) }); return }
   res.status(201).json({ terapeuta: data })
@@ -260,7 +279,7 @@ router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
 router.patch('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
   const { id } = req.params
   const b = req.body
-  const allowed = ['nome','titulo','bio','foto_url','especialidades','preco_cents','duracao_min','comissao_percentagem','ativo','email']
+  const allowed = ['nome','titulo','bio','foto_url','especialidades','preco_cents','duracao_min','comissao_percentagem','ativo','email','slug']
   const update: Record<string, unknown> = {}
   for (const k of allowed) { if (k in b) update[k] = b[k] }
   if (b.senha) update['senha_hash'] = await bcrypt.hash(b.senha, 10)

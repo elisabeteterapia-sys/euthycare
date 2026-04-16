@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Plus, Pencil, Trash2, EyeOff, Eye, X, Loader2, Check, Euro, KeyRound } from 'lucide-react'
+import { Plus, Pencil, Trash2, EyeOff, Eye, X, Loader2, Check, Euro, KeyRound, Link2 } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 const SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET ?? ''
@@ -22,12 +22,13 @@ interface Terapeuta {
   comissao_percentagem: number
   ativo: boolean
   email?: string
+  slug?: string
 }
 
 const emptyForm = {
   nome: '', titulo: '', bio: '', foto_url: '',
   especialidades: '', preco_cents: 2500, duracao_min: 50, comissao_percentagem: 20,
-  email: '', senha: '',
+  email: '', senha: '', slug: '',
 }
 
 const DIAS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
@@ -82,7 +83,7 @@ export default function AdminTerapeutasPage() {
       foto_url: t.foto_url ?? '', especialidades: t.especialidades,
       preco_cents: t.preco_cents, duracao_min: t.duracao_min,
       comissao_percentagem: t.comissao_percentagem,
-      email: t.email ?? '', senha: '',
+      email: t.email ?? '', senha: '', slug: t.slug ?? '',
     })
     setShowModal(true)
   }
@@ -218,7 +219,14 @@ export default function AdminTerapeutasPage() {
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-gray-900">{t.nome}</p>
               <p className="text-xs text-gray-400">{t.titulo}</p>
-              {t.especialidades && <p className="text-xs text-gray-500 mt-0.5 truncate">{t.especialidades}</p>}
+              {t.slug ? (
+                <a href={`https://euthycare.com/t/${t.slug}`} target="_blank" rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-sage-600 hover:underline mt-0.5">
+                  <Link2 className="h-3 w-3" /> euthycare.com/t/{t.slug}
+                </a>
+              ) : (
+                <p className="text-xs text-orange-400 mt-0.5">Sem link — defina um slug</p>
+              )}
             </div>
 
             {/* Métricas */}
@@ -396,6 +404,20 @@ export default function AdminTerapeutasPage() {
             </div>
             <div className="p-6 space-y-4">
               <F label="Nome completo" value={form.nome} onChange={v => setForm(f => ({ ...f, nome: v }))} placeholder="Ex: Dra. Ana Silva" />
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                  Link público (slug) — ex: <em className="text-sage-600 not-italic">elisabete</em>
+                </label>
+                <div className="flex items-center gap-0">
+                  <span className="h-10 flex items-center px-3 rounded-l-xl border border-r-0 border-cream-400 bg-cream-200 text-xs text-gray-500 select-none">
+                    euthycare.com/t/
+                  </span>
+                  <input type="text" value={form.slug}
+                    onChange={e => setForm(f => ({ ...f, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') }))}
+                    placeholder="nome-da-terapeuta"
+                    className="flex-1 h-10 px-3 rounded-r-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-sage-400" />
+                </div>
+              </div>
               <F label="Título profissional" value={form.titulo} onChange={v => setForm(f => ({ ...f, titulo: v }))} placeholder="Ex: Psicóloga Clínica" />
               <F label="Especialidades" value={form.especialidades} onChange={v => setForm(f => ({ ...f, especialidades: v }))} placeholder="Ex: Ansiedade, Depressão, Burnout" />
               <F label="Biografia" value={form.bio} onChange={v => setForm(f => ({ ...f, bio: v }))} placeholder="Breve descrição" textarea />
