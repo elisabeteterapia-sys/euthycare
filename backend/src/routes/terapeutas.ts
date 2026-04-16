@@ -2,8 +2,11 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import multer from 'multer'
 import { supabaseAdmin } from '../lib/supabase'
 import { restInsert, restUpdate, restDelete } from '../lib/supabaseRest'
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } })
 
 const JWT_SECRET = process.env.TERAPEUTA_JWT_SECRET ?? 'euthycare-terapeuta-secret-change-me'
 
@@ -254,6 +257,23 @@ router.get('/:id/slots', async (req: Request, res: Response) => {
     if (b.hora_inicio && b.hora_fim) gerarSlots(b.hora_inicio, b.hora_fim).forEach(s => bloqueadosSlots.add(s))
   }
   res.json({ data: dataParam, slots: [...new Set(todosSlots)].sort().filter(s => !ocupados.has(s) && !bloqueadosSlots.has(s)) })
+})
+
+// ── Admin: upload de foto ─────────────────────────────────────
+router.post('/admin/upload-foto', requireAdmin, upload.single('foto'), async (req: Request, res: Response) => {
+  if (!req.file) { res.status(400).json({ error: 'Nenhum ficheiro enviado' }); return }
+  const allowed = ['image/png', 'image/jpeg', 'image/webp']
+  if (!allowed.includes(req.file.mimetype)) {
+    res.status(400).json({ error: 'Formato inválido. Use PNG, JPG ou WebP.' }); return
+  }
+  const ext  = req.file.mimetype === 'image/png' ? 'png' : req.file.mimetype === 'image/webp' ? 'webp' : 'jpg'
+  const path = `terapeutas/${Date.now()}.${ext}`
+  const { error } = await supabaseAdmin.storage.from('uploads').upload(path, req.file.buffer, {
+    contentType: req.file.mimetype, upsert: false,
+  })
+  if (error) { res.status(500).json({ error: error.message }); return }
+  const { data } = supabaseAdmin.storage.from('uploads').getPublicUrl(path)
+  res.status(201).json({ url: data.publicUrl })
 })
 
 // ── Admin: criar terapeuta ────────────────────────────────────

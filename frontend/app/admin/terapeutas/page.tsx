@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Plus, Pencil, Trash2, EyeOff, Eye, X, Loader2, Check, Euro, KeyRound, Link2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, EyeOff, Eye, X, Loader2, Check, Euro, KeyRound, Link2, Upload } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 const SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET ?? ''
@@ -57,6 +57,7 @@ export default function AdminTerapeutasPage() {
   const [credSenha, setCredSenha] = useState('')
   const [credSaving, setCredSaving] = useState(false)
   const [credOk, setCredOk] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   async function load() {
     setLoading(true)
@@ -86,6 +87,23 @@ export default function AdminTerapeutasPage() {
       email: t.email ?? '', senha: '', slug: t.slug ?? '',
     })
     setShowModal(true)
+  }
+
+  async function uploadFoto(file: File) {
+    setUploading(true)
+    try {
+      const fd = new FormData()
+      fd.append('foto', file)
+      const r = await fetch(`${API}/terapeutas/admin/upload-foto`, {
+        method: 'POST',
+        headers: { 'x-admin-secret': SECRET },
+        body: fd,
+      })
+      const d = await r.json()
+      if (!r.ok) { alert(d.error ?? 'Erro ao fazer upload'); return }
+      setForm(f => ({ ...f, foto_url: d.url }))
+    } catch { alert('Erro de ligação') }
+    finally { setUploading(false) }
   }
 
   async function guardarCredenciais() {
@@ -421,7 +439,24 @@ export default function AdminTerapeutasPage() {
               <F label="Título profissional" value={form.titulo} onChange={v => setForm(f => ({ ...f, titulo: v }))} placeholder="Ex: Psicóloga Clínica" />
               <F label="Especialidades" value={form.especialidades} onChange={v => setForm(f => ({ ...f, especialidades: v }))} placeholder="Ex: Ansiedade, Depressão, Burnout" />
               <F label="Biografia" value={form.bio} onChange={v => setForm(f => ({ ...f, bio: v }))} placeholder="Breve descrição" textarea />
-              <F label="URL da foto (opcional)" value={form.foto_url} onChange={v => setForm(f => ({ ...f, foto_url: v }))} placeholder="https://..." />
+              {/* Upload de foto */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Foto (PNG, JPG ou WebP · máx 5 MB)</label>
+                <div className="flex items-center gap-3">
+                  {form.foto_url && (
+                    <img src={form.foto_url} alt="preview" className="h-14 w-14 rounded-xl object-cover border border-cream-300 flex-shrink-0" />
+                  )}
+                  <label className={`flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-cream-400 bg-cream-100 text-sm text-gray-500 cursor-pointer hover:border-sage-400 hover:text-sage-600 transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                    {uploading ? 'A enviar…' : 'Escolher ficheiro'}
+                    <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden"
+                      onChange={e => { const f = e.target.files?.[0]; if (f) uploadFoto(f) }} />
+                  </label>
+                  {form.foto_url && (
+                    <button onClick={() => setForm(f => ({ ...f, foto_url: '' }))} className="text-xs text-red-400 hover:text-red-600">Remover</button>
+                  )}
+                </div>
+              </div>
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
