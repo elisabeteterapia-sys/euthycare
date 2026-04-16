@@ -110,6 +110,15 @@ router.post('/checkout', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Pagamento não configurado. Contacte o suporte.' }); return
   }
 
+  // Construir URLs de retorno — usar SITE_URL do backend se disponível
+  const siteBase = (process.env.SITE_URL ?? '').replace(/\/$/, '')
+  const safeSuccess = siteBase
+    ? `${siteBase}/agendamento?sucesso=1`
+    : success_url.split('?')[0] + '?sucesso=1'
+  const safeCancel  = siteBase
+    ? `${siteBase}/agendamento`
+    : (cancel_url ?? success_url.split('?')[0])
+
   let session: Stripe.Checkout.Session
   try {
     session = await stripe.checkout.sessions.create({
@@ -132,8 +141,8 @@ router.post('/checkout', async (req: Request, res: Response) => {
         cliente_email: email,
         cliente_nome:  nome ?? '',
       },
-      success_url: success_url + (success_url.includes('?') ? '&' : '?') + 'session_id={CHECKOUT_SESSION_ID}',
-      cancel_url:  cancel_url ?? success_url,
+      success_url: safeSuccess,
+      cancel_url:  safeCancel,
     })
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Erro ao criar sessão de pagamento'
