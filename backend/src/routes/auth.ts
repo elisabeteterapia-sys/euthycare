@@ -32,6 +32,7 @@ router.post('/signup', async (req: Request, res: Response) => {
   })
 
   if (error) {
+    console.error('[auth/signup] Error:', error)
     res.status(400).json({ error: error.message })
     return
   }
@@ -92,6 +93,28 @@ router.post('/signout', async (req: Request, res: Response) => {
     await supabaseAdmin.auth.admin.signOut(token)
   }
   res.json({ message: 'Signed out' })
+})
+
+// GET /auth/debug — diagnóstico de Supabase (apenas em development)
+router.get('/debug', (_req: Request, res: Response) => {
+  if (process.env.NODE_ENV === 'production') {
+    res.status(403).json({ error: 'Not available in production' })
+    return
+  }
+
+  const hasUrl = !!process.env.SUPABASE_URL
+  const hasServiceRole = !!process.env.SUPABASE_SERVICE_ROLE_KEY
+  const hasAnonKey = !!process.env.SUPABASE_ANON_KEY
+
+  res.json({
+    env: process.env.NODE_ENV,
+    supabase: {
+      url: hasUrl ? '✓ configurado' : '✗ FALTA',
+      service_role_key: hasServiceRole ? '✓ configurado' : '✗ FALTA',
+      anon_key: hasAnonKey ? '✓ configurado' : '✗ FALTA',
+    },
+    message: !hasUrl || !hasServiceRole || !hasAnonKey ? 'Faltam variáveis de ambiente!' : 'Tudo OK',
+  })
 })
 
 export default router

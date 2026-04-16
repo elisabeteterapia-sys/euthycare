@@ -48,7 +48,7 @@ router.post('/', async (req: Request, res: Response) => {
 
   if (error) {
     // Duplicate email (unique constraint)
-    const msg = typeof error === 'object' && (error as Record<string,unknown>).message as string
+    const msg = typeof error === 'object' ? (error as Record<string,unknown>).message as string | undefined : undefined
     if (msg?.includes('duplicate') || msg?.includes('unique') || (error as Record<string,unknown>).code === '23505') {
       res.json({ success: true, message: 'Já está na lista!' })
       return
