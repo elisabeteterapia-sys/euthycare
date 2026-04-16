@@ -15,15 +15,9 @@ interface Post {
   publicado: boolean
 }
 
-const postsIniciais: Post[] = [
-  { id: '1', titulo: 'O que é a regulação emocional?',       categoria: 'Bem-estar',  autor: 'Dra. Ana Silva', data: '8 Abr 2026',  publicado: true  },
-  { id: '2', titulo: 'Como a terapia online funciona',        categoria: 'Terapia',    autor: 'Dra. Ana Silva', data: '2 Abr 2026',  publicado: true  },
-  { id: '3', titulo: '5 sinais de que precisas de ajuda',     categoria: 'Saúde',      autor: 'Dra. Ana Silva', data: '25 Mar 2026', publicado: true  },
-  { id: '4', titulo: 'Mindfulness para iniciantes',           categoria: 'Bem-estar',  autor: 'Dra. Ana Silva', data: '10 Mar 2026', publicado: false },
-  { id: '5', titulo: 'Ansiedade: mitos e verdades',           categoria: 'Saúde',      autor: 'Dra. Ana Silva', data: '1 Mar 2026',  publicado: false },
-]
+const postsIniciais: Post[] = []
 
-const emptyForm = { titulo: '', categoria: 'Bem-estar', autor: 'Dra. Ana Silva' }
+const emptyForm = { titulo: '', categoria: 'Bem-estar', autor: '' }
 
 export default function AdminBlogPage() {
   const [posts, setPosts] = useState<Post[]>(postsIniciais)
