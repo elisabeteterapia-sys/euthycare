@@ -111,7 +111,7 @@ router.post('/checkout', async (req: Request, res: Response) => {
   }
 
   // Construir URLs de retorno — usar SITE_URL do backend se disponível
-  const siteBase = (process.env.SITE_URL ?? '').replace(/\/$/, '')
+  const siteBase = (process.env.FRONTEND_URL ?? process.env.SITE_URL ?? '').replace(/\/$/, '')
   const safeSuccess = siteBase
     ? `${siteBase}/agendamento?sucesso=1`
     : success_url.split('?')[0] + '?sucesso=1'
