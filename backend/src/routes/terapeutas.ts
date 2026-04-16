@@ -188,14 +188,15 @@ router.get('/me/agenda', requireTerapeuta, async (req: Request, res: Response) =
 // ── GET /terapeutas/me/repasses ───────────────────────────────
 router.get('/me/repasses', requireTerapeuta, async (req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin
-    .from('agendamentos')
-    .select('id, data, hora, valor_cobrado_cents, repasse_cents, comissao_cents, repasse_pago, nome_cliente')
-    .eq('terapeuta_id', req.terapeutaId!).eq('status', 'confirmado')
-    .order('data', { ascending: false })
+    .from('creditos_cliente')
+    .select('id, cliente_email, cliente_nome, valor_pago_cents, comissao_cents, repasse_cents, repasse_pago, criado_em, pacotes(nome, numero_sessoes)')
+    .eq('terapeuta_id', req.terapeutaId!)
+    .order('criado_em', { ascending: false })
   if (error) { res.status(500).json({ error: error.message }); return }
-  const total_repasse = (data ?? []).reduce((s, a) => s + (a.repasse_cents ?? 0), 0)
-  const por_pagar = (data ?? []).reduce((s, a) => a.repasse_pago ? s : s + (a.repasse_cents ?? 0), 0)
-  res.json({ agendamentos: data ?? [], total_repasse, por_pagar })
+  const total_recebido = (data ?? []).reduce((s, c) => s + (c.valor_pago_cents ?? 0), 0)
+  const total_repasse  = (data ?? []).reduce((s, c) => s + (c.repasse_cents ?? 0), 0)
+  const por_pagar      = (data ?? []).filter(c => !c.repasse_pago).reduce((s, c) => s + (c.repasse_cents ?? 0), 0)
+  res.json({ pagamentos: data ?? [], total_recebido, total_repasse, por_pagar })
 })
 
 // ── GET /terapeutas/slug/:slug — perfil público por slug ──────
@@ -335,24 +336,41 @@ router.put('/admin/:id/disponibilidade', requireAdmin, async (req: Request, res:
   res.json({ ok: true })
 })
 
-// ── Admin: resumo de repasses ─────────────────────────────────
+// ── Admin: resumo de repasses (por terapeuta) ─────────────────
 router.get('/admin/repasses/resumo', requireAdmin, async (_req: Request, res: Response) => {
-  const { data, error } = await supabaseAdmin.from('agendamentos')
-    .select('terapeuta_id, repasse_cents, comissao_cents, repasse_pago, terapeutas(nome)')
-    .eq('status', 'confirmado')
+  const { data, error } = await supabaseAdmin
+    .from('creditos_cliente')
+    .select('terapeuta_id, valor_pago_cents, repasse_cents, comissao_cents, repasse_pago, terapeutas(nome)')
+    .not('terapeuta_id', 'is', null)
   if (error) { res.status(500).json({ error: error.message }); return }
-  const map = new Map<string, { nome: string; total_repasse: number; total_comissao: number; por_pagar: number }>()
-  for (const a of data ?? []) {
-    const tid = a.terapeuta_id as string
-    if (!tid) continue
-    const nome = (a.terapeutas as unknown as { nome: string } | null)?.nome ?? 'Desconhecida'
-    const entry = map.get(tid) ?? { nome, total_repasse: 0, total_comissao: 0, por_pagar: 0 }
-    entry.total_repasse += a.repasse_cents ?? 0
-    entry.total_comissao += a.comissao_cents ?? 0
-    if (!a.repasse_pago) entry.por_pagar += a.repasse_cents ?? 0
+
+  const map = new Map<string, {
+    nome: string; total_recebido: number; total_repasse: number
+    total_comissao: number; por_pagar: number; num_pagamentos: number
+  }>()
+  for (const c of data ?? []) {
+    const tid  = c.terapeuta_id as string
+    const nome = (c.terapeutas as unknown as { nome: string } | null)?.nome ?? 'Desconhecida'
+    const entry = map.get(tid) ?? { nome, total_recebido: 0, total_repasse: 0, total_comissao: 0, por_pagar: 0, num_pagamentos: 0 }
+    entry.total_recebido  += c.valor_pago_cents ?? 0
+    entry.total_repasse   += c.repasse_cents    ?? 0
+    entry.total_comissao  += c.comissao_cents   ?? 0
+    entry.num_pagamentos  += 1
+    if (!c.repasse_pago) entry.por_pagar += c.repasse_cents ?? 0
     map.set(tid, entry)
   }
   res.json({ repasses: Object.fromEntries(map) })
+})
+
+// ── Admin: listar pagamentos de uma terapeuta ─────────────────
+router.get('/admin/:id/repasses', requireAdmin, async (req: Request, res: Response) => {
+  const { data, error } = await supabaseAdmin
+    .from('creditos_cliente')
+    .select('id, cliente_email, cliente_nome, valor_pago_cents, comissao_cents, repasse_cents, repasse_pago, criado_em, pacotes(nome)')
+    .eq('terapeuta_id', req.params.id)
+    .order('criado_em', { ascending: false })
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ pagamentos: data ?? [] })
 })
 
 // ── Admin: definir/alterar senha ──────────────────────────────

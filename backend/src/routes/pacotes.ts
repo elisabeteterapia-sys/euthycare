@@ -175,13 +175,30 @@ router.post('/webhook', async (req: Request, res: Response) => {
 
     const { data: pacote } = await supabaseAdmin
       .from('pacotes')
-      .select('numero_sessoes, validade_dias')
+      .select('numero_sessoes, validade_dias, preco')
       .eq('id', pacote_id)
       .single()
 
     if (pacote) {
       const validade = new Date()
       validade.setDate(validade.getDate() + pacote.validade_dias)
+
+      // ── Calcular comissão ──────────────────────────────────
+      const valorPagoCents = Math.round(Number(pacote.preco) * 100)
+      let comissaoCents = 0
+      let repasseCents  = valorPagoCents
+
+      if (terapeuta_id) {
+        const { data: t } = await supabaseAdmin
+          .from('terapeutas')
+          .select('comissao_percentagem')
+          .eq('id', terapeuta_id)
+          .single()
+        if (t) {
+          comissaoCents = Math.round(valorPagoCents * t.comissao_percentagem / 100)
+          repasseCents  = valorPagoCents - comissaoCents
+        }
+      }
 
       await supabaseAdmin.from('creditos_cliente').insert({
         cliente_email,
@@ -193,6 +210,10 @@ router.post('/webhook', async (req: Request, res: Response) => {
         validade:          validade.toISOString().slice(0, 10),
         stripe_payment_id: session.payment_intent as string,
         status:            'ativo',
+        valor_pago_cents:  valorPagoCents,
+        comissao_cents:    comissaoCents,
+        repasse_cents:     repasseCents,
+        repasse_pago:      false,
       })
     }
   }
