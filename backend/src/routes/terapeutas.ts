@@ -151,8 +151,8 @@ router.post('/me/upload-foto', requireTerapeuta, upload.single('foto'), async (r
   if (!req.file) { res.status(400).json({ error: 'Nenhum ficheiro enviado' }); return }
   const result = await uploadParaStorage(req.file, `terapeutas/${req.terapeutaId}`)
   if ('error' in result) { res.status(400).json({ error: result.error }); return }
-  // Usar restUpdate para garantir bypass de RLS
-  await restUpdate('terapeutas', req.terapeutaId!, { foto_url: result.url })
+  const { error: updateErr } = await restUpdate('terapeutas', req.terapeutaId!, { foto_url: result.url })
+  if (updateErr) { res.status(500).json({ error: 'Foto enviada mas não guardada. Verifique as configurações do servidor.' }); return }
   res.status(201).json({ url: result.url })
 })
 
