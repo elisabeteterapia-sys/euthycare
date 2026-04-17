@@ -46,9 +46,9 @@ export default function HomePage() {
         <div className="container-app">
           <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto text-center">
             {[
-              { label: 'Consultas realizadas', value: '+200' },
-              { label: 'Anos de experiência', value: '8' },
-              { label: 'Satisfação', value: '98%' },
+              { label: 'Sessões online', value: '100%' },
+              { label: 'Mundo lusófono', value: '🌍' },
+              { label: 'Satisfação garantida', value: '❤️' },
             ].map(s => (
               <div key={s.label}>
                 <p className="text-2xl font-bold text-sage-600">{s.value}</p>

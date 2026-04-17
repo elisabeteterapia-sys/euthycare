@@ -1,67 +1,59 @@
 import Link from 'next/link'
-import { Heart, Users, Baby, Sparkles, Brain, ArrowRight, CheckCircle2, CalendarDays } from 'lucide-react'
+import { Heart, Flame, Zap, Shield, ArrowRight, CheckCircle2, CalendarDays } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Serviços — EuthyCare',
-  description: 'Psicoterapia individual, de casal e infantil. Sessões online. Terapeutas qualificados com abordagens comprovadas.',
+  description: 'Terapia emocional online. Apoio especializado em ansiedade, burnout e trauma emocional. Sessões por videochamada, para todo o mundo lusófono.',
 }
 
 const servicos = [
   {
-    id: 'individual',
+    id: 'ansiedade',
     icon: Heart,
-    titulo: 'Psicoterapia Individual',
-    subtitulo: 'Para adultos e jovens adultos',
-    descricao: 'Um espaço seguro e confidencial para explorar pensamentos, emoções e padrões de comportamento. Trabalhamos juntos para promover bem-estar e autoconhecimento.',
-    abordagens: ['TCC — Terapia Cognitivo-Comportamental', 'Terapia Humanista', 'EMDR para trauma', 'Terapia de Aceitação e Compromisso (ACT)'],
+    titulo: 'Ansiedade e Stress',
+    subtitulo: 'Para quem se sente sobrecarregado',
+    descricao: 'A ansiedade manifesta-se de formas diferentes — preocupação constante, dificuldade em descansar, tensão no corpo. Trabalhamos juntos para identificar os padrões e encontrar ferramentas concretas para recuperar o equilíbrio.',
+    abordagens: ['Regulação emocional', 'Gestão do pensamento ansioso', 'Técnicas de relaxamento', 'Autoconhecimento'],
     duracao: '50 minutos',
     modalidade: 'Online',
     cor: 'from-sage-400 to-sage-600',
   },
   {
-    id: 'casal',
-    icon: Users,
-    titulo: 'Terapia de Casal',
-    subtitulo: 'Para casais em qualquer fase',
-    descricao: 'Apoio especializado para melhorar a comunicação, resolver conflitos e fortalecer a ligação entre parceiros. Trabalhamos com casais em crise e em prevenção.',
-    abordagens: ['Comunicação não-violenta', 'Método Gottman', 'Terapia focada na emoção (EFT)', 'Resolução de conflitos'],
-    duracao: '75 minutos',
+    id: 'burnout',
+    icon: Flame,
+    titulo: 'Burnout e Esgotamento',
+    subtitulo: 'Quando o cansaço vai além do físico',
+    descricao: 'O burnout é mais do que cansaço — é uma perda de sentido, de energia e de si mesmo. Num processo terapêutico, reconstruímos os limites, os valores e a relação com o trabalho e com a vida.',
+    abordagens: ['Identificação de limites', 'Gestão de energia emocional', 'Reconstrução de propósito', 'Prevenção de recaídas'],
+    duracao: '50 minutos',
+    modalidade: 'Online',
+    cor: 'from-amber-400 to-amber-600',
+  },
+  {
+    id: 'trauma',
+    icon: Shield,
+    titulo: 'Trauma Emocional',
+    subtitulo: 'Processar o que ficou por resolver',
+    descricao: 'Experiências passadas deixam marcas que continuam a influenciar o presente. Num espaço seguro e sem julgamentos, trabalhamos o que ficou guardado — ao ritmo da pessoa, com cuidado e respeito.',
+    abordagens: ['Processamento de experiências difíceis', 'Regulação do sistema nervoso', 'Trabalho com a criança interior', 'Ressignificação'],
+    duracao: '50 minutos',
     modalidade: 'Online',
     cor: 'from-lilac-400 to-lilac-600',
   },
   {
-    id: 'infantil',
-    icon: Baby,
-    titulo: 'Psicologia Infantil',
-    subtitulo: 'Para crianças e adolescentes',
-    descricao: 'Acompanhamento especializado para crianças e adolescentes que enfrentam desafios emocionais, comportamentais ou de desenvolvimento.',
-    abordagens: ['Ludoterapia', 'Terapia de jogo', 'Terapia familiar sistémica', 'Suporte a dificuldades de aprendizagem'],
+    id: 'depressao',
+    icon: Zap,
+    titulo: 'Depressão e Vazio Emocional',
+    subtitulo: 'Quando tudo parece pesado demais',
+    descricao: 'A depressão não é fraqueza — é um sinal de que algo precisa de atenção. Através da terapia emocional, trabalhamos as raízes do sofrimento e construímos, passo a passo, um caminho de volta à vida.',
+    abordagens: ['Apoio emocional estruturado', 'Trabalho com crenças limitantes', 'Activação comportamental', 'Construção de recursos internos'],
     duracao: '50 minutos',
     modalidade: 'Online',
-    cor: 'from-amber-400 to-amber-500',
+    cor: 'from-sage-500 to-sage-700',
   },
-  {
-    id: 'digital',
-    icon: Sparkles,
-    titulo: 'App Euthy',
-    subtitulo: 'Apoio digital diário',
-    descricao: 'Ferramenta de apoio emocional para usar entre as sessões. Ideal como complemento à terapia ou como primeiro passo para o bem-estar.',
-    abordagens: ['Registo de humor', 'Exercícios guiados', 'Diário terapêutico', 'Conexão com o terapeuta'],
-    duracao: 'Disponível 24/7',
-    modalidade: 'Web e App Móvel',
-    cor: 'from-sage-500 to-lilac-500',
-  },
-]
-
-const terapeutas = [
-  { nome: 'Dra. Ana Ribeiro', especialidade: 'Ansiedade e Depressão', anos: 12, abordagem: 'TCC + ACT' },
-  { nome: 'Dr. Miguel Costa', especialidade: 'Terapia de Casal', anos: 8, abordagem: 'Gottman + EFT' },
-  { nome: 'Dra. Sofia Lopes', especialidade: 'Psicologia Infantil', anos: 10, abordagem: 'Ludoterapia' },
-  { nome: 'Dr. Rui Santos', especialidade: 'Trauma e EMDR', anos: 15, abordagem: 'EMDR + Trauma' },
 ]
 
 export default function ServicosPage() {
@@ -70,14 +62,14 @@ export default function ServicosPage() {
       {/* ── Hero ───────────────────────────────────────────────────── */}
       <section className="py-20 bg-cream-100 text-center">
         <div className="container-app animate-fade-in">
-          <Badge variant="sage" className="mb-4">Os nossos serviços</Badge>
+          <Badge variant="sage" className="mb-4">Terapia emocional online</Badge>
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            Cuidado especializado,<br />
-            <span className="text-gradient">centrado em si</span>
+            Um espaço seguro<br />
+            <span className="text-gradient">para ser quem é</span>
           </h1>
           <p className="text-lg text-gray-500 max-w-xl mx-auto mb-8">
-            Oferecemos acompanhamento psicológico de qualidade, online,
-            adaptado às suas necessidades e objetivos.
+            Sessões individuais de terapia emocional online, em português,
+            para quem vive em Portugal ou em qualquer parte do mundo.
           </p>
           <Link href="/agendamento">
             <Button size="lg" className="gap-2">
@@ -137,34 +129,6 @@ export default function ServicosPage() {
               </div>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* ── Equipa ──────────────────────────────────────────────────── */}
-      <section className="page-section bg-cream-100">
-        <div className="container-app">
-          <div className="text-center mb-12">
-            <Badge variant="lilac" className="mb-4">A nossa equipa</Badge>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Terapeutas qualificados</h2>
-            <p className="text-gray-500 max-w-xl mx-auto">
-              Todos os nossos profissionais são licenciados, supervisionados e comprometidos
-              com a ética e o seu bem-estar.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {terapeutas.map((t) => (
-              <Card key={t.nome} hover className="text-center">
-                <div className="mx-auto mb-4 h-16 w-16 rounded-2xl bg-gradient-to-br from-sage-300 to-lilac-400 flex items-center justify-center text-white text-2xl font-bold">
-                  {t.nome.split(' ')[1][0]}
-                </div>
-                <h3 className="font-bold text-gray-800 mb-1">{t.nome}</h3>
-                <p className="text-xs text-sage-600 font-medium mb-2">{t.especialidade}</p>
-                <p className="text-xs text-gray-400 mb-2">{t.abordagem}</p>
-                <Badge variant="cream">{t.anos} anos de experiência</Badge>
-              </Card>
-            ))}
-          </div>
         </div>
       </section>
 

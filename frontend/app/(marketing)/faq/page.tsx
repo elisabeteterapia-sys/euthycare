@@ -12,73 +12,44 @@ const categorias = [
     faqs: [
       {
         q: 'O que é o EuthyCare?',
-        a: 'O EuthyCare é uma plataforma de saúde mental com dois componentes: o App Euthy, uma ferramenta SaaS para terapeutas gerirem pacientes, agenda e consultas; e a Loja EuthyCare, onde vendemos recursos digitais (PDFs terapêuticos) para terapeutas e clientes.',
+        a: 'O EuthyCare é uma plataforma de terapia emocional online que conecta pessoas com terapeutas qualificados, através de sessões por videochamada segura. Pode marcar, pagar e realizar as suas sessões sem sair de casa.',
       },
       {
         q: 'Para quem é o EuthyCare?',
-        a: 'O App Euthy é destinado a terapeutas individuais e clínicas. A Loja é aberta a qualquer pessoa interessada em recursos de saúde mental e bem-estar emocional.',
+        a: 'Para qualquer pessoa adulta que queira apoio emocional profissional — seja para lidar com ansiedade, burnout, depressão, trauma, ou simplesmente para investir no seu bem-estar. A plataforma está disponível para todo o mundo lusófono.',
       },
       {
         q: 'As sessões são presenciais ou online?',
-        a: 'Todas as sessões são realizadas online, por videochamada segura. Não temos espaço físico — o que nos permite chegar a terapeutas e pacientes em qualquer lugar.',
+        a: 'Todas as sessões são online, por videochamada segura. Não é necessário deslocar-se — basta ter um dispositivo com câmara e uma ligação à internet estável.',
       },
       {
         q: 'O EuthyCare está disponível fora de Portugal?',
-        a: 'Sim. A plataforma está disponível em qualquer país. Aceitamos pagamentos em EUR, USD e BRL. O suporte é feito em português.',
+        a: 'Sim. Qualquer pessoa que fale português pode utilizar a plataforma, independentemente de onde esteja. Os pagamentos são processados em euros (EUR) através da Stripe.',
       },
     ],
   },
   {
-    label: 'App Euthy (SaaS)',
+    label: 'Sessões',
     faqs: [
       {
-        q: 'Como funciona o período de teste gratuito?',
-        a: 'Ao criar conta no App Euthy, tem 30 dias gratuitos sem precisar de cartão de crédito. No final do trial, escolhe o plano que mais se adapta à sua prática. Se não subscrever, o acesso é automaticamente suspenso.',
+        q: 'Como funciona a primeira consulta?',
+        a: 'A primeira sessão é uma consulta experimental — um espaço para se conhecerem, perceber o que a trouxe e ver se há sintonia. Não há compromisso. Pode decidir depois se quer continuar.',
       },
       {
-        q: 'Posso cancelar a qualquer momento?',
-        a: 'Sim. O cancelamento é feito na área de conta, sem fidelidade nem penalizações. O acesso mantém-se até ao final do período já pago.',
+        q: 'Quanto tempo dura uma sessão?',
+        a: 'Cada sessão tem a duração de 50 minutos.',
       },
       {
-        q: 'Posso fazer upgrade ou downgrade de plano?',
-        a: 'Sim, a qualquer momento. O upgrade tem efeito imediato, com ajuste proporcional do valor. O downgrade entra em vigor no próximo ciclo de faturação.',
+        q: 'Como é feita a videochamada?',
+        a: 'Após agendar, receberá o link da sessão por e-mail. Não é necessário instalar nenhuma aplicação — a sessão funciona directamente no browser.',
       },
       {
-        q: 'Os dados dos meus pacientes estão seguros?',
-        a: 'Sim. Os dados clínicos são encriptados em repouso (AES-256) e em trânsito (TLS). Nunca partilhamos dados de pacientes com terceiros. Seguimos o RGPD e boas práticas de segurança da informação clínica.',
+        q: 'Posso cancelar ou reagendar uma sessão?',
+        a: 'Sim. Pedimos que o cancelamento seja feito com pelo menos 24 horas de antecedência. Em caso de cancelamento tardio, o crédito pode ser considerado utilizado. Entre em contacto para situações excepcionais.',
       },
       {
-        q: 'O que é a IA de apoio clínico?',
-        a: 'Nos planos Profissional e Premium, a IA pode sugerir notas de sessão, gerar resumos clínicos e identificar padrões emocionais ao longo do tempo. Não substitui o julgamento clínico — é uma ferramenta de apoio.',
-      },
-      {
-        q: 'O plano Clínica suporta quantos terapeutas?',
-        a: 'O plano Clínica suporta até 10 terapeutas. Para equipas maiores, contacte-nos para um plano Enterprise personalizado.',
-      },
-      {
-        q: 'Posso exportar os dados se sair da plataforma?',
-        a: 'Sim. Os planos Premium e Clínica incluem exportação total dos dados em formato estruturado. No plano Essencial, o download está disponível por paciente.',
-      },
-    ],
-  },
-  {
-    label: 'Loja de PDFs',
-    faqs: [
-      {
-        q: 'Como funciona a compra de um PDF?',
-        a: 'Escolha o produto, clique em "Comprar agora" e será redirecionado para o checkout seguro via Stripe. Após o pagamento, o download fica disponível imediatamente na página de confirmação.',
-      },
-      {
-        q: 'Posso descarregar o PDF várias vezes?',
-        a: 'Sim, cada compra permite até 10 downloads. Recomendamos guardar o ficheiro localmente após a primeira transferência.',
-      },
-      {
-        q: 'Os PDFs têm reembolso?',
-        a: 'Por se tratarem de produtos digitais com acesso imediato, não emitimos reembolsos após o download. Se o produto estiver com defeito ou diferente do descrito, contacte-nos em até 7 dias e analisamos o caso.',
-      },
-      {
-        q: 'Posso partilhar os PDFs com colegas?',
-        a: 'Não. A licença é pessoal e intransferível. A redistribuição ou partilha pública dos conteúdos viola os nossos Termos de Uso e direitos de autor.',
+        q: 'O que acontece se tiver problemas técnicos durante a sessão?',
+        a: 'Se a ligação falhar durante a sessão, o terapeuta tentará reconectar. Se não for possível concluir a sessão por razões técnicas, a sessão não é descontada dos seus créditos.',
       },
     ],
   },
@@ -86,37 +57,37 @@ const categorias = [
     label: 'Pagamentos',
     faqs: [
       {
+        q: 'Como funcionam os pacotes de sessões?',
+        a: 'Compra um pacote de sessões (por exemplo, 4 ou 8 sessões) e depois agenda cada sessão à medida que precisar, dentro do prazo de validade do pacote.',
+      },
+      {
         q: 'Que métodos de pagamento aceitam?',
         a: 'Aceitamos cartões de crédito e débito (Visa, Mastercard, Amex) através da Stripe. Os pagamentos são processados de forma segura — não armazenamos dados de cartão nos nossos servidores.',
       },
       {
-        q: 'Em que moeda posso pagar?',
-        a: 'Os preços base são em euros (EUR). Também aceitamos pagamentos em USD e BRL. A conversão é feita automaticamente com base na moeda do seu método de pagamento.',
+        q: 'Recebo recibo após o pagamento?',
+        a: 'Sim. A Stripe envia automaticamente um recibo por e-mail imediatamente após o pagamento.',
       },
       {
-        q: 'Recebo fatura/recibo?',
-        a: 'Sim. A Stripe envia automaticamente um recibo por e-mail após cada cobrança. Pode também aceder ao histórico de pagamentos na área de conta.',
-      },
-      {
-        q: 'Os planos anuais têm desconto?',
-        a: 'Sim, os planos anuais têm um desconto de 17% face à soma dos planos mensais equivalentes.',
+        q: 'Os pacotes têm reembolso?',
+        a: 'Pacotes não iniciados podem ser reembolsados na totalidade. Após o uso de sessões, é feito o reembolso proporcional às sessões não utilizadas. Contacte-nos em até 7 dias.',
       },
     ],
   },
   {
-    label: 'Lista de Espera',
+    label: 'Privacidade',
     faqs: [
       {
-        q: 'O App Euthy já está disponível?',
-        a: 'Estamos em fase de pré-lançamento. Pode entrar na lista de espera em /euthy-lancamento para garantir acesso antecipado e condições especiais de lançamento.',
+        q: 'As sessões são confidenciais?',
+        a: 'Sim, totalmente. Todo o conteúdo partilhado nas sessões é confidencial e protegido pelo sigilo terapêutico. Os dados são tratados em conformidade com o RGPD.',
       },
       {
-        q: 'Ao entrar na lista de espera, crio uma conta?',
-        a: 'Não. A lista de espera é apenas para captar interesse. Não cria nenhuma conta nem implica qualquer compromisso financeiro. Quando lançarmos, notificamos por e-mail.',
+        q: 'Os dados pessoais estão seguros?',
+        a: 'Sim. Os dados são encriptados em trânsito (TLS) e em repouso. Nunca partilhamos informações pessoais com terceiros. Pode consultar a nossa política de privacidade completa.',
       },
       {
-        q: 'Quais são os benefícios de entrar na lista de espera?',
-        a: 'Acesso antecipado à plataforma, 30 dias gratuitos no lançamento, prioridade na abertura de inscrições, suporte direto da equipa fundadora e preço especial de lançamento.',
+        q: 'As sessões são gravadas?',
+        a: 'Não. As sessões não são gravadas. A videochamada é apenas entre o cliente e o terapeuta.',
       },
     ],
   },
@@ -156,7 +127,7 @@ export default function FaqPage() {
           <Badge variant="sage" className="mb-4">Dúvidas frequentes</Badge>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Como podemos ajudar?</h1>
           <p className="text-gray-500">
-            Encontre respostas rápidas sobre o App Euthy, a Loja, pagamentos e mais.
+            Encontre respostas sobre sessões, pagamentos e privacidade.
           </p>
         </div>
       </section>
