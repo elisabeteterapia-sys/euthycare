@@ -36,6 +36,7 @@ interface Pacote {
   destaque: boolean
   descricao: string
   ativo: boolean
+  publico: boolean
 }
 
 interface PacoteForm {
@@ -47,11 +48,12 @@ interface PacoteForm {
   validade_dias: number
   destaque: boolean
   descricao: string
+  publico: boolean
 }
 
 const emptyPacote: PacoteForm = {
   tipo: 'pacote', nome: '', numero_sessoes: 1, duracao_min: 50,
-  preco: 0, validade_dias: 30, destaque: false, descricao: '',
+  preco: 0, validade_dias: 30, destaque: false, descricao: '', publico: true,
 }
 
 const emptyForm = {
@@ -236,7 +238,7 @@ export default function AdminTerapeutasPage() {
       const method = editPacote ? 'PATCH' : 'POST'
       const body = editPacote
         ? pacoteForm
-        : { ...pacoteForm, terapeuta_id: pacotesTab.id }
+        : { ...pacoteForm, terapeuta_id: pacotesTab.id, preco: pacoteForm.preco }
       const r = await fetch(url, { method, headers: h(), body: JSON.stringify(body) })
       const d = await r.json()
       if (!r.ok) { alert(d.error ?? 'Erro ao guardar pacote'); return }
@@ -396,10 +398,10 @@ export default function AdminTerapeutasPage() {
                         <p className="font-medium text-gray-800 text-sm">{p.nome}
                           <span className="ml-2 text-xs text-gray-400 font-normal">{p.tipo === 'experimental' ? '· experimental' : `· ${p.numero_sessoes} sessão${p.numero_sessoes > 1 ? 'ões' : ''}`}</span>
                         </p>
-                        <p className="text-xs text-gray-400">{p.preco}€ · {p.validade_dias} dias{p.descricao ? ` · ${p.descricao.slice(0, 50)}…` : ''}</p>
+                        <p className="text-xs text-gray-400">{p.preco === 0 ? 'Gratuito' : `${p.preco}€`} · {p.validade_dias} dias{!p.publico ? ' · 🔗 só via link' : ''}{p.descricao ? ` · ${p.descricao.slice(0, 40)}…` : ''}</p>
                       </div>
                       <div className="flex gap-1 flex-shrink-0">
-                        <button onClick={() => { setEditPacote(p); setPacoteForm({ tipo: p.tipo, nome: p.nome, numero_sessoes: p.numero_sessoes, duracao_min: p.duracao_min, preco: p.preco, validade_dias: p.validade_dias, destaque: p.destaque, descricao: p.descricao ?? '' }) }}
+                        <button onClick={() => { setEditPacote(p); setPacoteForm({ tipo: p.tipo, nome: p.nome, numero_sessoes: p.numero_sessoes, duracao_min: p.duracao_min, preco: p.preco, validade_dias: p.validade_dias, destaque: p.destaque, descricao: p.descricao ?? '', publico: p.publico }) }}
                           className="p-1.5 rounded-lg hover:bg-cream-300 text-gray-400 hover:text-gray-700 transition-colors">
                           <Pencil className="h-3.5 w-3.5" />
                         </button>
@@ -465,6 +467,17 @@ export default function AdminTerapeutasPage() {
                       className="rounded text-sage-500" />
                     <span className="text-sm text-gray-600">Destacar como popular</span>
                   </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={pacoteForm.publico} onChange={e => setPacoteForm(f => ({ ...f, publico: e.target.checked }))}
+                      className="rounded text-sage-500" />
+                    <span className="text-sm text-gray-600">Visível no perfil público</span>
+                    {!pacoteForm.publico && <span className="text-xs text-orange-400">(só via link directo)</span>}
+                  </label>
+                  {!pacoteForm.publico && editPacote && pacotesTab && (
+                    <div className="bg-orange-50 rounded-xl px-3 py-2 text-xs text-orange-700">
+                      Link directo: <strong>euthycare.com/t/{pacotesTab.slug ?? '[slug]'}?pacote={editPacote.id}</strong>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

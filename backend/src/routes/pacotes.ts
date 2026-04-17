@@ -72,7 +72,19 @@ router.get('/creditos', async (req: Request, res: Response) => {
   res.json({ creditos: data, hasExperimental, sessoes_restantes: (data ?? []).reduce((acc, c) => acc + c.sessoes_restantes, 0) })
 })
 
-// ─── POST /pacotes/checkout — criar sessão Stripe ────────────
+// ─── GET /pacotes/public/:id — pacote específico por ID (link directo) ──
+router.get('/public/:id', async (req: Request, res: Response) => {
+  const { data, error } = await supabaseAdmin
+    .from('pacotes')
+    .select('id, tipo, nome, numero_sessoes, duracao_min, preco, moeda, validade_dias, destaque, descricao')
+    .eq('id', req.params.id)
+    .eq('ativo', true)
+    .single()
+  if (error || !data) { res.status(404).json({ error: 'Pacote não encontrado' }); return }
+  res.json(data)
+})
+
+// ─── POST /pacotes/checkout — criar sessão Stripe (ou crédito gratuito) ──
 router.post('/checkout', async (req: Request, res: Response) => {
   const { pacote_id, email, nome, terapeuta_id, terapeuta_slug } = req.body
 
@@ -104,6 +116,30 @@ router.post('/checkout', async (req: Request, res: Response) => {
       res.status(409).json({ error: 'A consulta experimental só pode ser adquirida uma vez por cliente.' })
       return
     }
+  }
+
+  // Pacote gratuito: criar crédito directamente sem Stripe
+  if (Number(pacote.preco) === 0) {
+    const validade = new Date()
+    validade.setDate(validade.getDate() + pacote.validade_dias)
+    const { error: errCredito } = await supabaseAdmin.from('creditos_cliente').insert({
+      cliente_email:     email,
+      cliente_nome:      nome ?? '',
+      pacote_id,
+      terapeuta_id:      terapeuta_id || null,
+      sessoes_total:     pacote.numero_sessoes,
+      sessoes_restantes: pacote.numero_sessoes,
+      validade:          validade.toISOString().slice(0, 10),
+      stripe_payment_id: null,
+      status:            'ativo',
+      valor_pago_cents:  0,
+      comissao_cents:    0,
+      repasse_cents:     0,
+      repasse_pago:      false,
+    })
+    if (errCredito) { res.status(500).json({ error: errCredito.message }); return }
+    const base = terapeuta_slug ? `https://euthycare.com/t/${terapeuta_slug}` : 'https://euthycare.com/agendamento'
+    res.json({ url: `${base}?sucesso=1`, free: true }); return
   }
 
   if (!process.env.STRIPE_SECRET_KEY) {
@@ -236,7 +272,7 @@ router.get('/admin/creditos', requireAdmin, async (_req: Request, res: Response)
 router.get('/admin/terapeuta/:id', requireAdmin, async (req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin
     .from('pacotes')
-    .select('id, tipo, nome, numero_sessoes, duracao_min, preco, moeda, validade_dias, destaque, descricao, ativo')
+    .select('id, tipo, nome, numero_sessoes, duracao_min, preco, moeda, validade_dias, destaque, descricao, ativo, publico')
     .eq('terapeuta_id', req.params.id)
     .order('preco')
   if (error) { res.status(500).json({ error: error.message }); return }
@@ -244,9 +280,9 @@ router.get('/admin/terapeuta/:id', requireAdmin, async (req: Request, res: Respo
 })
 
 router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
-  const { terapeuta_id, tipo, nome, numero_sessoes, duracao_min, preco, validade_dias, destaque, descricao } = req.body
-  if (!terapeuta_id || !nome || !numero_sessoes || !preco || !validade_dias) {
-    res.status(400).json({ error: 'terapeuta_id, nome, numero_sessoes, preco e validade_dias são obrigatórios' }); return
+  const { terapeuta_id, tipo, nome, numero_sessoes, duracao_min, preco, validade_dias, destaque, descricao, publico } = req.body
+  if (!terapeuta_id || !nome || !numero_sessoes || validade_dias === undefined) {
+    res.status(400).json({ error: 'terapeuta_id, nome, numero_sessoes e validade_dias são obrigatórios' }); return
   }
   const { data, error } = await supabaseAdmin.from('pacotes').insert({
     terapeuta_id,
@@ -254,11 +290,12 @@ router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
     nome,
     numero_sessoes: Number(numero_sessoes),
     duracao_min: Number(duracao_min ?? 50),
-    preco: Number(preco),
+    preco: Number(preco ?? 0),
     moeda: 'EUR',
     validade_dias: Number(validade_dias),
     destaque: destaque ?? false,
     descricao: descricao ?? null,
+    publico: publico !== false,
     ativo: true,
   }).select().single()
   if (error) { res.status(500).json({ error: error.message }); return }
@@ -266,7 +303,7 @@ router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
 })
 
 router.patch('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
-  const allowed = ['tipo','nome','numero_sessoes','duracao_min','preco','validade_dias','destaque','descricao','ativo']
+  const allowed = ['tipo','nome','numero_sessoes','duracao_min','preco','validade_dias','destaque','descricao','ativo','publico']
   const update: Record<string, unknown> = {}
   for (const k of allowed) if (req.body[k] !== undefined) update[k] = req.body[k]
   const { data, error } = await supabaseAdmin.from('pacotes').update(update).eq('id', req.params.id).select().single()

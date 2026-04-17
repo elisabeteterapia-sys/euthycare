@@ -217,10 +217,10 @@ router.get('/slug/:slug', async (req: Request, res: Response) => {
     .eq('slug', slug).eq('ativo', true).single()
   if (error || !data) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
 
-  // Pacotes específicos desta terapeuta
+  // Pacotes públicos desta terapeuta
   const { data: pacotes } = await supabaseAdmin.from('pacotes')
     .select('id, tipo, nome, numero_sessoes, duracao_min, preco, moeda, validade_dias, destaque, descricao')
-    .eq('terapeuta_id', data.id).eq('ativo', true).order('preco')
+    .eq('terapeuta_id', data.id).eq('ativo', true).eq('publico', true).order('preco')
 
   res.json({ terapeuta: data, pacotes: pacotes ?? [] })
 })

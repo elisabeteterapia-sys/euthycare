@@ -111,6 +111,9 @@ function PerfilTerapeuta({ t }: { t: Terapeuta }) {
 
 // ─── Secção: Pacotes ──────────────────────────────────────────
 function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string }) {
+  const searchParams    = useSearchParams()
+  const pacoteParam     = searchParams.get('pacote')
+
   const [pacotes, setPacotes]     = useState<Pacote[]>([])
   const [loading, setLoading]     = useState(true)
   const [email, setEmail]         = useState('')
@@ -121,13 +124,21 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
   const [hasExp, setHasExp]       = useState(false)
 
   useEffect(() => {
-    // Pacotes já carregados com o perfil
-    fetch(`${API}/terapeutas/slug/${slug}`)
-      .then(r => r.json())
-      .then(d => { if (Array.isArray(d.pacotes)) setPacotes(d.pacotes) })
-      .catch(() => null)
-      .finally(() => setLoading(false))
-  }, [slug])
+    if (pacoteParam) {
+      // Link directo: mostrar apenas o pacote indicado (pode ser privado)
+      fetch(`${API}/pacotes/public/${pacoteParam}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(d => { if (d) setPacotes([d]) })
+        .catch(() => null)
+        .finally(() => setLoading(false))
+    } else {
+      fetch(`${API}/terapeutas/slug/${slug}`)
+        .then(r => r.json())
+        .then(d => { if (Array.isArray(d.pacotes)) setPacotes(d.pacotes) })
+        .catch(() => null)
+        .finally(() => setLoading(false))
+    }
+  }, [slug, pacoteParam])
 
   async function verificarEmail(em: string) {
     if (!em) return
