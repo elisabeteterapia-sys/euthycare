@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Plus, Pencil, Trash2, EyeOff, Eye, X, Loader2, Check, Euro, KeyRound, Link2, Upload } from 'lucide-react'
+import { Plus, Pencil, Trash2, EyeOff, Eye, X, Loader2, Check, Euro, KeyRound, Link2, Upload, Package, Star } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 const SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET ?? ''
@@ -23,6 +23,35 @@ interface Terapeuta {
   ativo: boolean
   email?: string
   slug?: string
+}
+
+interface Pacote {
+  id: string
+  tipo: 'experimental' | 'pacote'
+  nome: string
+  numero_sessoes: number
+  duracao_min: number
+  preco: number
+  validade_dias: number
+  destaque: boolean
+  descricao: string
+  ativo: boolean
+}
+
+interface PacoteForm {
+  tipo: 'experimental' | 'pacote'
+  nome: string
+  numero_sessoes: number
+  duracao_min: number
+  preco: number
+  validade_dias: number
+  destaque: boolean
+  descricao: string
+}
+
+const emptyPacote: PacoteForm = {
+  tipo: 'pacote', nome: '', numero_sessoes: 1, duracao_min: 50,
+  preco: 0, validade_dias: 30, destaque: false, descricao: '',
 }
 
 const emptyForm = {
@@ -58,6 +87,12 @@ export default function AdminTerapeutasPage() {
   const [credSaving, setCredSaving] = useState(false)
   const [credOk, setCredOk] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [pacotesTab, setPacotesTab] = useState<Terapeuta | null>(null)
+  const [pacotes, setPacotes] = useState<Pacote[]>([])
+  const [pacoteForm, setPacoteForm] = useState<PacoteForm>(emptyPacote)
+  const [editPacote, setEditPacote] = useState<Pacote | null>(null)
+  const [savingPacote, setSavingPacote] = useState(false)
+  const [deletingPacote, setDeletingPacote] = useState<string | null>(null)
 
   async function load() {
     setLoading(true)
@@ -185,6 +220,42 @@ export default function AdminTerapeutasPage() {
     setDisps(result)
   }
 
+  async function abrirPacotes(t: Terapeuta) {
+    setPacotesTab(t)
+    setPacoteForm(emptyPacote)
+    setEditPacote(null)
+    const res = await fetch(`${API}/pacotes/admin/terapeuta/${t.id}`, { headers: h() })
+    setPacotes(await res.json())
+  }
+
+  async function guardarPacote() {
+    if (!pacotesTab) return
+    setSavingPacote(true)
+    try {
+      const url = editPacote ? `${API}/pacotes/admin/${editPacote.id}` : `${API}/pacotes/admin`
+      const method = editPacote ? 'PATCH' : 'POST'
+      const body = editPacote
+        ? pacoteForm
+        : { ...pacoteForm, terapeuta_id: pacotesTab.id }
+      const r = await fetch(url, { method, headers: h(), body: JSON.stringify(body) })
+      const d = await r.json()
+      if (!r.ok) { alert(d.error ?? 'Erro ao guardar pacote'); return }
+      const res = await fetch(`${API}/pacotes/admin/terapeuta/${pacotesTab.id}`, { headers: h() })
+      setPacotes(await res.json())
+      setPacoteForm(emptyPacote)
+      setEditPacote(null)
+    } finally { setSavingPacote(false) }
+  }
+
+  async function eliminarPacote(id: string) {
+    if (!pacotesTab) return
+    setDeletingPacote(id)
+    await fetch(`${API}/pacotes/admin/${id}`, { method: 'DELETE', headers: h() })
+    const res = await fetch(`${API}/pacotes/admin/terapeuta/${pacotesTab.id}`, { headers: h() })
+    setPacotes(await res.json())
+    setDeletingPacote(null)
+  }
+
   async function guardarDisponibilidade() {
     if (!dispTab) return
     setSavingDisp(true)
@@ -269,6 +340,10 @@ export default function AdminTerapeutasPage() {
 
             {/* Acções */}
             <div className="flex items-center gap-1">
+              <button onClick={() => abrirPacotes(t)} title="Pacotes"
+                className="px-2 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-cream-300 hover:text-gray-800 transition-colors">
+                Pacotes
+              </button>
               <button onClick={() => abrirDisponibilidade(t)} title="Horários"
                 className="px-2 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-cream-300 hover:text-gray-800 transition-colors">
                 Horários
@@ -293,6 +368,120 @@ export default function AdminTerapeutasPage() {
           </Card>
         ))}
       </div>
+
+      {/* Pacotes modal */}
+      {pacotesTab && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-cream-200">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Pacotes — {pacotesTab.nome}</h3>
+                <p className="text-xs text-gray-400 mt-0.5">Pacotes visíveis na página pública da terapeuta</p>
+              </div>
+              <button onClick={() => { setPacotesTab(null); setEditPacote(null); setPacoteForm(emptyPacote) }}>
+                <X className="h-5 w-5 text-gray-400" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Lista de pacotes */}
+              {pacotes.length === 0 ? (
+                <p className="text-sm text-gray-400 text-center py-4">Nenhum pacote ainda. Crie o primeiro abaixo.</p>
+              ) : (
+                <div className="space-y-2">
+                  {pacotes.map(p => (
+                    <div key={p.id} className={`flex items-center gap-3 rounded-xl border px-4 py-3 ${p.ativo ? 'border-cream-300 bg-cream-50' : 'border-gray-200 bg-gray-50 opacity-60'}`}>
+                      {p.destaque && <Star className="h-4 w-4 text-sage-500 flex-shrink-0" />}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-800 text-sm">{p.nome}
+                          <span className="ml-2 text-xs text-gray-400 font-normal">{p.tipo === 'experimental' ? '· experimental' : `· ${p.numero_sessoes} sessão${p.numero_sessoes > 1 ? 'ões' : ''}`}</span>
+                        </p>
+                        <p className="text-xs text-gray-400">{p.preco}€ · {p.validade_dias} dias{p.descricao ? ` · ${p.descricao.slice(0, 50)}…` : ''}</p>
+                      </div>
+                      <div className="flex gap-1 flex-shrink-0">
+                        <button onClick={() => { setEditPacote(p); setPacoteForm({ tipo: p.tipo, nome: p.nome, numero_sessoes: p.numero_sessoes, duracao_min: p.duracao_min, preco: p.preco, validade_dias: p.validade_dias, destaque: p.destaque, descricao: p.descricao ?? '' }) }}
+                          className="p-1.5 rounded-lg hover:bg-cream-300 text-gray-400 hover:text-gray-700 transition-colors">
+                          <Pencil className="h-3.5 w-3.5" />
+                        </button>
+                        <button onClick={() => eliminarPacote(p.id)} disabled={deletingPacote === p.id}
+                          className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors">
+                          {deletingPacote === p.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Formulário criar/editar */}
+              <div className="border-t border-cream-200 pt-5">
+                <h4 className="text-sm font-semibold text-gray-700 mb-4">{editPacote ? 'Editar pacote' : 'Novo pacote'}</h4>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Tipo</label>
+                      <select value={pacoteForm.tipo} onChange={e => setPacoteForm(f => ({ ...f, tipo: e.target.value as 'experimental' | 'pacote' }))}
+                        className="w-full h-10 px-3 rounded-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-sage-400">
+                        <option value="pacote">Pacote</option>
+                        <option value="experimental">Experimental</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Nome</label>
+                      <input type="text" value={pacoteForm.nome} onChange={e => setPacoteForm(f => ({ ...f, nome: e.target.value }))}
+                        placeholder="Ex: Essencial" className="w-full h-10 px-3 rounded-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-sage-400" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-4 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Sessões</label>
+                      <input type="number" min={1} value={pacoteForm.numero_sessoes} onChange={e => setPacoteForm(f => ({ ...f, numero_sessoes: parseInt(e.target.value) || 1 }))}
+                        className="w-full h-10 px-3 rounded-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-sage-400" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Duração</label>
+                      <input type="number" min={15} step={5} value={pacoteForm.duracao_min} onChange={e => setPacoteForm(f => ({ ...f, duracao_min: parseInt(e.target.value) || 50 }))}
+                        className="w-full h-10 px-3 rounded-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-sage-400" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Preço (€)</label>
+                      <input type="number" min={0} step={0.01} value={pacoteForm.preco || ''} onChange={e => setPacoteForm(f => ({ ...f, preco: parseFloat(e.target.value) || 0 }))}
+                        className="w-full h-10 px-3 rounded-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-sage-400" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Validade (dias)</label>
+                      <input type="number" min={1} value={pacoteForm.validade_dias} onChange={e => setPacoteForm(f => ({ ...f, validade_dias: parseInt(e.target.value) || 30 }))}
+                        className="w-full h-10 px-3 rounded-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-sage-400" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Descrição (opcional)</label>
+                    <input type="text" value={pacoteForm.descricao} onChange={e => setPacoteForm(f => ({ ...f, descricao: e.target.value }))}
+                      placeholder="Breve descrição do pacote"
+                      className="w-full h-10 px-3 rounded-xl border border-cream-400 bg-cream-100 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-sage-400" />
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={pacoteForm.destaque} onChange={e => setPacoteForm(f => ({ ...f, destaque: e.target.checked }))}
+                      className="rounded text-sage-500" />
+                    <span className="text-sm text-gray-600">Destacar como popular</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 justify-end p-6 border-t border-cream-200">
+              {editPacote && (
+                <Button variant="outline" size="sm" onClick={() => { setEditPacote(null); setPacoteForm(emptyPacote) }}>
+                  Cancelar edição
+                </Button>
+              )}
+              <Button size="sm" onClick={guardarPacote} disabled={savingPacote || !pacoteForm.nome.trim() || !pacoteForm.preco} className="gap-2 min-w-[140px]">
+                {savingPacote ? <><Loader2 className="h-4 w-4 animate-spin" /> A guardar…</> : editPacote ? 'Guardar alterações' : <><Package className="h-4 w-4" /> Criar pacote</>}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Disponibilidade modal */}
       {dispTab && terapeutaDisp && (

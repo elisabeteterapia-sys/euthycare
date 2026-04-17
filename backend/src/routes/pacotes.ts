@@ -232,4 +232,52 @@ router.get('/admin/creditos', requireAdmin, async (_req: Request, res: Response)
   res.json(data)
 })
 
+// ─── Admin: CRUD pacotes por terapeuta ────────────────────────
+router.get('/admin/terapeuta/:id', requireAdmin, async (req: Request, res: Response) => {
+  const { data, error } = await supabaseAdmin
+    .from('pacotes')
+    .select('id, tipo, nome, numero_sessoes, duracao_min, preco, moeda, validade_dias, destaque, descricao, ativo')
+    .eq('terapeuta_id', req.params.id)
+    .order('preco')
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json(data ?? [])
+})
+
+router.post('/admin', requireAdmin, async (req: Request, res: Response) => {
+  const { terapeuta_id, tipo, nome, numero_sessoes, duracao_min, preco, validade_dias, destaque, descricao } = req.body
+  if (!terapeuta_id || !nome || !numero_sessoes || !preco || !validade_dias) {
+    res.status(400).json({ error: 'terapeuta_id, nome, numero_sessoes, preco e validade_dias são obrigatórios' }); return
+  }
+  const { data, error } = await supabaseAdmin.from('pacotes').insert({
+    terapeuta_id,
+    tipo: tipo ?? 'pacote',
+    nome,
+    numero_sessoes: Number(numero_sessoes),
+    duracao_min: Number(duracao_min ?? 50),
+    preco: Number(preco),
+    moeda: 'EUR',
+    validade_dias: Number(validade_dias),
+    destaque: destaque ?? false,
+    descricao: descricao ?? null,
+    ativo: true,
+  }).select().single()
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json(data)
+})
+
+router.patch('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
+  const allowed = ['tipo','nome','numero_sessoes','duracao_min','preco','validade_dias','destaque','descricao','ativo']
+  const update: Record<string, unknown> = {}
+  for (const k of allowed) if (req.body[k] !== undefined) update[k] = req.body[k]
+  const { data, error } = await supabaseAdmin.from('pacotes').update(update).eq('id', req.params.id).select().single()
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json(data)
+})
+
+router.delete('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
+  const { error } = await supabaseAdmin.from('pacotes').delete().eq('id', req.params.id)
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ ok: true })
+})
+
 export default router
