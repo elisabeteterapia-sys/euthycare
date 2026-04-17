@@ -522,33 +522,47 @@ router.patch('/admin/:id', requireAdmin, async (req: Request, res: Response) => 
 })
 
 // GET /agendamento/admin/disponibilidade
-router.get('/admin/disponibilidade', requireAdmin, async (_req: Request, res: Response) => {
-  const { data, error } = await supabaseAdmin
-    .from('disponibilidades')
-    .select('*')
-    .order('dia_semana')
+router.get('/admin/disponibilidade', requireAdmin, async (req: Request, res: Response) => {
+  const { terapeuta_id } = req.query
 
+  let query = supabaseAdmin.from('disponibilidades').select('*').order('dia_semana')
+  if (terapeuta_id && typeof terapeuta_id === 'string') {
+    query = query.eq('terapeuta_id', terapeuta_id) as typeof query
+  } else {
+    // Usa o primeiro terapeuta ativo como default (painel admin single-therapist)
+    const { data: ts } = await supabaseAdmin.from('terapeutas').select('id').eq('ativo', true).order('criado_em').limit(1)
+    if (ts?.[0]?.id) query = query.eq('terapeuta_id', ts[0].id) as typeof query
+  }
+
+  const { data, error } = await query
   if (error) { res.status(500).json({ error: error.message }); return }
   res.json(data)
 })
 
 // PUT /agendamento/admin/disponibilidade — substituição completa (delete + insert)
 router.put('/admin/disponibilidade', requireAdmin, async (req: Request, res: Response) => {
-  const rows: Array<{ dia_semana: number; hora_inicio: string; hora_fim: string; intervalo_min: number; ativo: boolean }> = req.body
-  if (!Array.isArray(rows)) { res.status(400).json({ error: 'Corpo deve ser array' }); return }
+  const { terapeuta_id: tidParam, rows: rowsParam } = req.body as { terapeuta_id?: string; rows?: unknown[] }
 
-  // Apaga disponibilidades globais (sem terapeuta_id) e reinsere
-  const { error: delErr } = await supabaseAdmin
-    .from('disponibilidades')
-    .delete()
-    .is('terapeuta_id', null)
+  // Suporta corpo como array directo (legado) ou { terapeuta_id, rows }
+  const rows: Array<{ dia_semana: number; hora_inicio: string; hora_fim: string; intervalo_min: number; ativo: boolean }> =
+    Array.isArray(req.body) ? req.body : (rowsParam as typeof rows ?? [])
 
+  if (!Array.isArray(rows)) { res.status(400).json({ error: 'Corpo deve ser array ou { rows: [...] }' }); return }
+
+  // Determinar terapeuta_id
+  let terapeutaId = tidParam
+  if (!terapeutaId) {
+    const { data: ts } = await supabaseAdmin.from('terapeutas').select('id').eq('ativo', true).order('criado_em').limit(1)
+    terapeutaId = ts?.[0]?.id
+  }
+  if (!terapeutaId) { res.status(400).json({ error: 'Nenhuma terapeuta ativa encontrada' }); return }
+
+  const { error: delErr } = await supabaseAdmin.from('disponibilidades').delete().eq('terapeuta_id', terapeutaId)
   if (delErr) { res.status(500).json({ error: delErr.message }); return }
 
   if (rows.length > 0) {
-    const { error: insErr } = await supabaseAdmin
-      .from('disponibilidades')
-      .insert(rows)
+    const rowsComId = rows.map(r => ({ ...r, terapeuta_id: terapeutaId }))
+    const { error: insErr } = await supabaseAdmin.from('disponibilidades').insert(rowsComId)
     if (insErr) { res.status(500).json({ error: insErr.message }); return }
   }
 
