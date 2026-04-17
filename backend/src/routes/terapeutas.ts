@@ -254,9 +254,16 @@ router.get('/:id/slots', async (req: Request, res: Response) => {
   const { data: bloqueios } = await supabaseAdmin.from('bloqueios_agenda')
     .select('hora_inicio, hora_fim').eq('terapeuta_id', id).eq('data', dataParam)
   if (bloqueios?.some(b => !b.hora_inicio)) { res.json({ data: dataParam, slots: [] }); return }
-  const { data: disps } = await supabaseAdmin.from('disponibilidades')
+  let { data: disps } = await supabaseAdmin.from('disponibilidades')
     .select('hora_inicio, hora_fim, intervalo_min')
     .eq('terapeuta_id', id).eq('dia_semana', diaSemana).eq('ativo', true)
+  // Fallback: disponibilidades globais (sem terapeuta_id) configuradas via admin
+  if (!disps || disps.length === 0) {
+    const { data: fallback } = await supabaseAdmin.from('disponibilidades')
+      .select('hora_inicio, hora_fim, intervalo_min')
+      .is('terapeuta_id', null).eq('dia_semana', diaSemana).eq('ativo', true)
+    disps = fallback
+  }
   if (!disps || disps.length === 0) { res.json({ data: dataParam, slots: [] }); return }
   const todosSlots: string[] = []
   for (const d of disps) todosSlots.push(...gerarSlots(d.hora_inicio, d.hora_fim, d.intervalo_min ?? 60))

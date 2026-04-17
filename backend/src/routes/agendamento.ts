@@ -328,7 +328,7 @@ router.get('/slots', async (req: Request, res: Response) => {
 // ─── POST /agendamento ────────────────────────────────────────
 // Público: criar novo agendamento (requer crédito activo)
 router.post('/', async (req: Request, res: Response) => {
-  const { nome_cliente, email_cliente, data, hora, servico, modalidade, credito_id } = req.body
+  const { nome_cliente, email_cliente, data, hora, servico, modalidade, credito_id, terapeuta_id } = req.body
 
   if (!nome_cliente || !email_cliente || !data || !hora) {
     res.status(400).json({ error: 'Campos obrigatórios: nome_cliente, email_cliente, data, hora' })
@@ -399,8 +399,9 @@ router.post('/', async (req: Request, res: Response) => {
       data,
       hora,
       credito_id: creditoUsado,
-      ...(servico    ? { servico    } : {}),
-      ...(modalidade ? { modalidade } : {}),
+      ...(terapeuta_id ? { terapeuta_id } : {}),
+      ...(servico      ? { servico      } : {}),
+      ...(modalidade   ? { modalidade   } : {}),
     })
     .select()
     .single()
@@ -531,16 +532,26 @@ router.get('/admin/disponibilidade', requireAdmin, async (_req: Request, res: Re
   res.json(data)
 })
 
-// PUT /agendamento/admin/disponibilidade — upsert completo
+// PUT /agendamento/admin/disponibilidade — substituição completa (delete + insert)
 router.put('/admin/disponibilidade', requireAdmin, async (req: Request, res: Response) => {
   const rows: Array<{ dia_semana: number; hora_inicio: string; hora_fim: string; intervalo_min: number; ativo: boolean }> = req.body
   if (!Array.isArray(rows)) { res.status(400).json({ error: 'Corpo deve ser array' }); return }
 
-  const { error } = await supabaseAdmin
+  // Apaga disponibilidades globais (sem terapeuta_id) e reinsere
+  const { error: delErr } = await supabaseAdmin
     .from('disponibilidades')
-    .upsert(rows, { onConflict: 'dia_semana' })
+    .delete()
+    .is('terapeuta_id', null)
 
-  if (error) { res.status(500).json({ error: error.message }); return }
+  if (delErr) { res.status(500).json({ error: delErr.message }); return }
+
+  if (rows.length > 0) {
+    const { error: insErr } = await supabaseAdmin
+      .from('disponibilidades')
+      .insert(rows)
+    if (insErr) { res.status(500).json({ error: insErr.message }); return }
+  }
+
   res.json({ ok: true })
 })
 
