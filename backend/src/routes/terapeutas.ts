@@ -228,7 +228,7 @@ router.get('/slug/:slug', async (req: Request, res: Response) => {
 // ── GET /terapeutas ───────────────────────────────────────────
 router.get('/', async (_req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin.from('terapeutas')
-    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, ativo, email')
+    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, ativo, email, slug')
     .eq('ativo', true).order('nome')
   if (error) { res.status(500).json({ error: error.message }); return }
   res.json({ terapeutas: data ?? [] })
