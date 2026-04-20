@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Mail, Phone, MapPin, Clock, CheckCircle2, Send } from 'lucide-react'
+import { Mail, Clock, CheckCircle2, Send } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -12,29 +12,15 @@ const contatos = [
   {
     icon: Mail,
     label: 'E-mail',
-    value: 'apoio@euthycare.pt',
-    desc: 'Respondemos em até 2 horas úteis',
+    value: 'apoio@euthycare.com',
+    desc: 'Respondemos o mais breve possível',
     color: 'bg-sage-100 text-sage-600',
   },
   {
-    icon: Phone,
-    label: 'Telefone',
-    value: '+351 210 000 000',
-    desc: 'Seg–Sex, das 9h às 18h',
-    color: 'bg-lilac-100 text-lilac-600',
-  },
-  {
-    icon: MapPin,
-    label: 'Localização',
-    value: '100% Online',
-    desc: 'Sessões por videochamada segura',
-    color: 'bg-cream-300 text-gray-600',
-  },
-  {
     icon: Clock,
-    label: 'Horário de apoio',
-    value: 'Seg–Sex: 9h–18h',
-    desc: 'Urgências fora de horário por e-mail',
+    label: 'Apoio por e-mail',
+    value: 'Sempre disponível',
+    desc: 'Envie a sua questão e respondemos assim que possível',
     color: 'bg-sage-100 text-sage-600',
   },
 ]
@@ -173,13 +159,12 @@ export default function ContatoPage() {
                 ))}
               </div>
 
-              {/* Map placeholder */}
-              <div className="rounded-2xl overflow-hidden border border-cream-300 bg-gradient-to-br from-sage-50 to-cream-200 h-48 flex items-center justify-center">
-                <div className="text-center text-gray-400">
-                  <MapPin className="h-8 w-8 mx-auto mb-2 text-sage-300" />
-                  <p className="text-sm font-medium">100% Online</p>
-                  <p className="text-xs">Sessões por videochamada, em qualquer lugar</p>
-                </div>
+              <div className="rounded-2xl bg-sage-50 border border-sage-100 p-6 text-center">
+                <Mail className="h-8 w-8 mx-auto mb-2 text-sage-400" />
+                <p className="text-sm font-semibold text-sage-700 mb-1">Prefere escrever directamente?</p>
+                <a href="mailto:apoio@euthycare.com" className="text-sage-600 text-sm font-medium hover:underline">
+                  apoio@euthycare.com
+                </a>
               </div>
             </div>
           </div>
