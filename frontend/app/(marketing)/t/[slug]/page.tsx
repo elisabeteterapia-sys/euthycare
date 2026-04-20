@@ -42,6 +42,7 @@ interface Pacote {
 // ─── Constantes ───────────────────────────────────────────────
 const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
+const THERAPIST_TZ = 'Europe/Lisbon'
 
 function toDateString(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
@@ -51,6 +52,24 @@ function getCalendarDays(y: number, m: number) {
 }
 function formatDate(iso: string) {
   return new Date(iso + 'T12:00:00').toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
+// Converte hora "HH:MM" da timezone da terapeuta para a timezone local do cliente
+function convertSlotToLocal(date: string, hora: string, clientTz: string): string {
+  if (clientTz === THERAPIST_TZ) return hora
+  try {
+    const dt = new Date(`${date}T${hora}:00`)
+    // Interpret as Lisbon time
+    const lisbonStr = `${date}T${hora}:00`
+    const lisbonDate = new Date(new Date(lisbonStr).toLocaleString('en-US', { timeZone: THERAPIST_TZ }))
+    const diff = new Date(lisbonStr).getTime() - lisbonDate.getTime()
+    const localDate = new Date(dt.getTime() + diff)
+    return localDate.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit', timeZone: clientTz })
+  } catch { return hora }
+}
+
+function getClientTz(): string {
+  try { return Intl.DateTimeFormat().resolvedOptions().timeZone } catch { return THERAPIST_TZ }
 }
 
 // ─── Secção: Perfil da Terapeuta ─────────────────────────────
@@ -286,6 +305,8 @@ function SeccaoAgendamento({ terapeuta, sucesso }: { terapeuta: Terapeuta; suces
   const [agendando, setAgendando] = useState(false)
   const [agendado, setAgendado]   = useState(false)
   const [erro, setErro]           = useState('')
+  const [clientTz] = useState(() => getClientTz())
+  const isOtherTz = clientTz !== THERAPIST_TZ
 
   const { firstDay, daysInMonth } = getCalendarDays(ano, mes)
 
@@ -328,7 +349,15 @@ function SeccaoAgendamento({ terapeuta, sucesso }: { terapeuta: Terapeuta; suces
         }),
       })
       const d = await r.json()
-      if (!r.ok) { setErro(d.error ?? 'Erro ao agendar'); return }
+      if (!r.ok) {
+        // Sem créditos — redirecionar para secção de pacotes
+        if (r.status === 402) {
+          document.getElementById('pacotes')?.scrollIntoView({ behavior: 'smooth' })
+          setErro('Para agendar, escolha um pacote acima.')
+          return
+        }
+        setErro(d.error ?? 'Erro ao agendar'); return
+      }
       setAgendado(true)
     } catch {
       setErro('Erro de ligação. Tente novamente.')
@@ -411,18 +440,33 @@ function SeccaoAgendamento({ terapeuta, sucesso }: { terapeuta: Terapeuta; suces
                 ) : slots.length === 0 ? (
                   <p className="text-sm text-gray-400 py-4">Sem horários disponíveis neste dia.</p>
                 ) : (
-                  <div className="flex flex-wrap gap-2">
-                    {slots.map(h => (
-                      <button
-                        key={h}
-                        onClick={() => setHoraSel(h)}
-                        className={cn(
-                          'px-3 py-1.5 rounded-xl border text-sm font-medium transition-colors',
-                          horaSel === h ? 'bg-sage-400 text-white border-sage-400' : 'border-cream-400 text-gray-700 hover:border-sage-400'
-                        )}
-                      >{h}</button>
-                    ))}
-                  </div>
+                  <>
+                    {isOtherTz && (
+                      <p className="text-xs text-sage-600 bg-sage-50 rounded-lg px-3 py-2 mb-2">
+                        Horários na sua hora local ({clientTz.replace('_', ' ')})
+                      </p>
+                    )}
+                    <div className="flex flex-wrap gap-2">
+                      {slots.map(h => {
+                        const localH = convertSlotToLocal(diaSel!, h, clientTz)
+                        return (
+                          <button
+                            key={h}
+                            onClick={() => setHoraSel(h)}
+                            className={cn(
+                              'px-3 py-1.5 rounded-xl border text-sm font-medium transition-colors',
+                              horaSel === h ? 'bg-sage-400 text-white border-sage-400' : 'border-cream-400 text-gray-700 hover:border-sage-400'
+                            )}
+                          >
+                            {localH}
+                            {isOtherTz && localH !== h && (
+                              <span className="text-[10px] opacity-60 ml-1">({h} PT)</span>
+                            )}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </>
                 )}
               </div>
             )}
