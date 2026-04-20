@@ -2,11 +2,25 @@ import Link from 'next/link'
 import { CalendarDays, Heart, Shield, Leaf, ArrowRight, Star, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { NewsletterForm } from '@/components/marketing/newsletter-form'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'EuthyCare — Psicoterapia Online',
-  description: 'Cuidado mental acolhedor e acessível. Consultas de psicoterapia online com profissionais qualificados.',
+  title: 'EuthyCare — Terapia Emocional Online',
+  description: 'Sessões de terapia emocional online em português. Apoio para ansiedade, burnout e bem-estar emocional. Consulta experimental a €25, sem compromisso.',
+  openGraph: {
+    title: 'EuthyCare — Terapia Emocional Online',
+    description: 'Apoio emocional profissional, no conforto da sua casa. Primeira consulta a €25.',
+    url: 'https://euthycare.com',
+    siteName: 'EuthyCare',
+    locale: 'pt_PT',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'EuthyCare — Terapia Emocional Online',
+    description: 'Apoio emocional profissional, no conforto da sua casa. Primeira consulta a €25.',
+  },
 }
 
 export default function HomePage() {
@@ -111,6 +125,13 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="py-16 px-4 bg-cream-100">
+        <div className="container-app max-w-2xl mx-auto">
+          <NewsletterForm origem="homepage" />
         </div>
       </section>
 

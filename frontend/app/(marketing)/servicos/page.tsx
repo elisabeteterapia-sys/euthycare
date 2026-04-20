@@ -7,6 +7,14 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Serviços — EuthyCare',
   description: 'Terapia emocional online. Apoio especializado em ansiedade, burnout e trauma emocional. Sessões por videochamada, para todo o mundo lusófono.',
+  openGraph: {
+    title: 'Serviços de Terapia Emocional Online — EuthyCare',
+    description: 'Apoio especializado em ansiedade, burnout, trauma e depressão. Sessões online em português.',
+    url: 'https://euthycare.com/servicos',
+    siteName: 'EuthyCare',
+    locale: 'pt_PT',
+    type: 'website',
+  },
 }
 
 const servicos = [

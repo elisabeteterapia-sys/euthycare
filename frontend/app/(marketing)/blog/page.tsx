@@ -45,10 +45,10 @@ export default function BlogPage() {
     <>
       <section className="py-16 bg-cream-100 text-center">
         <div className="container-app">
-          <Badge variant="sage" className="mb-4">Conhecimento clínico</Badge>
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">Blog Euthycare</h1>
+          <Badge variant="sage" className="mb-4">Bem-estar emocional</Badge>
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">Blog EuthyCare</h1>
           <p className="text-lg text-gray-500 max-w-md mx-auto">
-            Artigos, técnicas e recursos para enriquecer a sua prática clínica.
+            Artigos sobre ansiedade, burnout, trauma e saúde emocional — para quem quer cuidar de si.
           </p>
         </div>
       </section>
