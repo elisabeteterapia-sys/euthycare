@@ -24,6 +24,7 @@ interface Terapeuta {
   especialidades: string
   preco_cents: number
   duracao_min: number
+  timezone?: string
 }
 
 interface Pacote {
@@ -42,7 +43,7 @@ interface Pacote {
 // ─── Constantes ───────────────────────────────────────────────
 const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
-const THERAPIST_TZ = 'Europe/Lisbon'
+const DEFAULT_TZ = 'Europe/Lisbon'
 
 function toDateString(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
@@ -55,21 +56,19 @@ function formatDate(iso: string) {
 }
 
 // Converte hora "HH:MM" da timezone da terapeuta para a timezone local do cliente
-function convertSlotToLocal(date: string, hora: string, clientTz: string): string {
-  if (clientTz === THERAPIST_TZ) return hora
+function convertSlotToLocal(date: string, hora: string, therapistTz: string, clientTz: string): string {
+  if (clientTz === therapistTz) return hora
   try {
-    const dt = new Date(`${date}T${hora}:00`)
-    // Interpret as Lisbon time
-    const lisbonStr = `${date}T${hora}:00`
-    const lisbonDate = new Date(new Date(lisbonStr).toLocaleString('en-US', { timeZone: THERAPIST_TZ }))
-    const diff = new Date(lisbonStr).getTime() - lisbonDate.getTime()
-    const localDate = new Date(dt.getTime() + diff)
+    const therapistStr = `${date}T${hora}:00`
+    const therapistDate = new Date(new Date(therapistStr).toLocaleString('en-US', { timeZone: therapistTz }))
+    const diff = new Date(therapistStr).getTime() - therapistDate.getTime()
+    const localDate = new Date(new Date(therapistStr).getTime() + diff)
     return localDate.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit', timeZone: clientTz })
   } catch { return hora }
 }
 
 function getClientTz(): string {
-  try { return Intl.DateTimeFormat().resolvedOptions().timeZone } catch { return THERAPIST_TZ }
+  try { return Intl.DateTimeFormat().resolvedOptions().timeZone } catch { return DEFAULT_TZ }
 }
 
 // ─── Secção: Perfil da Terapeuta ─────────────────────────────
@@ -306,7 +305,8 @@ function SeccaoAgendamento({ terapeuta, sucesso }: { terapeuta: Terapeuta; suces
   const [agendado, setAgendado]   = useState(false)
   const [erro, setErro]           = useState('')
   const [clientTz] = useState(() => getClientTz())
-  const isOtherTz = clientTz !== THERAPIST_TZ
+  const therapistTz = terapeuta.timezone ?? DEFAULT_TZ
+  const isOtherTz = clientTz !== therapistTz
 
   const { firstDay, daysInMonth } = getCalendarDays(ano, mes)
 
@@ -448,7 +448,7 @@ function SeccaoAgendamento({ terapeuta, sucesso }: { terapeuta: Terapeuta; suces
                     )}
                     <div className="flex flex-wrap gap-2">
                       {slots.map(h => {
-                        const localH = convertSlotToLocal(diaSel!, h, clientTz)
+                        const localH = convertSlotToLocal(diaSel!, h, therapistTz, clientTz)
                         return (
                           <button
                             key={h}

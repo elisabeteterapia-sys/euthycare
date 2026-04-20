@@ -213,7 +213,7 @@ router.get('/me/repasses', requireTerapeuta, async (req: Request, res: Response)
 router.get('/slug/:slug', async (req: Request, res: Response) => {
   const { slug } = req.params
   const { data, error } = await supabaseAdmin.from('terapeutas')
-    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem')
+    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, timezone')
     .eq('slug', slug).eq('ativo', true).single()
   if (error || !data) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
 
