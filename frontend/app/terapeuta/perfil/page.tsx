@@ -17,7 +17,22 @@ interface Perfil {
   preco_cents: number
   duracao_min: number
   comissao_percentagem: number
+  timezone?: string
 }
+
+const TIMEZONES = [
+  { label: 'Portugal (Lisboa)',        value: 'Europe/Lisbon' },
+  { label: 'Brasil (São Paulo)',        value: 'America/Sao_Paulo' },
+  { label: 'Brasil (Manaus)',           value: 'America/Manaus' },
+  { label: 'Brasil (Fortaleza)',        value: 'America/Fortaleza' },
+  { label: 'Angola / Moçambique',       value: 'Africa/Luanda' },
+  { label: 'Cabo Verde',                value: 'Atlantic/Cape_Verde' },
+  { label: 'Reino Unido (Londres)',     value: 'Europe/London' },
+  { label: 'França / Espanha',          value: 'Europe/Paris' },
+  { label: 'EUA (Nova Iorque)',         value: 'America/New_York' },
+  { label: 'EUA (Los Angeles)',         value: 'America/Los_Angeles' },
+  { label: 'Canadá (Toronto)',          value: 'America/Toronto' },
+]
 
 export default function TerapeutaPerfil() {
   const terapeuta = useTerapeuta()
@@ -28,7 +43,7 @@ export default function TerapeutaPerfil() {
   const [erro, setErro] = useState('')
 
   const [form, setForm] = useState({
-    nome: '', titulo: '', bio: '', foto_url: '', especialidades: '',
+    nome: '', titulo: '', bio: '', foto_url: '', especialidades: '', timezone: 'Europe/Lisbon',
   })
   const [uploadingFoto, setUploadingFoto] = useState(false)
 
@@ -47,6 +62,7 @@ export default function TerapeutaPerfil() {
           bio: t.bio ?? '',
           foto_url: t.foto_url ?? '',
           especialidades: t.especialidades ?? '',
+          timezone: t.timezone ?? 'Europe/Lisbon',
         })
       })
       .finally(() => setLoading(false))
@@ -138,6 +154,23 @@ export default function TerapeutaPerfil() {
           <Field label="Biografia" value={form.bio}
             onChange={v => setForm(f => ({ ...f, bio: v }))}
             placeholder="Apresentação para os clientes..." textarea />
+          <div>
+            <label className="block text-xs font-semibold text-sage-500 uppercase tracking-wide mb-1.5">
+              Fuso horário (país onde trabalha)
+            </label>
+            <select
+              value={form.timezone}
+              onChange={e => setForm(f => ({ ...f, timezone: e.target.value }))}
+              className="w-full h-10 px-3 rounded-xl border border-sage-200 bg-cream-50 text-sm text-sage-800 focus:outline-none focus:ring-2 focus:ring-sage-300"
+            >
+              {TIMEZONES.map(tz => (
+                <option key={tz.value} value={tz.value}>{tz.label}</option>
+              ))}
+            </select>
+            <p className="text-xs text-sage-400 mt-1">
+              Os clientes verão os horários convertidos para o fuso deles automaticamente.
+            </p>
+          </div>
           {/* Info só leitura */}
           {perfil && (
             <div className="mt-2 pt-4 border-t border-sage-100 grid grid-cols-3 gap-4 text-center">

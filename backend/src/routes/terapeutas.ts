@@ -159,12 +159,12 @@ router.post('/me/upload-foto', requireTerapeuta, upload.single('foto'), async (r
 // ── PATCH /terapeutas/me ─────────────────────────────────────
 router.patch('/me', requireTerapeuta, async (req: Request, res: Response) => {
   const b = req.body
-  const allowed = ['nome', 'titulo', 'bio', 'foto_url', 'especialidades']
+  const allowed = ['nome', 'titulo', 'bio', 'foto_url', 'especialidades', 'timezone']
   const update: Record<string, unknown> = {}
   for (const k of allowed) { if (k in b) update[k] = b[k] }
   if (Object.keys(update).length === 0) { res.status(400).json({ error: 'Nenhum campo para actualizar' }); return }
   const { data, error } = await supabaseAdmin.from('terapeutas')
-    .update(update).eq('id', req.terapeutaId!).select('id, nome, titulo, bio, foto_url, especialidades, email').single()
+    .update(update).eq('id', req.terapeutaId!).select('id, nome, titulo, bio, foto_url, especialidades, email, timezone').single()
   if (error) { res.status(500).json({ error: error.message }); return }
   res.json({ terapeuta: data })
 })
@@ -172,7 +172,7 @@ router.patch('/me', requireTerapeuta, async (req: Request, res: Response) => {
 // ── GET /terapeutas/me ────────────────────────────────────────
 router.get('/me', requireTerapeuta, async (req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin.from('terapeutas')
-    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, email, calendario_token')
+    .select('id, nome, titulo, bio, foto_url, especialidades, preco_cents, duracao_min, comissao_percentagem, email, calendario_token, timezone')
     .eq('id', req.terapeutaId!).single()
   if (error || !data) { res.status(404).json({ error: 'Terapeuta não encontrada' }); return }
   res.json({ terapeuta: data })
