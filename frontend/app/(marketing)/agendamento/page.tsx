@@ -660,7 +660,7 @@ export default function AgendamentoPage() {
             <div>
               <Badge variant="lilac" className="mb-3">A terapeuta</Badge>
               <h2 className="text-2xl font-bold text-gray-900 mb-1">Elisabete Lopes</h2>
-              <p className="text-sm text-sage-600 font-medium mb-4">Psicóloga Clínica · Nº OPP 00000</p>
+              <p className="text-sm text-sage-600 font-medium mb-4">Terapeuta · CITRG Reg. 18.642</p>
               <p className="text-gray-600 leading-relaxed mb-4">
                 Especialista em psicoterapia individual e de casal com mais de 10 anos de experiência
                 clínica. Trabalho com adultos e adolescentes em questões de ansiedade, depressão,
@@ -669,10 +669,6 @@ export default function AgendamentoPage() {
               <p className="text-sm text-gray-500 mb-5">
                 <strong className="text-gray-700">Abordagem:</strong> TCC · ACT · Mindfulness-Based (MBSR)
               </p>
-              <div className="flex items-center gap-1 text-sm text-amber-500">
-                {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-amber-400" />)}
-                <span className="ml-2 text-gray-500">4.9 · 120+ consultas</span>
-              </div>
             </div>
           </div>
         </div>
