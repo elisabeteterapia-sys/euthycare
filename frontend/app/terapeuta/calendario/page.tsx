@@ -20,8 +20,8 @@ export default function TerapeutaCalendario() {
 
   const icsUrl = token ? `${API}/terapeutas/cal/${token}` : null
   const webcalUrl = icsUrl?.replace('https://', 'webcal://').replace('http://', 'webcal://')
-  const googleUrl = icsUrl
-    ? `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(icsUrl)}`
+  const googleUrl = webcalUrl
+    ? `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcalUrl)}`
     : null
 
   async function copiar() {
