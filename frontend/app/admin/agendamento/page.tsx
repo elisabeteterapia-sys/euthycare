@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   Calendar, Settings, Ban, RefreshCw, CheckCircle, XCircle,
-  ChevronLeft, ChevronRight, Loader2, Trash2, Clock, Plus,
+  ChevronLeft, ChevronRight, Loader2, Trash2, Clock, Plus, Gift,
 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -23,7 +23,7 @@ const DIAS_SHORT  = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 const MESES_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
 
-type Tab = 'dia' | 'agendamentos' | 'disponibilidade' | 'bloqueios'
+type Tab = 'dia' | 'agendamentos' | 'disponibilidade' | 'bloqueios' | 'oferecer'
 
 interface Agendamento {
   id: string; data: string; hora: string
@@ -68,6 +68,7 @@ export default function AdminAgendamentoPage() {
           { key: 'agendamentos',   label: 'Consultas',       icon: CheckCircle },
           { key: 'disponibilidade',label: 'Disponibilidade', icon: Settings },
           { key: 'bloqueios',      label: 'Bloqueios',       icon: Ban },
+          { key: 'oferecer',       label: 'Oferecer Sessão', icon: Gift },
         ] as const).map(({ key, label, icon: Icon }) => (
           <button key={key} onClick={() => setTab(key)}
             className={cn('flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all',
@@ -81,7 +82,84 @@ export default function AdminAgendamentoPage() {
       {tab === 'agendamentos'    && <TabAgendamentos />}
       {tab === 'disponibilidade' && <TabDisponibilidade />}
       {tab === 'bloqueios'       && <TabBloqueios />}
+      {tab === 'oferecer'        && <TabOferecer />}
     </div>
+  )
+}
+
+// ─── Tab: Oferecer Sessão Gratuita ────────────────────────────
+function TabOferecer() {
+  const [email, setEmail]           = useState('')
+  const [nome, setNome]             = useState('')
+  const [sessoes, setSessoes]       = useState(1)
+  const [validade, setValidade]     = useState(30)
+  const [enviando, setEnviando]     = useState(false)
+  const [resultado, setResultado]   = useState<{ url: string } | null>(null)
+  const [erro, setErro]             = useState('')
+
+  async function handleOferecer(e: { preventDefault(): void }) {
+    e.preventDefault()
+    setEnviando(true); setErro(''); setResultado(null)
+    try {
+      const r = await fetch(`${API}/pacotes/admin/credito-oferta`, {
+        method: 'POST',
+        headers: adminHeaders(),
+        body: JSON.stringify({ email, nome, sessoes, validade_dias: validade }),
+      })
+      const d = await r.json()
+      if (!r.ok) { setErro(d.error ?? 'Erro ao criar crédito'); return }
+      setResultado(d)
+      setEmail(''); setNome('')
+    } catch { setErro('Erro de ligação.') }
+    finally { setEnviando(false) }
+  }
+
+  return (
+    <Card className="max-w-md">
+      <h2 className="text-lg font-bold text-gray-900 mb-1">Oferecer sessão gratuita</h2>
+      <p className="text-sm text-gray-400 mb-5">Cria um crédito manual para o cliente agendar sem pagamento.</p>
+
+      {resultado && (
+        <div className="mb-4 rounded-xl bg-sage-50 border border-sage-200 p-4 text-sm text-sage-800">
+          <p className="font-semibold mb-1">✓ Crédito criado com sucesso!</p>
+          <p className="text-xs text-gray-500 mb-2">Envie este link ao cliente:</p>
+          <div className="flex items-center gap-2">
+            <code className="flex-1 rounded bg-white border border-sage-200 px-2 py-1 text-xs break-all">{resultado.url}</code>
+            <button onClick={() => navigator.clipboard.writeText(resultado.url)}
+              className="text-sage-600 text-xs font-medium hover:underline whitespace-nowrap">Copiar</button>
+          </div>
+        </div>
+      )}
+
+      <form onSubmit={handleOferecer} className="space-y-3">
+        <div>
+          <label className="text-xs font-medium text-gray-600 mb-1 block">Nome do cliente</label>
+          <input type="text" value={nome} onChange={e => setNome(e.target.value)} placeholder="Nome completo"
+            className="w-full h-9 px-3 rounded-xl border border-cream-400 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400" />
+        </div>
+        <div>
+          <label className="text-xs font-medium text-gray-600 mb-1 block">E-mail do cliente *</label>
+          <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="cliente@email.com"
+            className="w-full h-9 px-3 rounded-xl border border-cream-400 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400" />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs font-medium text-gray-600 mb-1 block">Nº sessões</label>
+            <input type="number" min={1} max={20} value={sessoes} onChange={e => setSessoes(Number(e.target.value))}
+              className="w-full h-9 px-3 rounded-xl border border-cream-400 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400" />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-gray-600 mb-1 block">Validade (dias)</label>
+            <input type="number" min={7} max={365} value={validade} onChange={e => setValidade(Number(e.target.value))}
+              className="w-full h-9 px-3 rounded-xl border border-cream-400 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400" />
+          </div>
+        </div>
+        {erro && <p className="text-sm text-red-500">{erro}</p>}
+        <Button type="submit" loading={enviando} disabled={!email} className="w-full gap-2">
+          <Gift className="h-4 w-4" /> Criar crédito gratuito
+        </Button>
+      </form>
+    </Card>
   )
 }
 

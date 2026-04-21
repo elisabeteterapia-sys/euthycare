@@ -257,6 +257,37 @@ router.post('/webhook', async (req: Request, res: Response) => {
   res.json({ received: true })
 })
 
+// ─── Admin: criar crédito de oferta (sessão gratuita manual) ──
+router.post('/admin/credito-oferta', requireAdmin, async (req: Request, res: Response) => {
+  const { email, nome, terapeuta_id, terapeuta_slug, sessoes = 1, validade_dias = 30 } = req.body
+  if (!email) { res.status(400).json({ error: 'email obrigatório' }); return }
+
+  const validade = new Date()
+  validade.setDate(validade.getDate() + Number(validade_dias))
+
+  const { error } = await supabaseAdmin.from('creditos_cliente').insert({
+    cliente_email:     email,
+    cliente_nome:      nome ?? '',
+    pacote_id:         null,
+    terapeuta_id:      terapeuta_id || null,
+    sessoes_total:     Number(sessoes),
+    sessoes_restantes: Number(sessoes),
+    validade:          validade.toISOString().slice(0, 10),
+    stripe_payment_id: null,
+    status:            'ativo',
+    tipo_origem:       'oferta',
+    valor_pago_cents:  0,
+    comissao_cents:    0,
+    repasse_cents:     0,
+    repasse_pago:      false,
+  })
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+
+  const base = terapeuta_slug ? `https://euthycare.com/t/${terapeuta_slug}` : 'https://euthycare.com/agendamento'
+  res.json({ ok: true, url: base })
+})
+
 // ─── Admin: listar créditos ───────────────────────────────────
 router.get('/admin/creditos', requireAdmin, async (_req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin
