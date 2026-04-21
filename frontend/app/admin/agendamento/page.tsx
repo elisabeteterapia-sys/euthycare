@@ -87,79 +87,135 @@ export default function AdminAgendamentoPage() {
   )
 }
 
-// ─── Tab: Oferecer Sessão Gratuita ────────────────────────────
-function TabOferecer() {
-  const [email, setEmail]           = useState('')
-  const [nome, setNome]             = useState('')
-  const [sessoes, setSessoes]       = useState(1)
-  const [validade, setValidade]     = useState(30)
-  const [enviando, setEnviando]     = useState(false)
-  const [resultado, setResultado]   = useState<{ url: string } | null>(null)
-  const [erro, setErro]             = useState('')
+// ─── Tab: Oferecer Sessão — Link Mágico ──────────────────────
+interface TokenOferta {
+  id: string; token: string; url: string
+  sessoes: number; validade_dias: number
+  usos_max: number | null; usos_total: number
+  criado_em: string
+}
 
-  async function handleOferecer(e: { preventDefault(): void }) {
-    e.preventDefault()
-    setEnviando(true); setErro(''); setResultado(null)
+function TabOferecer() {
+  const [tokens, setTokens]       = useState<TokenOferta[]>([])
+  const [loading, setLoading]     = useState(true)
+  const [sessoes, setSessoes]     = useState(1)
+  const [validade, setValidade]   = useState(30)
+  const [gerando, setGerando]     = useState(false)
+  const [copiado, setCopiado]     = useState<string | null>(null)
+  const [erro, setErro]           = useState('')
+
+  async function carregarTokens() {
     try {
-      const r = await fetch(`${API}/pacotes/admin/credito-oferta`, {
+      const r = await fetch(`${API}/oferta/admin/listar`, { headers: adminHeaders() })
+      const d = await r.json()
+      if (Array.isArray(d)) setTokens(d)
+    } catch { /* ignore */ }
+    finally { setLoading(false) }
+  }
+
+  useEffect(() => { carregarTokens() }, [])
+
+  async function gerarLink() {
+    setGerando(true); setErro('')
+    try {
+      const r = await fetch(`${API}/oferta/admin/criar`, {
         method: 'POST',
         headers: adminHeaders(),
-        body: JSON.stringify({ email, nome, sessoes, validade_dias: validade }),
+        body: JSON.stringify({ sessoes, validade_dias: validade, usos_max: 1 }),
       })
       const d = await r.json()
-      if (!r.ok) { setErro(d.error ?? 'Erro ao criar crédito'); return }
-      setResultado(d)
-      setEmail(''); setNome('')
+      if (!r.ok) { setErro(d.error ?? 'Erro ao gerar link'); return }
+      setTokens(prev => [d, ...prev])
+      copiar(d.url, d.id)
     } catch { setErro('Erro de ligação.') }
-    finally { setEnviando(false) }
+    finally { setGerando(false) }
+  }
+
+  async function desactivar(id: string) {
+    await fetch(`${API}/oferta/admin/${id}`, { method: 'DELETE', headers: adminHeaders() })
+    setTokens(prev => prev.filter(t => t.id !== id))
+  }
+
+  function copiar(url: string, id: string) {
+    navigator.clipboard.writeText(url)
+    setCopiado(id)
+    setTimeout(() => setCopiado(null), 2000)
   }
 
   return (
-    <Card className="max-w-md">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">Oferecer sessão gratuita</h2>
-      <p className="text-sm text-gray-400 mb-5">Cria um crédito manual para o cliente agendar sem pagamento.</p>
-
-      {resultado && (
-        <div className="mb-4 rounded-xl bg-sage-50 border border-sage-200 p-4 text-sm text-sage-800">
-          <p className="font-semibold mb-1">✓ Crédito criado com sucesso!</p>
-          <p className="text-xs text-gray-500 mb-2">Envie este link ao cliente:</p>
-          <div className="flex items-center gap-2">
-            <code className="flex-1 rounded bg-white border border-sage-200 px-2 py-1 text-xs break-all">{resultado.url}</code>
-            <button onClick={() => navigator.clipboard.writeText(resultado.url)}
-              className="text-sage-600 text-xs font-medium hover:underline whitespace-nowrap">Copiar</button>
-          </div>
-        </div>
-      )}
-
-      <form onSubmit={handleOferecer} className="space-y-3">
-        <div>
-          <label className="text-xs font-medium text-gray-600 mb-1 block">Nome do cliente</label>
-          <input type="text" value={nome} onChange={e => setNome(e.target.value)} placeholder="Nome completo"
-            className="w-full h-9 px-3 rounded-xl border border-cream-400 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400" />
-        </div>
-        <div>
-          <label className="text-xs font-medium text-gray-600 mb-1 block">E-mail do cliente *</label>
-          <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="cliente@email.com"
-            className="w-full h-9 px-3 rounded-xl border border-cream-400 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400" />
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="text-xs font-medium text-gray-600 mb-1 block">Nº sessões</label>
-            <input type="number" min={1} max={20} value={sessoes} onChange={e => setSessoes(Number(e.target.value))}
+    <div className="max-w-lg space-y-5">
+      {/* Gerador */}
+      <Card>
+        <h2 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
+          <Gift className="h-5 w-5 text-sage-500" /> Link mágico de sessão gratuita
+        </h2>
+        <p className="text-sm text-gray-400 mb-4">
+          Gera um link de uso único. O cliente abre, insere o e-mail e agenda sem pagar.
+        </p>
+        <div className="flex gap-3 mb-3">
+          <div className="flex-1">
+            <label className="text-xs font-medium text-gray-600 mb-1 block">Sessões</label>
+            <input type="number" min={1} max={10} value={sessoes}
+              onChange={e => setSessoes(Number(e.target.value))}
               className="w-full h-9 px-3 rounded-xl border border-cream-400 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400" />
           </div>
-          <div>
+          <div className="flex-1">
             <label className="text-xs font-medium text-gray-600 mb-1 block">Validade (dias)</label>
-            <input type="number" min={7} max={365} value={validade} onChange={e => setValidade(Number(e.target.value))}
+            <input type="number" min={7} max={365} value={validade}
+              onChange={e => setValidade(Number(e.target.value))}
               className="w-full h-9 px-3 rounded-xl border border-cream-400 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400" />
           </div>
         </div>
-        {erro && <p className="text-sm text-red-500">{erro}</p>}
-        <Button type="submit" loading={enviando} disabled={!email} className="w-full gap-2">
-          <Gift className="h-4 w-4" /> Criar crédito gratuito
+        {erro && <p className="text-sm text-red-500 mb-2">{erro}</p>}
+        <Button onClick={gerarLink} loading={gerando} className="w-full gap-2">
+          <Gift className="h-4 w-4" /> Gerar link e copiar
         </Button>
-      </form>
-    </Card>
+      </Card>
+
+      {/* Lista de links activos */}
+      <div>
+        <h3 className="text-sm font-semibold text-gray-700 mb-3">Links activos</h3>
+        {loading ? (
+          <div className="flex items-center gap-2 text-gray-400 text-sm py-4">
+            <Loader2 className="h-4 w-4 animate-spin" /> A carregar…
+          </div>
+        ) : tokens.length === 0 ? (
+          <p className="text-sm text-gray-400">Nenhum link gerado ainda.</p>
+        ) : (
+          <div className="space-y-2">
+            {tokens.map(t => (
+              <div key={t.id} className="rounded-2xl border border-cream-300 bg-cream-100 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <code className="text-xs text-gray-600 break-all block mb-1">{t.url}</code>
+                    <p className="text-xs text-gray-400">
+                      {t.sessoes} sessão{t.sessoes > 1 ? 'ões' : ''} · {t.validade_dias} dias ·{' '}
+                      {t.usos_max === null
+                        ? `${t.usos_total} usos`
+                        : `${t.usos_total}/${t.usos_max} uso${t.usos_max > 1 ? 's' : ''}`}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => copiar(t.url, t.id)}
+                      className="text-xs font-medium text-sage-600 hover:underline"
+                    >
+                      {copiado === t.id ? '✓ Copiado' : 'Copiar'}
+                    </button>
+                    <button
+                      onClick={() => desactivar(t.id)}
+                      className="text-xs text-red-400 hover:text-red-600 hover:underline"
+                    >
+                      Remover
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
 

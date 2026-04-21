@@ -20,6 +20,7 @@ import conteudoRouter from './routes/conteudo'
 import terapeutasRouter from './routes/terapeutas'
 import blogRouter from './routes/blog'
 import newsletterRouter from './routes/newsletter'
+import ofertaTokenRouter from './routes/oferta-token'
 
 const app = express()
 const PORT = process.env.PORT ?? 3001
@@ -79,6 +80,7 @@ app.use('/conteudo',    conteudoRouter)
 app.use('/terapeutas', terapeutasRouter)
 app.use('/blog',       blogRouter)
 app.use('/newsletter', newsletterRouter)
+app.use('/oferta',     ofertaTokenRouter)
 
 // 404
 app.use((_req, res) => {
