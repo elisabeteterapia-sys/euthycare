@@ -143,7 +143,6 @@ router.post('/:token/resgatar', async (req: Request, res: Response) => {
     validade:          validade.toISOString().slice(0, 10),
     stripe_payment_id: null,
     status:            'ativo',
-    tipo_origem:       'oferta',
     valor_pago_cents:  0,
     comissao_cents:    0,
     repasse_cents:     0,
@@ -158,12 +157,13 @@ router.post('/:token/resgatar', async (req: Request, res: Response) => {
     .update({ usos_total: oferta.usos_total + 1 })
     .eq('id', oferta.id)
 
-  // URL de destino: página da terapeuta ou agendamento geral
-  const base = oferta.terapeuta_slug
-    ? `${SITE}/t/${oferta.terapeuta_slug}`
-    : `${SITE}/agendamento`
+  // Redirecionar para agendamento com email pré-carregado
+  const emailParam = encodeURIComponent(email)
+  const url = oferta.terapeuta_slug
+    ? `${SITE}/t/${oferta.terapeuta_slug}?sucesso=1`
+    : `${SITE}/agendamento?sucesso=1&email=${emailParam}`
 
-  res.json({ ok: true, url: base })
+  res.json({ ok: true, url })
 })
 
 export default router

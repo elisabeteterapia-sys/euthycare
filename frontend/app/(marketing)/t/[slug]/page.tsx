@@ -291,7 +291,7 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
 }
 
 // ─── Secção: Agendar slot ─────────────────────────────────────
-function SeccaoAgendamento({ terapeuta, sucesso }: { terapeuta: Terapeuta; sucesso: boolean }) {
+function SeccaoAgendamento({ terapeuta, sucesso, emailInicial = '' }: { terapeuta: Terapeuta; sucesso: boolean; emailInicial?: string }) {
   const hoje    = new Date()
   const [ano, setAno]   = useState(hoje.getFullYear())
   const [mes, setMes]   = useState(hoje.getMonth())
@@ -299,7 +299,7 @@ function SeccaoAgendamento({ terapeuta, sucesso }: { terapeuta: Terapeuta; suces
   const [slots, setSlots]   = useState<string[]>([])
   const [horaSel, setHoraSel] = useState<string | null>(null)
   const [loadSlots, setLoadSlots] = useState(false)
-  const [email, setEmail]   = useState('')
+  const [email, setEmail]   = useState(emailInicial)
   const [nome, setNome]     = useState('')
   const [agendando, setAgendando] = useState(false)
   const [agendado, setAgendado]   = useState(false)
@@ -513,6 +513,7 @@ export default function TerapeutaPublicaPage() {
   const { slug }        = useParams<{ slug: string }>()
   const searchParams    = useSearchParams()
   const sucesso         = searchParams.get('sucesso') === '1'
+  const emailParam      = searchParams.get('email') ?? ''
 
   const [terapeuta, setTerapeuta] = useState<Terapeuta | null>(null)
   const [loading, setLoading]     = useState(true)
@@ -561,7 +562,7 @@ export default function TerapeutaPublicaPage() {
         <PerfilTerapeuta t={terapeuta} />
 
         {sucesso
-          ? <SeccaoAgendamento terapeuta={terapeuta} sucesso={true} />
+          ? <SeccaoAgendamento terapeuta={terapeuta} sucesso={true} emailInicial={emailParam} />
           : <SeccaoPacotes terapeuta={terapeuta} slug={slug} />
         }
 
