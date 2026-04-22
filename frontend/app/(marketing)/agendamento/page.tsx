@@ -78,7 +78,88 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   )
 }
 
-// ─── Secção de Preços ─────────────────────────────────────────
+// ─── Secção: escolha de terapeuta ────────────────────────────
+interface TerapeutaCard {
+  id: string; nome: string; titulo: string; bio: string
+  foto_url: string | null; especialidades: string[]; slug: string; duracao_min: number
+}
+
+function SeccaoTerapeutas() {
+  const [terapeutas, setTerapeutas] = useState<TerapeutaCard[]>([])
+  const [loading, setLoading]       = useState(true)
+
+  useEffect(() => {
+    fetch(`${API}/terapeutas`)
+      .then(r => r.json())
+      .then(d => { if (Array.isArray(d.terapeutas)) setTerapeutas(d.terapeutas) })
+      .catch(() => null)
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return (
+    <div className="flex justify-center py-20 text-gray-400">
+      <Loader2 className="h-6 w-6 animate-spin mr-2" /> A carregar…
+    </div>
+  )
+
+  return (
+    <section id="planos" className="py-20 bg-cream-200">
+      <div className="container-app">
+        <div className="text-center mb-12">
+          <Badge variant="sage" className="mb-4">As nossas terapeutas</Badge>
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">Escolha a sua terapeuta</h2>
+          <p className="text-gray-500 max-w-lg mx-auto">
+            Cada terapeuta tem os seus pacotes e disponibilidade. Clique para ver os preços e agendar.
+          </p>
+        </div>
+
+        {terapeutas.length === 0 ? (
+          <p className="text-center text-gray-400 py-8">Sem terapeutas disponíveis de momento.</p>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {terapeutas.map(t => (
+              <a key={t.id} href={`/t/${t.slug}`}
+                className="group bg-white rounded-2xl border border-cream-200 p-6 shadow-soft hover:shadow-card hover:border-sage-300 transition-all duration-200 flex flex-col"
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  {t.foto_url ? (
+                    <img src={t.foto_url} alt={t.nome}
+                      className="h-16 w-16 rounded-xl object-cover flex-shrink-0" />
+                  ) : (
+                    <div className="h-16 w-16 rounded-xl bg-gradient-to-br from-sage-200 to-lilac-200 flex items-center justify-center text-2xl font-bold text-sage-600 flex-shrink-0">
+                      {t.nome.charAt(0)}
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <p className="font-bold text-gray-900 group-hover:text-sage-700 transition-colors">{t.nome}</p>
+                    <p className="text-sm text-sage-600">{t.titulo}</p>
+                    <p className="text-xs text-gray-400">{t.duracao_min} min por sessão</p>
+                  </div>
+                </div>
+                {t.bio && (
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-3 flex-1">{t.bio}</p>
+                )}
+                {t.especialidades?.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {t.especialidades.slice(0, 3).map((e: string) => (
+                      <span key={e} className="text-xs bg-sage-50 text-sage-600 border border-sage-200 rounded-full px-2.5 py-0.5">{e}</span>
+                    ))}
+                  </div>
+                )}
+                <div className="flex items-center justify-between pt-3 border-t border-cream-200">
+                  <span className="text-xs text-gray-400">Ver consulta experimental · pacotes</span>
+                  <ArrowRight className="h-4 w-4 text-sage-400 group-hover:text-sage-600 group-hover:translate-x-1 transition-all" />
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+// ─── Secção de Preços (legado — mantido para compatibilidade) ─
 function SeccaoPacotes() {
   const [pacotes, setPacotes]     = useState<Pacote[]>([])
   const [loading, setLoading]     = useState(true)
@@ -612,8 +693,8 @@ export default function AgendamentoPage() {
         </div>
       </section>
 
-      {/* ── Pacotes & Preços ──────────────────────────────────── */}
-      <SeccaoPacotes />
+      {/* ── Terapeutas ───────────────────────────────────────── */}
+      <SeccaoTerapeutas />
 
       {/* ── Agendar (verificar créditos ou wizard) ────────────── */}
       {creditos && creditos.length > 0 ? (
@@ -646,30 +727,6 @@ export default function AgendamentoPage() {
                 <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
               </Card>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Sobre a terapeuta ────────────────────────────────── */}
-      <section className="py-20 bg-cream-100">
-        <div className="container-app max-w-3xl">
-          <div className="flex flex-col sm:flex-row gap-8 items-center sm:items-start">
-            <div className="h-40 w-40 rounded-3xl bg-gradient-to-br from-sage-200 to-lilac-200 flex items-center justify-center text-5xl font-bold text-sage-600 flex-shrink-0">
-              E
-            </div>
-            <div>
-              <Badge variant="lilac" className="mb-3">A terapeuta</Badge>
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">Elisabete Lopes</h2>
-              <p className="text-sm text-sage-600 font-medium mb-4">Terapeuta · CITRG Reg. 18.642</p>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                Especialista em psicoterapia individual e de casal com mais de 10 anos de experiência
-                clínica. Trabalho com adultos e adolescentes em questões de ansiedade, depressão,
-                trauma e dificuldades relacionais, numa abordagem integrativa centrada na pessoa.
-              </p>
-              <p className="text-sm text-gray-500 mb-5">
-                <strong className="text-gray-700">Abordagem:</strong> TCC · ACT · Mindfulness-Based (MBSR)
-              </p>
-            </div>
           </div>
         </div>
       </section>
