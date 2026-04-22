@@ -73,6 +73,9 @@ export default function TerapeutaLayout({ children }: { children: React.ReactNod
             <a href="/terapeuta/calendario" className="text-sm font-medium text-sage-600 hover:text-sage-800 transition-colors">
               Calendário
             </a>
+            <a href="/terapeuta/oferta" className="text-sm font-medium text-sage-600 hover:text-sage-800 transition-colors">
+              Sessão Gratuita
+            </a>
             <a href="/terapeuta/perfil" className="text-sm font-medium text-sage-600 hover:text-sage-800 transition-colors">
               Perfil
             </a>

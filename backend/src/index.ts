@@ -14,7 +14,7 @@ import geoRouter from './routes/geo'
 import paymentsRouter from './routes/payments'
 import waitlistRouter from './routes/waitlist'
 import lojaRouter from './routes/loja'
-import agendamentoRouter from './routes/agendamento'
+import agendamentoRouter, { enviarLembretes } from './routes/agendamento'
 import pacotesRouter from './routes/pacotes'
 import conteudoRouter from './routes/conteudo'
 import terapeutasRouter from './routes/terapeutas'
@@ -96,5 +96,15 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`)
 })
+
+// ─── Cron: lembretes de consulta (cada 15 min) ────────────────
+const QUINZE_MIN = 15 * 60 * 1000
+setInterval(() => {
+  enviarLembretes().catch(e => console.error('[cron-lembretes]', e))
+}, QUINZE_MIN)
+// Executa também ao arrancar (depois de 30s para deixar o servidor estabilizar)
+setTimeout(() => {
+  enviarLembretes().catch(e => console.error('[cron-lembretes]', e))
+}, 30_000)
 
 export default app

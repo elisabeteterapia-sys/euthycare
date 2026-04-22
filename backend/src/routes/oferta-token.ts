@@ -2,22 +2,43 @@
 // POST /oferta/admin/criar          — admin: gerar token
 // GET  /oferta/admin/listar         — admin: listar tokens activos
 // DELETE /oferta/admin/:id          — admin: desactivar token
+// POST /oferta/terapeuta/criar      — terapeuta JWT: gerar token próprio
+// GET  /oferta/terapeuta/listar     — terapeuta JWT: listar tokens próprios
+// DELETE /oferta/terapeuta/:id      — terapeuta JWT: desactivar token próprio
 // GET  /oferta/:token               — público: info do token
 // POST /oferta/:token/resgatar      — público: criar crédito e devolver URL
 
 import { Router, Request, Response, NextFunction } from 'express'
 import crypto from 'crypto'
+import jwt from 'jsonwebtoken'
 import { supabaseAdmin } from '../lib/supabase'
 
 const router = Router()
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://euthycare.com'
+const JWT_SECRET = process.env.TERAPEUTA_JWT_SECRET ?? 'euthycare-terapeuta-secret-change-me'
 
 function requireAdmin(req: Request, res: Response, next: NextFunction) {
   if (req.headers['x-admin-secret'] !== process.env.ADMIN_SECRET) {
     res.status(401).json({ error: 'Acesso negado' }); return
   }
   next()
+}
+
+declare module 'express-serve-static-core' {
+  interface Request { terapeutaId?: string }
+}
+
+function requireTerapeutaJwt(req: Request, res: Response, next: NextFunction) {
+  const auth = req.headers['authorization']
+  if (!auth?.startsWith('Bearer ')) { res.status(401).json({ error: 'Token não fornecido' }); return }
+  try {
+    const payload = jwt.verify(auth.slice(7), JWT_SECRET) as { sub: string }
+    req.terapeutaId = payload.sub
+    next()
+  } catch {
+    res.status(401).json({ error: 'Token inválido ou expirado' })
+  }
 }
 
 function gerarToken() {
@@ -76,6 +97,70 @@ router.get('/admin/listar', requireAdmin, async (_req: Request, res: Response) =
 
 // ─── Admin: desactivar token ──────────────────────────────────
 router.delete('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
+  const { error } = await supabaseAdmin
+    .from('ofertas_token')
+    .update({ ativo: false })
+    .eq('id', req.params.id)
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ ok: true })
+})
+
+// ─── Terapeuta: criar token próprio ──────────────────────────
+router.post('/terapeuta/criar', requireTerapeutaJwt, async (req: Request, res: Response) => {
+  const { sessoes = 1, validade_dias = 30, usos_max = 1 } = req.body
+
+  // Resolver slug e id da terapeuta autenticada
+  const { data: t } = await supabaseAdmin
+    .from('terapeutas')
+    .select('id, slug')
+    .eq('id', req.terapeutaId!)
+    .single()
+
+  if (!t) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
+
+  const token = gerarToken()
+  const { data, error } = await supabaseAdmin
+    .from('ofertas_token')
+    .insert({
+      token,
+      terapeuta_id:   t.id,
+      terapeuta_slug: t.slug ?? null,
+      sessoes:        Number(sessoes),
+      validade_dias:  Number(validade_dias),
+      usos_max:       usos_max === null ? null : Number(usos_max),
+    })
+    .select().single()
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ ...data, url: `${SITE}/oferta/${token}` })
+})
+
+// ─── Terapeuta: listar tokens próprios ───────────────────────
+router.get('/terapeuta/listar', requireTerapeutaJwt, async (req: Request, res: Response) => {
+  const { data, error } = await supabaseAdmin
+    .from('ofertas_token')
+    .select('*')
+    .eq('terapeuta_id', req.terapeutaId!)
+    .eq('ativo', true)
+    .order('criado_em', { ascending: false })
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json((data ?? []).map(t => ({ ...t, url: `${SITE}/oferta/${t.token}` })))
+})
+
+// ─── Terapeuta: desactivar token próprio ─────────────────────
+router.delete('/terapeuta/:id', requireTerapeutaJwt, async (req: Request, res: Response) => {
+  // Verificar que o token pertence a esta terapeuta
+  const { data: existing } = await supabaseAdmin
+    .from('ofertas_token')
+    .select('id')
+    .eq('id', req.params.id)
+    .eq('terapeuta_id', req.terapeutaId!)
+    .single()
+
+  if (!existing) { res.status(403).json({ error: 'Acesso negado.' }); return }
+
   const { error } = await supabaseAdmin
     .from('ofertas_token')
     .update({ ativo: false })

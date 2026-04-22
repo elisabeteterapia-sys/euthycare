@@ -217,12 +217,24 @@ router.get('/slug/:slug', async (req: Request, res: Response) => {
     .eq('slug', slug).eq('ativo', true).single()
   if (error || !data) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
 
-  // Pacotes públicos desta terapeuta
-  const { data: pacotes } = await supabaseAdmin.from('pacotes')
-    .select('id, tipo, nome, numero_sessoes, duracao_min, preco, moeda, validade_dias, destaque, descricao')
+  const selectPacotes = 'id, tipo, nome, numero_sessoes, duracao_min, preco, moeda, validade_dias, destaque, descricao'
+
+  // Pacotes específicos desta terapeuta
+  const { data: pacotesProprios } = await supabaseAdmin.from('pacotes')
+    .select(selectPacotes)
     .eq('terapeuta_id', data.id).eq('ativo', true).eq('publico', true).order('preco')
 
-  res.json({ terapeuta: data, pacotes: pacotes ?? [] })
+  // Pacote experimental global (terapeuta_id nulo) — sempre incluído
+  const { data: expGlobal } = await supabaseAdmin.from('pacotes')
+    .select(selectPacotes)
+    .is('terapeuta_id', null).eq('tipo', 'experimental').eq('ativo', true).eq('publico', true)
+
+  // Merge: experimental global primeiro, depois os próprios (sem duplicar tipo experimental)
+  const temExpProprio = (pacotesProprios ?? []).some(p => p.tipo === 'experimental')
+  const expBase = (!temExpProprio && expGlobal?.length) ? expGlobal : []
+  const pacotes = [...expBase, ...(pacotesProprios ?? [])].sort((a, b) => Number(a.preco) - Number(b.preco))
+
+  res.json({ terapeuta: data, pacotes })
 })
 
 // ── GET /terapeutas ───────────────────────────────────────────

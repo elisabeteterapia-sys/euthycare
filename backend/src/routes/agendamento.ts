@@ -609,4 +609,100 @@ router.delete('/admin/bloqueios/:id', requireAdmin, async (req: Request, res: Re
   res.status(204).send()
 })
 
+// ─── Lembretes automáticos (chamado pelo cron interno) ────────
+export async function enviarLembretes() {
+  if (!RESEND_KEY) return
+
+  const agora = new Date()
+
+  // Janela 24h: agendamentos entre now+23h e now+25h
+  const low24  = new Date(agora.getTime() + 23 * 60 * 60 * 1000)
+  const high24 = new Date(agora.getTime() + 25 * 60 * 60 * 1000)
+
+  // Janela 30min: agendamentos entre now+15min e now+45min
+  const low30  = new Date(agora.getTime() + 15 * 60 * 1000)
+  const high30 = new Date(agora.getTime() + 45 * 60 * 1000)
+
+  function fmtDate(d: Date) { return d.toISOString().slice(0, 10) }
+  function fmtTime(d: Date) { return d.toTimeString().slice(0, 5) }
+
+  // ── Lembretes 24h ──────────────────────────────────────────
+  const datas24 = [...new Set([fmtDate(low24), fmtDate(high24)])]
+  const { data: ag24 } = await supabaseAdmin
+    .from('agendamentos')
+    .select('id, nome_cliente, email_cliente, data, hora, video_url, terapeuta_id, status')
+    .in('data', datas24)
+    .not('status', 'eq', 'cancelado')
+    .eq('lembrete_24h', false)
+
+  for (const ag of ag24 ?? []) {
+    const horaAgendamento = `${ag.data}T${ag.hora}:00`
+    const tsAg = new Date(horaAgendamento).getTime()
+    if (tsAg < low24.getTime() || tsAg > high24.getTime()) continue
+
+    let duracaoMin = 50
+    if (ag.terapeuta_id) {
+      const { data: t } = await supabaseAdmin.from('terapeutas')
+        .select('duracao_min').eq('id', ag.terapeuta_id).single()
+      if (t) duracaoMin = t.duracao_min ?? 50
+    }
+
+    const { dataFmt, hora } = fmtDataHora(ag.data, ag.hora)
+    await sendEmail(
+      ag.email_cliente,
+      `Lembrete: consulta amanhã às ${hora}`,
+      `<div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#2d4534">
+        <h2 style="color:#5c8a6b">EuthyCare</h2>
+        <p>Olá <strong>${ag.nome_cliente}</strong>,</p>
+        <p>Este é um lembrete de que tem uma consulta <strong>amanhã</strong>:</p>
+        <div style="background:#f2f7f4;border-radius:12px;padding:16px 20px;margin:20px 0">
+          <p style="margin:0"><strong>Data:</strong> ${dataFmt}</p>
+          <p style="margin:8px 0 0"><strong>Hora:</strong> ${hora}</p>
+          <p style="margin:8px 0 0"><strong>Duração:</strong> ${duracaoMin} minutos</p>
+        </div>
+        <a href="${ag.video_url}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:12px 20px;border-radius:10px;font-weight:600;font-size:14px">
+          🎥 Link da videochamada
+        </a>
+        <p style="font-size:12px;color:#97c2a8;margin-top:24px">EuthyCare · euthycare.com</p>
+      </div>`
+    )
+
+    await supabaseAdmin.from('agendamentos').update({ lembrete_24h: true }).eq('id', ag.id)
+    console.log(`[lembretes] 24h enviado → ${ag.email_cliente} (${ag.data} ${ag.hora})`)
+  }
+
+  // ── Lembretes 30min ────────────────────────────────────────
+  const datas30 = [...new Set([fmtDate(low30), fmtDate(high30)])]
+  const { data: ag30 } = await supabaseAdmin
+    .from('agendamentos')
+    .select('id, nome_cliente, email_cliente, data, hora, video_url, terapeuta_id, status')
+    .in('data', datas30)
+    .not('status', 'eq', 'cancelado')
+    .eq('lembrete_30m', false)
+
+  for (const ag of ag30 ?? []) {
+    const horaAgendamento = `${ag.data}T${ag.hora}:00`
+    const tsAg = new Date(horaAgendamento).getTime()
+    if (tsAg < low30.getTime() || tsAg > high30.getTime()) continue
+
+    const { hora } = fmtDataHora(ag.data, ag.hora)
+    await sendEmail(
+      ag.email_cliente,
+      `A sua consulta começa em 30 minutos — às ${hora}`,
+      `<div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#2d4534">
+        <h2 style="color:#5c8a6b">EuthyCare</h2>
+        <p>Olá <strong>${ag.nome_cliente}</strong>,</p>
+        <p>A sua consulta começa <strong>em cerca de 30 minutos</strong> (${hora}).</p>
+        <a href="${ag.video_url}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:14px 24px;border-radius:10px;font-weight:600;font-size:15px;margin:16px 0">
+          🎥 Entrar na videochamada agora
+        </a>
+        <p style="font-size:12px;color:#97c2a8;margin-top:24px">EuthyCare · euthycare.com</p>
+      </div>`
+    )
+
+    await supabaseAdmin.from('agendamentos').update({ lembrete_30m: true }).eq('id', ag.id)
+    console.log(`[lembretes] 30min enviado → ${ag.email_cliente} (${ag.data} ${ag.hora})`)
+  }
+}
+
 export default router
