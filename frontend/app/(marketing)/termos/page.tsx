@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 }
 
 const UPDATED = '9 de abril de 2026'
-const CONTACT = 'legal@euthycare.com'
+const CONTACT = 'suporte@euthycare.com'
 
 export default function TermosPage() {
   return (

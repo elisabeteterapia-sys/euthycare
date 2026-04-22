@@ -12,7 +12,7 @@ const contatos = [
   {
     icon: Mail,
     label: 'E-mail',
-    value: 'apoio@euthycare.com',
+    value: 'suporte@euthycare.com',
     desc: 'Respondemos o mais breve possível',
     color: 'bg-sage-100 text-sage-600',
   },
@@ -162,8 +162,8 @@ export default function ContatoPage() {
               <div className="rounded-2xl bg-sage-50 border border-sage-100 p-6 text-center">
                 <Mail className="h-8 w-8 mx-auto mb-2 text-sage-400" />
                 <p className="text-sm font-semibold text-sage-700 mb-1">Prefere escrever directamente?</p>
-                <a href="mailto:apoio@euthycare.com" className="text-sage-600 text-sm font-medium hover:underline">
-                  apoio@euthycare.com
+                <a href="mailto:suporte@euthycare.com" className="text-sage-600 text-sm font-medium hover:underline">
+                  suporte@euthycare.com
                 </a>
               </div>
             </div>

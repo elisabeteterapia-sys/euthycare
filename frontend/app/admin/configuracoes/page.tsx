@@ -117,7 +117,7 @@ export default function AdminConfiguracoesPage() {
       {tab === 'notificacoes' && (
         <Card className="space-y-5 max-w-2xl">
           <h2 className="font-semibold text-gray-800">Notificações por email</h2>
-          <p className="text-sm text-gray-500">As notificações serão enviadas para <strong>{dados['geral_email'] || 'contato@euthycare.com'}</strong>.</p>
+          <p className="text-sm text-gray-500">As notificações serão enviadas para <strong>{dados['geral_email'] || 'suporte@euthycare.com'}</strong>.</p>
           {[
             { label: 'Novo agendamento',            chave: 'notif_agendamento' },
             { label: 'Novo inscrito lista de espera', chave: 'notif_waitlist' },

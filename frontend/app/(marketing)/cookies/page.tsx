@@ -150,8 +150,8 @@ export default function CookiesPage() {
           <h2>Contacto</h2>
           <p>
             Dúvidas sobre cookies ou privacidade:{' '}
-            <a href="mailto:privacidade@euthycare.com" className="text-sage-600 underline">
-              privacidade@euthycare.com
+            <a href="mailto:suporte@euthycare.com" className="text-sage-600 underline">
+              suporte@euthycare.com
             </a>
           </p>
         </div>
