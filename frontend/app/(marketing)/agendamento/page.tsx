@@ -91,7 +91,16 @@ function SeccaoTerapeutas() {
   useEffect(() => {
     fetch(`${API}/terapeutas`)
       .then(r => r.json())
-      .then(d => { if (Array.isArray(d.terapeutas)) setTerapeutas(d.terapeutas) })
+      .then(d => {
+        if (Array.isArray(d.terapeutas)) {
+          setTerapeutas(d.terapeutas.map((t: TerapeutaCard & { especialidades: unknown }) => ({
+            ...t,
+            especialidades: typeof t.especialidades === 'string'
+              ? t.especialidades.split(',').map((s: string) => s.trim()).filter(Boolean)
+              : (Array.isArray(t.especialidades) ? t.especialidades : []),
+          })))
+        }
+      })
       .catch(() => null)
       .finally(() => setLoading(false))
   }, [])
