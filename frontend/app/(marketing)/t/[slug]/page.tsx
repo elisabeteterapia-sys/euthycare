@@ -161,7 +161,7 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
   async function verificarEmail(em: string) {
     if (!em) return
     try {
-      const r = await fetch(`${API}/pacotes/creditos?email=${encodeURIComponent(em)}`)
+      const r = await fetch(`${API}/pacotes/creditos?email=${encodeURIComponent(em)}&terapeuta_id=${terapeuta.id}`)
       const d = await r.json()
       setHasExp(d.hasExperimental ?? false)
     } catch { /* ignore */ }

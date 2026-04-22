@@ -34,7 +34,7 @@ router.get('/', async (_req: Request, res: Response) => {
 
 // ─── GET /pacotes/creditos?email=... ─────────────────────────
 router.get('/creditos', async (req: Request, res: Response) => {
-  const { email } = req.query
+  const { email, terapeuta_id } = req.query
   if (!email || typeof email !== 'string') {
     res.status(400).json({ error: 'email obrigatório' }); return
   }
@@ -59,14 +59,19 @@ router.get('/creditos', async (req: Request, res: Response) => {
 
   if (error) { res.status(500).json({ error: error.message }); return }
 
-  // Verificar se o cliente já usou a consulta experimental (qualquer status)
-  const { data: expData } = await supabaseAdmin
+  // Verificar se o cliente já usou a consulta experimental com esta terapeuta específica
+  let expQuery = supabaseAdmin
     .from('creditos_cliente')
     .select('id, pacotes!inner(tipo)')
     .eq('cliente_email', email)
     .eq('pacotes.tipo', 'experimental')
     .limit(1)
 
+  if (terapeuta_id && typeof terapeuta_id === 'string') {
+    expQuery = expQuery.eq('terapeuta_id', terapeuta_id)
+  }
+
+  const { data: expData } = await expQuery
   const hasExperimental = (expData?.length ?? 0) > 0
 
   res.json({ creditos: data, hasExperimental, sessoes_restantes: (data ?? []).reduce((acc, c) => acc + c.sessoes_restantes, 0) })
@@ -103,17 +108,21 @@ router.post('/checkout', async (req: Request, res: Response) => {
     res.status(404).json({ error: 'Pacote não encontrado' }); return
   }
 
-  // Consulta experimental: verificar se o cliente já comprou
+  // Consulta experimental: verificar se o cliente já comprou com esta terapeuta
   if (pacote.tipo === 'experimental') {
-    const { data: jaComprou } = await supabaseAdmin
+    let expCheck = supabaseAdmin
       .from('creditos_cliente')
       .select('id')
       .eq('cliente_email', email)
       .eq('pacote_id', pacote_id)
       .limit(1)
 
+    if (terapeuta_id) expCheck = expCheck.eq('terapeuta_id', terapeuta_id)
+
+    const { data: jaComprou } = await expCheck
+
     if (jaComprou && jaComprou.length > 0) {
-      res.status(409).json({ error: 'A consulta experimental só pode ser adquirida uma vez por cliente.' })
+      res.status(409).json({ error: 'A consulta experimental já foi utilizada com esta terapeuta.' })
       return
     }
   }
