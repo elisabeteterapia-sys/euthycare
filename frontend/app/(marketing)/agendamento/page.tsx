@@ -93,7 +93,8 @@ function SeccaoTerapeutas() {
       .then(r => r.json())
       .then(d => {
         if (Array.isArray(d.terapeutas)) {
-          setTerapeutas(d.terapeutas.map((t: TerapeutaCard & { especialidades: unknown }) => ({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setTerapeutas(d.terapeutas.map((t: any) => ({
             ...t,
             especialidades: typeof t.especialidades === 'string'
               ? t.especialidades.split(',').map((s: string) => s.trim()).filter(Boolean)
