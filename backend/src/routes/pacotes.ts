@@ -6,18 +6,34 @@
 
 import { Router, Request, Response, NextFunction } from 'express'
 import Stripe from 'stripe'
+import jwt from 'jsonwebtoken'
 import { supabaseAdmin } from '../lib/supabase'
 
 const router = Router()
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', { apiVersion: '2025-02-24.acacia' })
 const webhookSecret = process.env.STRIPE_PACOTES_WEBHOOK_SECRET ?? ''
+const JWT_SECRET = process.env.TERAPEUTA_JWT_SECRET ?? 'euthycare-terapeuta-secret-change-me'
+
+declare module 'express-serve-static-core' {
+  interface Request { terapeutaId?: string }
+}
 
 function requireAdmin(req: Request, res: Response, next: NextFunction) {
   if (req.headers['x-admin-secret'] !== process.env.ADMIN_SECRET) {
     res.status(401).json({ error: 'Acesso negado' }); return
   }
   next()
+}
+
+function requireTerapeutaJwt(req: Request, res: Response, next: NextFunction) {
+  const auth = req.headers['authorization']
+  if (!auth?.startsWith('Bearer ')) { res.status(401).json({ error: 'Token não fornecido' }); return }
+  try {
+    const payload = jwt.verify(auth.slice(7), JWT_SECRET) as { sub: string }
+    req.terapeutaId = payload.sub
+    next()
+  } catch { res.status(401).json({ error: 'Token inválido ou expirado' }) }
 }
 
 // ─── GET /pacotes — listar pacotes ───────────────────────────
@@ -352,6 +368,64 @@ router.patch('/admin/:id', requireAdmin, async (req: Request, res: Response) => 
 })
 
 router.delete('/admin/:id', requireAdmin, async (req: Request, res: Response) => {
+  const { error } = await supabaseAdmin.from('pacotes').delete().eq('id', req.params.id)
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ ok: true })
+})
+
+// ─── Terapeuta: gerir os seus próprios pacotes (JWT) ──────────
+router.get('/meus', requireTerapeutaJwt, async (req: Request, res: Response) => {
+  const { data, error } = await supabaseAdmin
+    .from('pacotes')
+    .select('id, tipo, nome, numero_sessoes, duracao_min, preco, moeda, validade_dias, destaque, descricao, ativo, publico')
+    .eq('terapeuta_id', req.terapeutaId!)
+    .order('preco')
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json(data ?? [])
+})
+
+router.post('/meus', requireTerapeutaJwt, async (req: Request, res: Response) => {
+  const { tipo, nome, numero_sessoes, duracao_min, preco, validade_dias, destaque, descricao, publico } = req.body
+  if (!nome || !numero_sessoes || validade_dias === undefined) {
+    res.status(400).json({ error: 'nome, numero_sessoes e validade_dias são obrigatórios' }); return
+  }
+  const { data, error } = await supabaseAdmin.from('pacotes').insert({
+    terapeuta_id:   req.terapeutaId!,
+    tipo:           tipo ?? 'pacote',
+    nome,
+    numero_sessoes: Number(numero_sessoes),
+    duracao_min:    Number(duracao_min ?? 50),
+    preco:          Number(preco ?? 0),
+    moeda:          'EUR',
+    validade_dias:  Number(validade_dias),
+    destaque:       destaque ?? false,
+    descricao:      descricao ?? null,
+    publico:        publico !== false,
+    ativo:          true,
+  }).select().single()
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json(data)
+})
+
+router.patch('/meus/:id', requireTerapeutaJwt, async (req: Request, res: Response) => {
+  // Verificar que o pacote pertence à terapeuta autenticada
+  const { data: pacote } = await supabaseAdmin.from('pacotes').select('terapeuta_id').eq('id', req.params.id).single()
+  if (!pacote || pacote.terapeuta_id !== req.terapeutaId) {
+    res.status(403).json({ error: 'Sem permissão para editar este pacote' }); return
+  }
+  const allowed = ['tipo','nome','numero_sessoes','duracao_min','preco','validade_dias','destaque','descricao','ativo','publico']
+  const update: Record<string, unknown> = {}
+  for (const k of allowed) if (req.body[k] !== undefined) update[k] = req.body[k]
+  const { data, error } = await supabaseAdmin.from('pacotes').update(update).eq('id', req.params.id).select().single()
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json(data)
+})
+
+router.delete('/meus/:id', requireTerapeutaJwt, async (req: Request, res: Response) => {
+  const { data: pacote } = await supabaseAdmin.from('pacotes').select('terapeuta_id').eq('id', req.params.id).single()
+  if (!pacote || pacote.terapeuta_id !== req.terapeutaId) {
+    res.status(403).json({ error: 'Sem permissão para eliminar este pacote' }); return
+  }
   const { error } = await supabaseAdmin.from('pacotes').delete().eq('id', req.params.id)
   if (error) { res.status(500).json({ error: error.message }); return }
   res.json({ ok: true })
