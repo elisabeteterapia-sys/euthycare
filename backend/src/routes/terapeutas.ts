@@ -209,6 +209,57 @@ router.get('/me/repasses', requireTerapeuta, async (req: Request, res: Response)
   res.json({ pagamentos: data ?? [], total_recebido, total_repasse, por_pagar })
 })
 
+// ── Disponibilidade (self) ─────────────────────────────────────
+router.get('/me/disponibilidade', requireTerapeuta, async (req: Request, res: Response) => {
+  const { data, error } = await supabaseAdmin.from('disponibilidades')
+    .select('*').eq('terapeuta_id', req.terapeutaId!).order('dia_semana')
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json(data ?? [])
+})
+
+router.put('/me/disponibilidade', requireTerapeuta, async (req: Request, res: Response) => {
+  const id = req.terapeutaId!
+  const rows = (req.body as Array<Record<string, unknown>>).map(r => ({ ...r, terapeuta_id: id }))
+  await supabaseAdmin.from('disponibilidades').delete().eq('terapeuta_id', id)
+  if (rows.length > 0) {
+    const { error } = await supabaseAdmin.from('disponibilidades').insert(rows)
+    if (error) { res.status(500).json({ error: error.message }); return }
+  }
+  res.json({ ok: true })
+})
+
+// ── Bloqueios de agenda (self) ────────────────────────────────
+router.get('/me/bloqueios', requireTerapeuta, async (req: Request, res: Response) => {
+  const { from, to } = req.query
+  let q = supabaseAdmin.from('bloqueios_agenda').select('*').eq('terapeuta_id', req.terapeutaId!).order('data')
+  if (from && typeof from === 'string') q = q.gte('data', from)
+  if (to   && typeof to   === 'string') q = q.lte('data', to)
+  const { data, error } = await q
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json(data ?? [])
+})
+
+router.post('/me/bloqueio', requireTerapeuta, async (req: Request, res: Response) => {
+  const { data: dt, hora_inicio, hora_fim, motivo } = req.body
+  if (!dt) { res.status(400).json({ error: 'data obrigatória' }); return }
+  const { data, error } = await supabaseAdmin.from('bloqueios_agenda').insert({
+    terapeuta_id: req.terapeutaId!,
+    data: dt,
+    hora_inicio: hora_inicio ?? null,
+    hora_fim:    hora_fim    ?? null,
+    motivo:      motivo      ?? null,
+  }).select().single()
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json(data)
+})
+
+router.delete('/me/bloqueio/:id', requireTerapeuta, async (req: Request, res: Response) => {
+  const { error } = await supabaseAdmin.from('bloqueios_agenda')
+    .delete().eq('id', req.params.id).eq('terapeuta_id', req.terapeutaId!)
+  if (error) { res.status(500).json({ error: error.message }); return }
+  res.json({ ok: true })
+})
+
 // ── GET /terapeutas/slug/:slug — perfil público por slug ──────
 router.get('/slug/:slug', async (req: Request, res: Response) => {
   const { slug } = req.params

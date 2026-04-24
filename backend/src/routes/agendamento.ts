@@ -183,7 +183,10 @@ async function enviarConfirmacaoCliente(params: {
           </td>
         </tr>
       </table>
-      <p style="font-size:13px;color:#7b9e87;margin-top:16px">
+      <p style="font-size:12px;color:#555;margin-top:8px">
+        🔗 Link da videochamada: <a href="${params.videoUrl}" style="color:#5c8a6b">${params.videoUrl}</a>
+      </p>
+      <p style="font-size:13px;color:#7b9e87;margin-top:8px">
         O ficheiro de calendário (.ics) está em anexo — funciona com Google Calendar, Apple Calendar e Outlook.<br>
         Entre na videochamada alguns minutos antes da hora marcada.
       </p>
@@ -243,7 +246,10 @@ async function enviarNotificacaoTerapeuta(params: {
           </td>
         </tr>
       </table>
-      <p style="font-size:13px;color:#7b9e87;margin-top:16px">O ficheiro .ics está em anexo.</p>
+      <p style="font-size:12px;color:#555;margin-top:8px">
+        🔗 Link: <a href="${params.videoUrl}" style="color:#5c8a6b">${params.videoUrl}</a>
+      </p>
+      <p style="font-size:13px;color:#7b9e87;margin-top:8px">O ficheiro .ics está em anexo.</p>
       <hr style="border:none;border-top:1px solid #e0ede5;margin:24px 0">
       <p style="font-size:12px;color:#97c2a8">EuthyCare · euthycare.com</p>
     </div>
@@ -418,10 +424,11 @@ router.post('/', async (req: Request, res: Response) => {
 
   // Gerar URL da videochamada Jitsi e guardar no agendamento
   const videoUrl = `https://meet.jit.si/euthycare-${novo.id}`
-  await supabaseAdmin
+  const { error: errVideo } = await supabaseAdmin
     .from('agendamentos')
     .update({ video_url: videoUrl })
     .eq('id', novo.id)
+  if (errVideo) console.error('[agendamento] Falha ao guardar video_url:', errVideo.message)
 
   const agendamentoFinal = { ...novo, video_url: videoUrl }
 
@@ -663,7 +670,10 @@ export async function enviarLembretes() {
         <a href="${ag.video_url}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:12px 20px;border-radius:10px;font-weight:600;font-size:14px">
           🎥 Link da videochamada
         </a>
-        <p style="font-size:12px;color:#97c2a8;margin-top:24px">EuthyCare · euthycare.com</p>
+        <p style="font-size:12px;color:#555;margin-top:8px">
+          🔗 Link: <a href="${ag.video_url}" style="color:#5c8a6b">${ag.video_url}</a>
+        </p>
+        <p style="font-size:12px;color:#97c2a8;margin-top:16px">EuthyCare · euthycare.com</p>
       </div>`
     )
 
@@ -696,7 +706,10 @@ export async function enviarLembretes() {
         <a href="${ag.video_url}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:14px 24px;border-radius:10px;font-weight:600;font-size:15px;margin:16px 0">
           🎥 Entrar na videochamada agora
         </a>
-        <p style="font-size:12px;color:#97c2a8;margin-top:24px">EuthyCare · euthycare.com</p>
+        <p style="font-size:12px;color:#555;margin-top:4px">
+          🔗 Link: <a href="${ag.video_url}" style="color:#5c8a6b">${ag.video_url}</a>
+        </p>
+        <p style="font-size:12px;color:#97c2a8;margin-top:16px">EuthyCare · euthycare.com</p>
       </div>`
     )
 

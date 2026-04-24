@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Eye, EyeOff } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
@@ -9,6 +10,7 @@ export default function TerapeutaLogin() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
+  const [verSenha, setVerSenha] = useState(false)
   const [erro, setErro] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -62,14 +64,24 @@ export default function TerapeutaLogin() {
 
           <div>
             <label className="block text-sm font-medium text-sage-700 mb-1">Senha</label>
-            <input
-              type="password"
-              value={senha}
-              onChange={e => setSenha(e.target.value)}
-              className="w-full border border-sage-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400 bg-cream-50"
-              placeholder="••••••••"
-              required
-            />
+            <div className="relative">
+              <input
+                type={verSenha ? 'text' : 'password'}
+                value={senha}
+                onChange={e => setSenha(e.target.value)}
+                className="w-full border border-sage-200 rounded-xl px-4 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400 bg-cream-50"
+                placeholder="••••••••"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setVerSenha(v => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sage-400 hover:text-sage-600 transition-colors"
+                tabIndex={-1}
+              >
+                {verSenha ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
 
           {erro && (
