@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { useAppCurrency } from '@/lib/currency-context'
 import { useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -131,6 +132,7 @@ function PerfilTerapeuta({ t }: { t: Terapeuta }) {
 function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string }) {
   const searchParams    = useSearchParams()
   const pacoteParam     = searchParams.get('pacote')
+  const { formatPrice } = useAppCurrency()
 
   const [pacotes, setPacotes]     = useState<Pacote[]>([])
   const [loading, setLoading]     = useState(true)
@@ -257,7 +259,7 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
                 )}
                 {sel && <CheckCircle2 className="absolute top-3 right-3 h-4 w-4 text-sage-500" />}
                 <p className="font-semibold text-gray-800 text-sm mb-1">{p.nome}</p>
-                <p className="text-2xl font-bold text-sage-700 mb-1">{p.preco}€</p>
+                <p className="text-2xl font-bold text-sage-700 mb-1">{formatPrice(p.preco)}</p>
                 <p className="text-xs text-gray-400 mb-2">{p.numero_sessoes} sessão{p.numero_sessoes > 1 ? 'ões' : ''} · {p.duracao_min} min</p>
                 {p.descricao && <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{p.descricao}</p>}
                 {blocked && <p className="text-xs text-orange-500 mt-1 font-medium">Já utilizado</p>}
@@ -281,7 +283,7 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
           >
             {comprando
               ? <><Loader2 className="h-4 w-4 animate-spin" /> A processar…</>
-              : <><ArrowRight className="h-4 w-4" /> {pacoteSel ? `Pagar ${pacoteSel.preco}€` : 'Selecione um pacote'}</>
+              : <><ArrowRight className="h-4 w-4" /> {pacoteSel ? `Pagar ${formatPrice(pacoteSel.preco)}` : 'Selecione um pacote'}</>
             }
           </Button>
         </div>

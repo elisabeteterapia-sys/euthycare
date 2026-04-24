@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
+import { useAppCurrency } from '@/lib/currency-context'
 import {
   CalendarDays, Clock, Video, CheckCircle2, ArrowRight, Loader2,
   Mail, Bell, Shield, ChevronDown, ChevronUp, Star, Sparkles,
