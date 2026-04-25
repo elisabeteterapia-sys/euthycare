@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useTerapeuta } from '../context'
-import { Loader2, Check, Upload, Camera } from 'lucide-react'
+import { Loader2, Check, Upload, Camera, CreditCard, ExternalLink, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
@@ -33,6 +33,108 @@ const TIMEZONES = [
   { label: 'EUA (Los Angeles)',         value: 'America/Los_Angeles' },
   { label: 'Canadá (Toronto)',          value: 'America/Toronto' },
 ]
+
+function StripeConnectCard() {
+  const [status, setStatus]     = useState<{ connected: boolean; onboarded: boolean } | null>(null)
+  const [loading, setLoading]   = useState(true)
+  const [starting, setStarting] = useState(false)
+
+  function token() { return sessionStorage.getItem('terapeuta_token') ?? '' }
+  function authH() { return { Authorization: `Bearer ${token()}` } }
+
+  useEffect(() => {
+    // Verificar se há retorno do onboarding Stripe
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('stripe') === 'success' || params.get('stripe') === 'refresh') {
+      window.history.replaceState({}, '', '/terapeuta/perfil')
+    }
+    fetch(`${API}/terapeutas/me/stripe-connect/status`, { headers: authH() })
+      .then(r => r.json())
+      .then(d => setStatus(d))
+      .catch(() => setStatus({ connected: false, onboarded: false }))
+      .finally(() => setLoading(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  async function iniciarOnboarding() {
+    setStarting(true)
+    const r = await fetch(`${API}/terapeutas/me/stripe-connect`, { method: 'POST', headers: authH() })
+    const d = await r.json()
+    if (d.url) window.location.href = d.url
+    else setStarting(false)
+  }
+
+  async function abrirDashboard() {
+    const r = await fetch(`${API}/terapeutas/me/stripe-connect/dashboard`, { headers: authH() })
+    const d = await r.json()
+    if (d.url) window.open(d.url, '_blank')
+  }
+
+  if (loading) return null
+
+  return (
+    <div className="bg-white rounded-2xl border border-sage-100 shadow-soft overflow-hidden mt-6">
+      <div className="px-6 py-4 border-b border-sage-100 flex items-center gap-2">
+        <CreditCard className="h-4 w-4 text-sage-500" />
+        <h2 className="font-semibold text-sage-800 text-sm">Recebimento automático (Stripe)</h2>
+      </div>
+      <div className="px-6 py-5">
+        {!status?.connected ? (
+          <>
+            <div className="flex items-start gap-3 mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+              <AlertCircle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-700">
+                Conta Stripe não configurada. Active o repasse automático para receber a sua parte directamente na conta bancária após cada consulta.
+              </p>
+            </div>
+            <p className="text-xs text-gray-400 mb-4">
+              Será criada uma conta Stripe Express com o e-mail do seu perfil. O processo demora menos de 5 minutos.
+            </p>
+            <button
+              onClick={iniciarOnboarding}
+              disabled={starting}
+              className="flex items-center gap-2 bg-[#635BFF] hover:bg-[#4f49c8] disabled:opacity-60 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors"
+            >
+              {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+              Configurar conta de recebimento
+            </button>
+          </>
+        ) : !status?.onboarded ? (
+          <>
+            <div className="flex items-start gap-3 mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+              <AlertCircle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-700">Onboarding incompleto. Complete o registo no Stripe para activar os repasses.</p>
+            </div>
+            <button
+              onClick={iniciarOnboarding}
+              disabled={starting}
+              className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors"
+            >
+              {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              Continuar configuração
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center gap-3 mb-4 p-3 bg-sage-50 border border-sage-200 rounded-xl">
+              <CheckCircle2 className="h-4 w-4 text-sage-500 flex-shrink-0" />
+              <p className="text-sm text-sage-700 font-medium">Conta Stripe activa — repasses automáticos activados.</p>
+            </div>
+            <p className="text-xs text-gray-400 mb-4">
+              Após cada pagamento do cliente, a sua parte é transferida automaticamente para a sua conta bancária pelo Stripe.
+            </p>
+            <button
+              onClick={abrirDashboard}
+              className="flex items-center gap-2 text-sm text-sage-600 hover:text-sage-800 border border-sage-200 hover:border-sage-400 px-4 py-2 rounded-xl transition-colors"
+            >
+              <ExternalLink className="h-4 w-4" /> Ver dashboard de pagamentos
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
 
 export default function TerapeutaPerfil() {
   const terapeuta = useTerapeuta()
@@ -208,6 +310,9 @@ export default function TerapeutaPerfil() {
           </button>
         </div>
       </div>
+
+      {/* Stripe Connect */}
+      <StripeConnectCard />
     </div>
   )
 }

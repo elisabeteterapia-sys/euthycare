@@ -3,12 +3,14 @@ import { Router, Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import multer from 'multer'
+import Stripe from 'stripe'
 import { supabaseAdmin } from '../lib/supabase'
 import { restInsert, restUpdate, restDelete } from '../lib/supabaseRest'
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } })
 
 const JWT_SECRET = process.env.TERAPEUTA_JWT_SECRET ?? 'euthycare-terapeuta-secret-change-me'
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', { apiVersion: '2025-02-24.acacia' })
 
 function requireAdmin(req: Request, res: Response, next: NextFunction) {
   const secret = req.headers['x-admin-secret']
@@ -207,6 +209,69 @@ router.get('/me/repasses', requireTerapeuta, async (req: Request, res: Response)
   const total_repasse  = (data ?? []).reduce((s, c) => s + (c.repasse_cents ?? 0), 0)
   const por_pagar      = (data ?? []).filter(c => !c.repasse_pago).reduce((s, c) => s + (c.repasse_cents ?? 0), 0)
   res.json({ pagamentos: data ?? [], total_recebido, total_repasse, por_pagar })
+})
+
+// ── Stripe Connect: onboarding e dashboard ────────────────────
+// POST /me/stripe-connect → cria/recupera conta Express e devolve link de onboarding
+router.post('/me/stripe-connect', requireTerapeuta, async (req: Request, res: Response) => {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    res.status(500).json({ error: 'Stripe não configurado.' }); return
+  }
+  const { data: t } = await supabaseAdmin
+    .from('terapeutas').select('stripe_account_id, email, nome').eq('id', req.terapeutaId!).single()
+  if (!t) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
+
+  let accountId = t.stripe_account_id as string | null
+  if (!accountId) {
+    const account = await stripe.accounts.create({
+      type: 'express',
+      email: t.email,
+      capabilities: { card_payments: { requested: true }, transfers: { requested: true } },
+      business_profile: { url: 'https://euthycare.com' },
+      metadata: { terapeuta_id: req.terapeutaId! },
+    })
+    accountId = account.id
+    await supabaseAdmin.from('terapeutas').update({ stripe_account_id: accountId }).eq('id', req.terapeutaId!)
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://euthycare.com'
+  const link = await stripe.accountLinks.create({
+    account: accountId,
+    refresh_url: `${siteUrl}/terapeuta/perfil?stripe=refresh`,
+    return_url:  `${siteUrl}/terapeuta/perfil?stripe=success`,
+    type: 'account_onboarding',
+  })
+  res.json({ url: link.url })
+})
+
+// GET /me/stripe-connect/status → estado da conta Connect
+router.get('/me/stripe-connect/status', requireTerapeuta, async (req: Request, res: Response) => {
+  const { data: t } = await supabaseAdmin
+    .from('terapeutas').select('stripe_account_id, stripe_onboarded').eq('id', req.terapeutaId!).single()
+  if (!t?.stripe_account_id) { res.json({ connected: false }); return }
+
+  // Verificar se o onboarding foi completado junto do Stripe
+  if (!t.stripe_onboarded) {
+    try {
+      const account = await stripe.accounts.retrieve(t.stripe_account_id as string)
+      const onboarded = account.details_submitted && !account.requirements?.currently_due?.length
+      if (onboarded) {
+        await supabaseAdmin.from('terapeutas').update({ stripe_onboarded: true }).eq('id', req.terapeutaId!)
+      }
+      res.json({ connected: true, onboarded, stripe_account_id: t.stripe_account_id })
+    } catch { res.json({ connected: true, onboarded: false }) }
+  } else {
+    res.json({ connected: true, onboarded: true, stripe_account_id: t.stripe_account_id })
+  }
+})
+
+// GET /me/stripe-connect/dashboard → link para dashboard Stripe da terapeuta
+router.get('/me/stripe-connect/dashboard', requireTerapeuta, async (req: Request, res: Response) => {
+  const { data: t } = await supabaseAdmin
+    .from('terapeutas').select('stripe_account_id').eq('id', req.terapeutaId!).single()
+  if (!t?.stripe_account_id) { res.status(404).json({ error: 'Conta Stripe não configurada.' }); return }
+  const loginLink = await stripe.accounts.createLoginLink(t.stripe_account_id as string)
+  res.json({ url: loginLink.url })
 })
 
 // ── Disponibilidade (self) ─────────────────────────────────────

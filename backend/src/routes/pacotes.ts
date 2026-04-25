@@ -171,6 +171,26 @@ router.post('/checkout', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Pagamento não configurado. Contacte o suporte.' }); return
   }
 
+  // Buscar dados da terapeuta (comissão + conta Stripe Connect)
+  let stripeAccountId: string | null = null
+  let comissaoCents = 0
+  const valorCents = Math.round(pacote.preco * 100)
+
+  if (terapeuta_id) {
+    const { data: tData } = await supabaseAdmin
+      .from('terapeutas')
+      .select('comissao_percentagem, stripe_account_id, stripe_onboarded')
+      .eq('id', terapeuta_id)
+      .single()
+    if (tData) {
+      comissaoCents = Math.round(valorCents * tData.comissao_percentagem / 100)
+      // Usar Stripe Connect só se a conta estiver totalmente onboarded
+      if (tData.stripe_account_id && tData.stripe_onboarded) {
+        stripeAccountId = tData.stripe_account_id as string
+      }
+    }
+  }
+
   // URLs de retorno: página da terapeuta ou agendamento geral
   const base = terapeuta_slug
     ? `https://euthycare.com/t/${terapeuta_slug}`
@@ -180,7 +200,7 @@ router.post('/checkout', async (req: Request, res: Response) => {
 
   let session: Stripe.Checkout.Session
   try {
-    session = await stripe.checkout.sessions.create({
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: 'payment',
       customer_email: email,
       line_items: [{
@@ -191,7 +211,7 @@ router.post('/checkout', async (req: Request, res: Response) => {
             description: pacote.descricao ?? undefined,
             metadata:    { pacote_id: pacote.id },
           },
-          unit_amount: Math.round(pacote.preco * 100),
+          unit_amount: valorCents,
         },
         quantity: 1,
       }],
@@ -203,7 +223,17 @@ router.post('/checkout', async (req: Request, res: Response) => {
       },
       success_url: safeSuccess,
       cancel_url:  safeCancel,
-    })
+    }
+
+    // Se a terapeuta tem Stripe Connect ativo: destination charge com repasse automático
+    if (stripeAccountId && comissaoCents > 0) {
+      sessionParams.payment_intent_data = {
+        application_fee_amount: comissaoCents,
+        transfer_data: { destination: stripeAccountId },
+      }
+    }
+
+    session = await stripe.checkout.sessions.create(sessionParams)
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Erro ao criar sessão de pagamento'
     console.error('[pacotes/checkout] Stripe error:', msg)
