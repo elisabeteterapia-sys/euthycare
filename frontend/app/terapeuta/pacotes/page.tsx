@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Plus, Pencil, Trash2, Loader2, CheckCircle2, AlertCircle, X } from 'lucide-react'
+import { Plus, Pencil, Trash2, Loader2, CheckCircle2, AlertCircle, X, Copy, Link2 } from 'lucide-react'
+import { useTerapeuta } from '../context'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
@@ -32,7 +33,28 @@ function authHeader() {
   return { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'application/json' }
 }
 
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://euthycare.com'
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false)
+  function copiar() {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+  return (
+    <button onClick={copiar}
+      className="flex items-center gap-1 text-xs text-sage-600 hover:text-sage-800 border border-sage-200 hover:border-sage-400 rounded-lg px-2.5 py-1.5 transition-colors bg-white"
+    >
+      {copied ? <CheckCircle2 className="h-3.5 w-3.5 text-sage-500" /> : <Copy className="h-3.5 w-3.5" />}
+      {copied ? 'Copiado!' : 'Copiar'}
+    </button>
+  )
+}
+
 export default function PacotesPage() {
+  const terapeuta               = useTerapeuta()
   const [pacotes, setPacotes]   = useState<Pacote[]>([])
   const [loading, setLoading]   = useState(true)
   const [modal, setModal]       = useState<'criar' | 'editar' | null>(null)
@@ -115,6 +137,36 @@ export default function PacotesPage() {
           <Plus className="h-4 w-4" /> Novo pacote
         </button>
       </div>
+
+      {/* ── Links de divulgação ─────────────────────────── */}
+      {terapeuta?.slug && (
+        <div className="bg-sage-50 border border-sage-200 rounded-2xl p-5 space-y-3">
+          <div className="flex items-center gap-2 text-sage-700 font-semibold text-sm">
+            <Link2 className="h-4 w-4" /> Links de divulgação
+          </div>
+          <p className="text-xs text-sage-600">Partilhe estes links com os seus clientes para que possam pagar directamente.</p>
+
+          {/* Link da página */}
+          <div className="bg-white rounded-xl border border-sage-200 px-4 py-3 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-gray-500 mb-0.5">Página completa</p>
+              <p className="text-sm text-sage-700 truncate">{SITE}/t/{terapeuta.slug}</p>
+            </div>
+            <CopyButton text={`${SITE}/t/${terapeuta.slug}`} />
+          </div>
+
+          {/* Links por pacote */}
+          {pacotes.filter(p => p.ativo && p.publico).map(p => (
+            <div key={p.id} className="bg-white rounded-xl border border-sage-200 px-4 py-3 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-gray-500 mb-0.5">{p.nome}</p>
+                <p className="text-sm text-sage-700 truncate">{SITE}/t/{terapeuta.slug}?pacote={p.id}</p>
+              </div>
+              <CopyButton text={`${SITE}/t/${terapeuta.slug}?pacote=${p.id}`} />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Lista de pacotes */}
       {loading ? (

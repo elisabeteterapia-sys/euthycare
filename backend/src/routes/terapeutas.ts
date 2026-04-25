@@ -135,7 +135,7 @@ router.post('/login', async (req: Request, res: Response) => {
   const { email, senha } = req.body
   if (!email || !senha) { res.status(400).json({ error: 'email e senha obrigatórios' }); return }
   const { data, error } = await supabaseAdmin.from('terapeutas')
-    .select('id, nome, email, senha_hash, ativo').eq('email', email.toLowerCase().trim()).single()
+    .select('id, nome, email, slug, senha_hash, ativo').eq('email', email.toLowerCase().trim()).single()
   if (error || !data) { res.status(401).json({ error: 'Credenciais inválidas' }); return }
   const t = data
   if (!t.ativo) { res.status(403).json({ error: 'Conta inativa. Contacte a administração.' }); return }
@@ -143,7 +143,7 @@ router.post('/login', async (req: Request, res: Response) => {
   const ok = await bcrypt.compare(senha, t.senha_hash)
   if (!ok) { res.status(401).json({ error: 'Credenciais inválidas' }); return }
   const token = jwt.sign({ sub: t.id, nome: t.nome }, JWT_SECRET, { expiresIn: '7d' })
-  res.json({ token, terapeuta: { id: t.id, nome: t.nome, email: t.email } })
+  res.json({ token, terapeuta: { id: t.id, nome: t.nome, email: t.email, slug: t.slug } })
 })
 
 // ── POST /terapeutas/me/upload-foto ──────────────────────────

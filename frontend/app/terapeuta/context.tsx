@@ -6,6 +6,7 @@ export interface TerapeutaInfo {
   id: string
   nome: string
   email: string
+  slug?: string
 }
 
 export const TerapeutaCtx = createContext<TerapeutaInfo | null>(null)
