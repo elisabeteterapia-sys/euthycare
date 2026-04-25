@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Plus, Pencil, Trash2, Loader2, CheckCircle2, AlertCircle, X, Copy, Link2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Loader2, CheckCircle2, AlertCircle, X, Copy, Link2, Send, Lock } from 'lucide-react'
 import { useTerapeuta } from '../context'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
@@ -59,9 +59,16 @@ export default function PacotesPage() {
   const [loading, setLoading]   = useState(true)
   const [modal, setModal]       = useState<'criar' | 'editar' | null>(null)
   const [form, setForm]         = useState({ ...VAZIO })
+  const [privado, setPrivado]   = useState(false)
+  const [clienteEmail, setClienteEmail] = useState('')
+  const [clienteNome, setClienteNome]   = useState('')
   const [editId, setEditId]     = useState<string | null>(null)
   const [saving, setSaving]     = useState(false)
   const [msg, setMsg]           = useState<{ ok: boolean; text: string } | null>(null)
+  // Estado após criar proposta privada
+  const [proposta, setProposta] = useState<{ id: string; link: string } | null>(null)
+  const [enviando, setEnviando] = useState(false)
+  const [enviado, setEnviado]   = useState(false)
 
   const carregar = useCallback(async () => {
     setLoading(true)
@@ -74,6 +81,8 @@ export default function PacotesPage() {
 
   function abrirCriar() {
     setForm({ ...VAZIO }); setEditId(null); setModal('criar'); setMsg(null)
+    setPrivado(false); setClienteEmail(''); setClienteNome('')
+    setProposta(null); setEnviado(false)
   }
 
   function abrirEditar(p: Pacote) {
@@ -89,20 +98,45 @@ export default function PacotesPage() {
     if (!form.nome || !form.numero_sessoes) return
     setSaving(true); setMsg(null)
     try {
-      const body = JSON.stringify({ ...form, publico: true, ativo: true })
+      const body = JSON.stringify({ ...form, publico: !privado, ativo: true })
       const url    = editId ? `${API}/pacotes/meus/${editId}` : `${API}/pacotes/meus`
       const method = editId ? 'PATCH' : 'POST'
       const r = await fetch(url, { method, headers: authHeader(), body })
       if (r.ok) {
-        setMsg({ ok: true, text: editId ? 'Pacote actualizado.' : 'Pacote criado.' })
+        const d = await r.json()
         await carregar()
-        setTimeout(() => setModal(null), 900)
+        if (!editId && privado && terapeuta?.slug) {
+          // Proposta privada: mostrar link em destaque em vez de fechar o modal
+          const link = `${SITE}/t/${terapeuta.slug}?pacote=${d.id}`
+          setProposta({ id: d.id, link })
+          setMsg(null)
+        } else {
+          setMsg({ ok: true, text: editId ? 'Pacote actualizado.' : 'Pacote criado.' })
+          setTimeout(() => setModal(null), 900)
+        }
       } else {
         const d = await r.json()
         setMsg({ ok: false, text: d.error ?? 'Erro ao guardar.' })
       }
     } catch { setMsg({ ok: false, text: 'Erro de ligação.' }) }
     finally { setSaving(false) }
+  }
+
+  async function enviarProposta() {
+    if (!proposta || !clienteEmail || !terapeuta?.slug) return
+    setEnviando(true)
+    try {
+      const r = await fetch(`${API}/pacotes/meus/${proposta.id}/enviar-cliente`, {
+        method: 'POST', headers: authHeader(),
+        body: JSON.stringify({
+          cliente_email:  clienteEmail,
+          cliente_nome:   clienteNome || null,
+          terapeuta_nome: terapeuta.nome,
+          terapeuta_slug: terapeuta.slug,
+        }),
+      })
+      if (r.ok) setEnviado(true)
+    } finally { setEnviando(false) }
   }
 
   async function toggleAtivo(p: Pacote) {
@@ -238,7 +272,85 @@ export default function PacotesPage() {
               <button onClick={() => setModal(null)} className="text-gray-400 hover:text-gray-600"><X className="h-5 w-5" /></button>
             </div>
 
+            {/* ── Vista após criar proposta privada ── */}
+            {proposta ? (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 p-3 bg-sage-50 border border-sage-200 rounded-xl">
+                  <CheckCircle2 className="h-4 w-4 text-sage-500 flex-shrink-0" />
+                  <p className="text-sm text-sage-700 font-medium">Proposta criada! Partilhe o link abaixo.</p>
+                </div>
+
+                {/* Link em destaque */}
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
+                  <p className="text-xs text-gray-500 mb-1.5 font-medium">Link de pagamento</p>
+                  <p className="text-xs text-sage-700 break-all mb-2">{proposta.link}</p>
+                  <CopyButton text={proposta.link} />
+                </div>
+
+                {/* Enviar por email */}
+                {!enviado ? (
+                  <div className="space-y-2 pt-1 border-t border-cream-200">
+                    <p className="text-xs font-medium text-gray-600">Enviar por email ao cliente</p>
+                    <input
+                      type="text" placeholder="Nome do cliente (opcional)"
+                      value={clienteNome}
+                      onChange={e => setClienteNome(e.target.value)}
+                      className="w-full border border-cream-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400"
+                    />
+                    <div className="flex gap-2">
+                      <input
+                        type="email" placeholder="email@cliente.com"
+                        value={clienteEmail}
+                        onChange={e => setClienteEmail(e.target.value)}
+                        className="flex-1 border border-cream-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400"
+                      />
+                      <button
+                        onClick={enviarProposta}
+                        disabled={!clienteEmail || enviando}
+                        className="flex items-center gap-1.5 bg-sage-400 hover:bg-sage-500 disabled:opacity-50 text-white text-sm font-semibold px-3 py-2 rounded-xl transition-colors"
+                      >
+                        {enviando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                        Enviar
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 p-3 bg-sage-50 border border-sage-200 rounded-xl">
+                    <CheckCircle2 className="h-4 w-4 text-sage-500" />
+                    <p className="text-sm text-sage-700">Email enviado para {clienteEmail}!</p>
+                  </div>
+                )}
+
+                <button onClick={() => setModal(null)}
+                  className="w-full border border-cream-300 text-gray-600 rounded-xl py-2.5 text-sm hover:bg-cream-50 transition-colors">
+                  Fechar
+                </button>
+              </div>
+            ) : (
             <div className="space-y-4">
+              {/* Modo: Público ou Proposta Privada */}
+              {modal === 'criar' && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setPrivado(false)}
+                    className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors ${!privado ? 'bg-sage-400 text-white border-sage-400' : 'border-cream-300 text-gray-500 hover:border-sage-300'}`}
+                  >
+                    Público
+                  </button>
+                  <button
+                    onClick={() => setPrivado(true)}
+                    className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors flex items-center justify-center gap-1.5 ${privado ? 'bg-lilac-500 text-white border-lilac-500' : 'border-cream-300 text-gray-500 hover:border-lilac-300'}`}
+                  >
+                    <Lock className="h-3.5 w-3.5" /> Proposta privada
+                  </button>
+                </div>
+              )}
+              {privado && (
+                <div className="rounded-xl bg-lilac-50 border border-lilac-200 px-3 py-2 text-xs text-lilac-700">
+                  Proposta personalizada — só acessível via link directo. Ideal para enviar a um cliente após a consulta experimental.
+                </div>
+              )}
+
               {/* Tipo */}
               <div className="flex gap-2">
                 {(['pacote', 'experimental'] as const).map(t => (
@@ -349,10 +461,11 @@ export default function PacotesPage() {
                   className="flex-1 flex items-center justify-center gap-2 bg-sage-400 hover:bg-sage-500 disabled:opacity-50 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
                 >
                   {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {modal === 'criar' ? 'Criar pacote' : 'Guardar'}
+                  {modal === 'criar' ? (privado ? 'Criar proposta' : 'Criar pacote') : 'Guardar'}
                 </button>
               </div>
             </div>
+            )}
           </div>
         </div>
       )}

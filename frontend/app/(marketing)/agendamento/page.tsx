@@ -59,10 +59,11 @@ const confianca = [
 ]
 
 const faq = [
-  { q: 'O que é a Consulta Experimental?', a: 'É uma sessão de 50 minutos a 25€ para conhecermos o seu caso e verificar se somos a combinação certa. Disponível apenas uma vez por cliente.' },
+  { q: 'O que é a Consulta Experimental?', a: 'É uma sessão de 50 minutos a 25€ para conhecermos o seu caso e verificar se somos a combinação certa. Disponível apenas uma vez por cliente, por terapeuta.' },
+  { q: 'O que acontece depois da Consulta Experimental?', a: 'No final da sessão, a terapeuta define consigo um plano de tratamento personalizado — número de sessões, frequência e objectivos. Receberá um link de pagamento directamente no e-mail para confirmar o seu plano e começar o acompanhamento.' },
   { q: 'Como funciona a consulta online?', a: 'Via videochamada segura. Receberá o link por e-mail. Basta um dispositivo com câmara e microfone.' },
   { q: 'Posso remarcar ou cancelar?', a: 'Sim, gratuitamente até 24 h antes. Responda ao e-mail de confirmação ou contacte-nos directamente.' },
-  { q: 'Os créditos expiram?', a: 'Sim. Cada pacote tem validade: Essencial 30 dias, Evolução 60 dias, Premium 90 dias. A Consulta Experimental tem 30 dias.' },
+  { q: 'Os créditos expiram?', a: 'Sim. Cada pacote tem validade definida pela terapeuta. A Consulta Experimental tem validade de 30 dias.' },
 ]
 
 // ─── Componente FAQ ───────────────────────────────────────────

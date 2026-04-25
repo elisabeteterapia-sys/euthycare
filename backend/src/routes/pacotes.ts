@@ -461,4 +461,66 @@ router.delete('/meus/:id', requireTerapeutaJwt, async (req: Request, res: Respon
   res.json({ ok: true })
 })
 
+// ─── Terapeuta: enviar proposta de tratamento ao cliente ──────
+router.post('/meus/:id/enviar-cliente', requireTerapeutaJwt, async (req: Request, res: Response) => {
+  const RESEND_KEY = process.env.RESEND_API_KEY
+  const FROM_EMAIL = 'noreply@euthycare.com'
+  const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://euthycare.com'
+
+  // Verificar posse do pacote
+  const { data: pacote } = await supabaseAdmin.from('pacotes')
+    .select('id, nome, numero_sessoes, duracao_min, preco, descricao, terapeuta_id')
+    .eq('id', req.params.id).single()
+  if (!pacote || pacote.terapeuta_id !== req.terapeutaId) {
+    res.status(403).json({ error: 'Sem permissão' }); return
+  }
+
+  const { cliente_email, cliente_nome, terapeuta_nome, terapeuta_slug } = req.body
+  if (!cliente_email || !terapeuta_slug) {
+    res.status(400).json({ error: 'cliente_email e terapeuta_slug são obrigatórios' }); return
+  }
+
+  const linkPagamento = `${SITE}/t/${terapeuta_slug}?pacote=${pacote.id}`
+
+  if (!RESEND_KEY) { res.status(500).json({ error: 'Email não configurado.' }); return }
+
+  const html = `
+  <div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#2d4534">
+    <h2 style="color:#5c8a6b">EuthyCare</h2>
+    <p>Olá${cliente_nome ? ` <strong>${cliente_nome}</strong>` : ''},</p>
+    <p><strong>${terapeuta_nome ?? 'A sua terapeuta'}</strong> preparou um plano de tratamento personalizado para si.</p>
+    <div style="background:#f2f7f4;border-radius:12px;padding:16px 20px;margin:20px 0">
+      <p style="margin:0;font-size:16px;font-weight:600;color:#2d4534">${pacote.nome}</p>
+      <p style="margin:8px 0 0;color:#555">${pacote.numero_sessoes} sessão${pacote.numero_sessoes > 1 ? 'ões' : ''} de ${pacote.duracao_min} min · ${pacote.preco}€</p>
+      ${pacote.descricao ? `<p style="margin:12px 0 0;font-size:13px;color:#666;line-height:1.6">${pacote.descricao}</p>` : ''}
+    </div>
+    <a href="${linkPagamento}" style="display:inline-block;background:#5c8a6b;color:#fff;text-decoration:none;padding:14px 24px;border-radius:10px;font-weight:600;font-size:15px;margin-top:8px">
+      Ver e pagar o plano de tratamento
+    </a>
+    <p style="font-size:12px;color:#555;margin-top:10px">
+      🔗 Ou aceda directamente: <a href="${linkPagamento}" style="color:#5c8a6b">${linkPagamento}</a>
+    </p>
+    <hr style="border:none;border-top:1px solid #e0ede5;margin:24px 0">
+    <p style="font-size:12px;color:#97c2a8">EuthyCare · euthycare.com</p>
+  </div>`
+
+  const r = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: FROM_EMAIL,
+      to: cliente_email,
+      subject: `Plano de tratamento de ${terapeuta_nome ?? 'EuthyCare'}`,
+      html,
+    }),
+  })
+
+  if (!r.ok) {
+    console.error('[pacotes/enviar-cliente] Resend error:', await r.text())
+    res.status(500).json({ error: 'Erro ao enviar email.' }); return
+  }
+
+  res.json({ ok: true, link: linkPagamento })
+})
+
 export default router
