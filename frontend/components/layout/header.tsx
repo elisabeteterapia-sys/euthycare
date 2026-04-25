@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Menu, X, Leaf } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CurrencySelector } from '@/components/ui/currency-selector'
+import { LanguageSelector } from '@/components/ui/language-selector'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -57,6 +58,7 @@ export function Header() {
 
         {/* Desktop CTAs */}
         <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
+          <LanguageSelector />
           <CurrencySelector />
           <Link href="/login">
             <Button variant="ghost" size="sm">Entrar</Button>

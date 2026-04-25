@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import { useAppCurrency } from '@/lib/currency-context'
 import {
   CalendarDays, Clock, Video, CheckCircle2, ArrowRight, Loader2,
@@ -88,6 +89,7 @@ interface TerapeutaCard {
 function SeccaoTerapeutas() {
   const [terapeutas, setTerapeutas] = useState<TerapeutaCard[]>([])
   const [loading, setLoading]       = useState(true)
+  const t = useTranslations('booking')
 
   useEffect(() => {
     fetch(`${API}/terapeutas`)
@@ -95,11 +97,11 @@ function SeccaoTerapeutas() {
       .then(d => {
         if (Array.isArray(d.terapeutas)) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          setTerapeutas(d.terapeutas.map((t: any) => ({
-            ...t,
-            especialidades: typeof t.especialidades === 'string'
-              ? t.especialidades.split(',').map((s: string) => s.trim()).filter(Boolean)
-              : (Array.isArray(t.especialidades) ? t.especialidades : []),
+          setTerapeutas(d.terapeutas.map((ti: any) => ({
+            ...ti,
+            especialidades: typeof ti.especialidades === 'string'
+              ? ti.especialidades.split(',').map((s: string) => s.trim()).filter(Boolean)
+              : (Array.isArray(ti.especialidades) ? ti.especialidades : []),
           })))
         }
       })
@@ -109,7 +111,7 @@ function SeccaoTerapeutas() {
 
   if (loading) return (
     <div className="flex justify-center py-20 text-gray-400">
-      <Loader2 className="h-6 w-6 animate-spin mr-2" /> A carregar…
+      <Loader2 className="h-6 w-6 animate-spin mr-2" /> {t('loading')}
     </div>
   )
 
@@ -117,48 +119,46 @@ function SeccaoTerapeutas() {
     <section id="planos" className="py-20 bg-cream-200">
       <div className="container-app">
         <div className="text-center mb-12">
-          <Badge variant="sage" className="mb-4">As nossas terapeutas</Badge>
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">Escolha a sua terapeuta</h2>
-          <p className="text-gray-500 max-w-lg mx-auto">
-            Cada terapeuta tem os seus pacotes e disponibilidade. Clique para ver os preços e agendar.
-          </p>
+          <Badge variant="sage" className="mb-4">{t('therapists_badge')}</Badge>
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">{t('therapists_title')}</h2>
+          <p className="text-gray-500 max-w-lg mx-auto">{t('therapists_subtitle')}</p>
         </div>
 
         {terapeutas.length === 0 ? (
-          <p className="text-center text-gray-400 py-8">Sem terapeutas disponíveis de momento.</p>
+          <p className="text-center text-gray-400 py-8">{t('no_therapists')}</p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {terapeutas.map(t => (
-              <a key={t.id} href={`/t/${t.slug}`}
+            {terapeutas.map(ti => (
+              <a key={ti.id} href={`/t/${ti.slug}`}
                 className="group bg-white rounded-2xl border border-cream-200 p-6 shadow-soft hover:shadow-card hover:border-sage-300 transition-all duration-200 flex flex-col"
               >
                 <div className="flex items-center gap-4 mb-4">
-                  {t.foto_url ? (
-                    <img src={t.foto_url} alt={t.nome}
+                  {ti.foto_url ? (
+                    <img src={ti.foto_url} alt={ti.nome}
                       className="h-16 w-16 rounded-xl object-cover flex-shrink-0" />
                   ) : (
                     <div className="h-16 w-16 rounded-xl bg-gradient-to-br from-sage-200 to-lilac-200 flex items-center justify-center text-2xl font-bold text-sage-600 flex-shrink-0">
-                      {t.nome.charAt(0)}
+                      {ti.nome.charAt(0)}
                     </div>
                   )}
                   <div className="min-w-0">
-                    <p className="font-bold text-gray-900 group-hover:text-sage-700 transition-colors">{t.nome}</p>
-                    <p className="text-sm text-sage-600">{t.titulo}</p>
-                    <p className="text-xs text-gray-400">{t.duracao_min} min por sessão</p>
+                    <p className="font-bold text-gray-900 group-hover:text-sage-700 transition-colors">{ti.nome}</p>
+                    <p className="text-sm text-sage-600">{ti.titulo}</p>
+                    <p className="text-xs text-gray-400">{ti.duracao_min} min</p>
                   </div>
                 </div>
-                {t.bio && (
-                  <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-3 flex-1">{t.bio}</p>
+                {ti.bio && (
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-3 flex-1">{ti.bio}</p>
                 )}
-                {t.especialidades?.length > 0 && (
+                {ti.especialidades?.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-4">
-                    {t.especialidades.slice(0, 3).map((e: string) => (
+                    {ti.especialidades.slice(0, 3).map((e: string) => (
                       <span key={e} className="text-xs bg-sage-50 text-sage-600 border border-sage-200 rounded-full px-2.5 py-0.5">{e}</span>
                     ))}
                   </div>
                 )}
                 <div className="flex items-center justify-between pt-3 border-t border-cream-200">
-                  <span className="text-xs text-gray-400">Ver consulta experimental · pacotes</span>
+                  <span className="text-xs text-gray-400">{t('see_consultation')}</span>
                   <ArrowRight className="h-4 w-4 text-sage-400 group-hover:text-sage-600 group-hover:translate-x-1 transition-all" />
                 </div>
               </a>
@@ -378,32 +378,30 @@ function VerificadorCreditos({ onCreditos }: { onCreditos: (creditos: Credito[],
   const [email, setEmail]     = useState('')
   const [loading, setLoading] = useState(false)
   const [erro, setErro]       = useState('')
+  const t = useTranslations('booking')
 
   async function verificar(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault(); setErro(''); setLoading(true)
     try {
       const r = await fetch(`${API}/pacotes/creditos?email=${encodeURIComponent(email)}`)
       const d = await r.json()
-      if (!r.ok) { setErro(d.error ?? 'Erro ao verificar créditos'); return }
-      if (!d.sessoes_restantes) {
-        setErro('Sem créditos activos para este e-mail. Adquira um pacote acima.')
-        return
-      }
+      if (!r.ok) { setErro(d.error ?? t('connection_error')); return }
+      if (!d.sessoes_restantes) { setErro(t('no_credits')); return }
       onCreditos(d.creditos, email)
-    } catch { setErro('Erro de ligação. Tente novamente.') }
+    } catch { setErro(t('connection_error')) }
     finally { setLoading(false) }
   }
 
   return (
     <section id="agendar" className="py-20 bg-cream-100">
       <div className="container-app max-w-md text-center">
-        <Badge variant="lilac" className="mb-4">Já tem um pacote?</Badge>
-        <h2 className="text-3xl font-bold text-gray-900 mb-3">Agendar consulta</h2>
-        <p className="text-gray-500 mb-8">Introduza o e-mail com que comprou o pacote para verificar os seus créditos.</p>
+        <Badge variant="lilac" className="mb-4">{t('schedule_badge')}</Badge>
+        <h2 className="text-3xl font-bold text-gray-900 mb-3">{t('schedule_title')}</h2>
+        <p className="text-gray-500 mb-8">{t('schedule_subtitle')}</p>
         <Card>
           <form onSubmit={verificar} className="space-y-4">
             <Input
-              label="E-mail do pacote"
+              label={t('email_label')}
               type="email"
               placeholder="maria@email.com"
               value={email}
@@ -416,7 +414,7 @@ function VerificadorCreditos({ onCreditos }: { onCreditos: (creditos: Credito[],
               </div>
             )}
             <Button type="submit" loading={loading} className="w-full gap-2">
-              <ArrowRight className="h-4 w-4" /> Verificar créditos
+              <ArrowRight className="h-4 w-4" /> {t('check_credits')}
             </Button>
           </form>
         </Card>
@@ -658,6 +656,7 @@ function WizardAgendamento({ creditos, email }: { creditos: Credito[]; email: st
 export default function AgendamentoPage() {
   const [creditos, setCreditos] = useState<Credito[] | null>(null)
   const [emailCliente, setEmailCliente] = useState('')
+  const t = useTranslations('booking')
 
   // Verificar retorno do Stripe (?sucesso=1&email=...)
   useEffect(() => {
@@ -681,23 +680,22 @@ export default function AgendamentoPage() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="bg-gradient-to-br from-sage-50 via-cream-100 to-lilac-50 py-24 text-center border-b border-cream-300">
         <div className="container-app">
-          <Badge variant="sage" className="mb-5">Agendamento online</Badge>
+          <Badge variant="sage" className="mb-5">{t('badge')}</Badge>
           <h1 className="text-5xl font-bold text-gray-900 mb-4 leading-tight">
-            Consultas terapêuticas<br /><span className="text-gradient">ao seu ritmo</span>
+            {t('title')}
           </h1>
           <p className="text-lg text-gray-500 max-w-xl mx-auto mb-8 leading-relaxed">
-            Comece com uma consulta experimental a 25€ ou adquira um pacote de sessões.
-            Agende quando quiser, sem compromissos.
+            {t('subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a href="#planos">
               <Button size="lg" className="gap-2 shadow-soft">
-                Ver planos <ArrowRight className="h-5 w-5" />
+                {t('cta_plans')} <ArrowRight className="h-5 w-5" />
               </Button>
             </a>
             <a href="#agendar">
               <Button size="lg" variant="outline" className="gap-2">
-                Já tenho pacote
+                {t('cta_have_package')}
               </Button>
             </a>
           </div>

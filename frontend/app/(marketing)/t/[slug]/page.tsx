@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import { useAppCurrency } from '@/lib/currency-context'
 import { useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -73,16 +74,17 @@ function getClientTz(): string {
 }
 
 // ─── Secção: Perfil da Terapeuta ─────────────────────────────
-function PerfilTerapeuta({ t }: { t: Terapeuta }) {
-  const especialidades = t.especialidades ? t.especialidades.split(',').map(e => e.trim()).filter(Boolean) : []
+function PerfilTerapeuta({ t: terapeuta }: { t: Terapeuta }) {
+  const i18n = useTranslations('therapist_page')
+  const especialidades = terapeuta.especialidades ? terapeuta.especialidades.split(',').map(e => e.trim()).filter(Boolean) : []
   return (
     <section className="py-16 bg-cream-100">
       <div className="container-app max-w-3xl">
         <div className="flex flex-col sm:flex-row gap-8 items-start">
           {/* Avatar */}
           <div className="flex-shrink-0">
-            {t.foto_url ? (
-              <img src={t.foto_url} alt={t.nome}
+            {terapeuta.foto_url ? (
+              <img src={terapeuta.foto_url} alt={terapeuta.nome}
                 className="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl object-cover shadow-card" />
             ) : (
               <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl bg-gradient-to-br from-sage-300 to-lilac-300 flex items-center justify-center shadow-card">
@@ -93,10 +95,10 @@ function PerfilTerapeuta({ t }: { t: Terapeuta }) {
 
           {/* Info */}
           <div className="flex-1">
-            <Badge variant="sage" className="mb-3">Terapeuta Certificada</Badge>
-            <h1 className="text-3xl font-bold text-gray-900 mb-1">{t.nome}</h1>
-            <p className="text-sage-600 font-medium mb-4">{t.titulo}</p>
-            {t.bio && <p className="text-gray-600 leading-relaxed mb-4">{t.bio}</p>}
+            <Badge variant="sage" className="mb-3">{i18n('certified')}</Badge>
+            <h1 className="text-3xl font-bold text-gray-900 mb-1">{terapeuta.nome}</h1>
+            <p className="text-sage-600 font-medium mb-4">{terapeuta.titulo}</p>
+            {terapeuta.bio && <p className="text-gray-600 leading-relaxed mb-4">{terapeuta.bio}</p>}
             {especialidades.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {especialidades.map(e => (
@@ -112,9 +114,9 @@ function PerfilTerapeuta({ t }: { t: Terapeuta }) {
         {/* Stats */}
         <div className="mt-8 grid grid-cols-3 gap-4">
           {[
-            { icon: Clock,       label: `${t.duracao_min} min`, desc: 'por sessão' },
-            { icon: Video,       label: 'Online',               desc: 'videochamada segura' },
-            { icon: Shield,      label: 'RGPD',                 desc: 'dados protegidos' },
+            { icon: Clock,  label: `${terapeuta.duracao_min} min`, desc: i18n('min_per_session') },
+            { icon: Video,  label: i18n('online'),                 desc: i18n('video_safe') },
+            { icon: Shield, label: i18n('gdpr'),                   desc: i18n('data_protected') },
           ].map(({ icon: Icon, label, desc }) => (
             <div key={label} className="bg-white rounded-2xl p-4 text-center shadow-sm">
               <Icon className="h-5 w-5 text-sage-500 mx-auto mb-1" />
@@ -133,6 +135,8 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
   const searchParams    = useSearchParams()
   const pacoteParam     = searchParams.get('pacote')
   const { formatPrice } = useAppCurrency()
+  const i18n            = useTranslations('therapist_page')
+  const tCommon         = useTranslations('common')
 
   const [pacotes, setPacotes]     = useState<Pacote[]>([])
   const [loading, setLoading]     = useState(true)
@@ -196,7 +200,7 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
 
   if (loading) return (
     <div className="flex justify-center py-16 text-gray-400">
-      <Loader2 className="h-6 w-6 animate-spin mr-2" /> A carregar…
+      <Loader2 className="h-6 w-6 animate-spin mr-2" /> {tCommon('loading')}
     </div>
   )
 
@@ -204,14 +208,14 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
     <section className="py-16" id="pacotes">
       <div className="container-app max-w-4xl">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Agende a sua sessão</h2>
-          <p className="text-gray-500">Escolha o pacote ideal e comece o seu processo terapêutico</p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">{i18n('book_title')}</h2>
+          <p className="text-gray-500">{i18n('book_subtitle')}</p>
         </div>
 
         {/* Dados do cliente */}
         <div className="grid sm:grid-cols-2 gap-4 mb-8 max-w-lg mx-auto">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nome completo</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{i18n('full_name')}</label>
             <input
               type="text"
               value={nome}
@@ -221,7 +225,7 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{i18n('email')}</label>
             <input
               type="email"
               value={email}
@@ -262,7 +266,7 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
                 <p className="text-2xl font-bold text-sage-700 mb-1">{formatPrice(p.preco)}</p>
                 <p className="text-xs text-gray-400 mb-2">{p.numero_sessoes} sessão{p.numero_sessoes > 1 ? 'ões' : ''} · {p.duracao_min} min</p>
                 {p.descricao && <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{p.descricao}</p>}
-                {blocked && <p className="text-xs text-orange-500 mt-1 font-medium">Já utilizado</p>}
+                {blocked && <p className="text-xs text-orange-500 mt-1 font-medium">{i18n('used_experimental')}</p>}
               </button>
             )
           })}
@@ -282,8 +286,8 @@ function SeccaoPacotes({ terapeuta, slug }: { terapeuta: Terapeuta; slug: string
             className="gap-2 min-w-[200px]"
           >
             {comprando
-              ? <><Loader2 className="h-4 w-4 animate-spin" /> A processar…</>
-              : <><ArrowRight className="h-4 w-4" /> {pacoteSel ? `Pagar ${formatPrice(pacoteSel.preco)}` : 'Selecione um pacote'}</>
+              ? <><Loader2 className="h-4 w-4 animate-spin" /> {tCommon('loading')}</>
+              : <><ArrowRight className="h-4 w-4" /> {pacoteSel ? `${i18n('pay')} ${formatPrice(pacoteSel.preco)}` : i18n('select_package')}</>
             }
           </Button>
         </div>
