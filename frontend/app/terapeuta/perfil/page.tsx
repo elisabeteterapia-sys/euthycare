@@ -38,6 +38,7 @@ function StripeConnectCard() {
   const [status, setStatus]     = useState<{ connected: boolean; onboarded: boolean } | null>(null)
   const [loading, setLoading]   = useState(true)
   const [starting, setStarting] = useState(false)
+  const [erroStripe, setErroStripe] = useState('')
 
   function token() { return sessionStorage.getItem('terapeuta_token') ?? '' }
   function authH() { return { Authorization: `Bearer ${token()}` } }
@@ -57,11 +58,20 @@ function StripeConnectCard() {
   }, [])
 
   async function iniciarOnboarding() {
-    setStarting(true)
-    const r = await fetch(`${API}/terapeutas/me/stripe-connect`, { method: 'POST', headers: authH() })
-    const d = await r.json()
-    if (d.url) window.location.href = d.url
-    else setStarting(false)
+    setStarting(true); setErroStripe('')
+    try {
+      const r = await fetch(`${API}/terapeutas/me/stripe-connect`, { method: 'POST', headers: authH() })
+      const d = await r.json()
+      if (d.url) {
+        window.location.href = d.url
+      } else {
+        setErroStripe(d.error ?? 'Erro desconhecido ao iniciar configuração Stripe.')
+        setStarting(false)
+      }
+    } catch {
+      setErroStripe('Erro de ligação ao servidor. Tente novamente.')
+      setStarting(false)
+    }
   }
 
   async function abrirDashboard() {
@@ -98,6 +108,12 @@ function StripeConnectCard() {
               {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
               Configurar conta de recebimento
             </button>
+            {erroStripe && (
+              <div className="mt-3 flex items-start gap-2 rounded-xl bg-red-50 border border-red-200 px-3 py-2.5 text-sm text-red-600">
+                <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                <span>{erroStripe}</span>
+              </div>
+            )}
           </>
         ) : !status?.onboarded ? (
           <>
