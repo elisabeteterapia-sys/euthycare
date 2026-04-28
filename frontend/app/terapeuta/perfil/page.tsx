@@ -327,8 +327,22 @@ export default function TerapeutaPerfil() {
         </div>
       </div>
 
-      {/* Stripe Connect */}
-      <StripeConnectCard />
+      {/* Stripe Connect — só para terapeutas não-plataforma */}
+      {terapeuta?.email !== process.env.NEXT_PUBLIC_PLATFORM_EMAIL
+        ? <StripeConnectCard />
+        : (
+          <div className="bg-white rounded-2xl border border-sage-100 shadow-soft p-5 mt-6">
+            <div className="flex items-center gap-2 text-sage-700 font-semibold text-sm mb-2">
+              <CreditCard className="h-4 w-4 text-sage-500" />
+              Recebimento automático (Stripe)
+            </div>
+            <div className="flex items-center gap-2 p-3 bg-sage-50 border border-sage-200 rounded-xl text-sm text-sage-700">
+              <CheckCircle2 className="h-4 w-4 text-sage-500 flex-shrink-0" />
+              Conta principal — os pagamentos ficam directamente na conta EuthyCare.
+            </div>
+          </div>
+        )
+      }
     </div>
   )
 }
