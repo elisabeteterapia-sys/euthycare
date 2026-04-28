@@ -19,6 +19,7 @@ interface Pacote {
   descricao: string | null
   ativo: boolean
   publico: boolean
+  codigo?: string | null
 }
 
 const VAZIO: Omit<Pacote, 'id' | 'moeda' | 'ativo' | 'publico'> = {
@@ -66,7 +67,7 @@ export default function PacotesPage() {
   const [saving, setSaving]     = useState(false)
   const [msg, setMsg]           = useState<{ ok: boolean; text: string } | null>(null)
   // Estado após criar proposta privada
-  const [proposta, setProposta] = useState<{ id: string; link: string } | null>(null)
+  const [proposta, setProposta] = useState<{ id: string; link: string; linkCurto: string } | null>(null)
   const [enviando, setEnviando] = useState(false)
   const [enviado, setEnviado]   = useState(false)
 
@@ -108,7 +109,8 @@ export default function PacotesPage() {
         if (!editId && privado && terapeuta?.slug) {
           // Proposta privada: mostrar link em destaque em vez de fechar o modal
           const link = `${SITE}/t/${terapeuta.slug}?pacote=${d.id}`
-          setProposta({ id: d.id, link })
+          const linkCurto = d.codigo ? `${SITE}/p/${d.codigo}` : link
+          setProposta({ id: d.id, link, linkCurto })
           setMsg(null)
         } else {
           setMsg({ ok: true, text: editId ? 'Pacote actualizado.' : 'Pacote criado.' })
@@ -189,16 +191,19 @@ export default function PacotesPage() {
             <CopyButton text={`${SITE}/t/${terapeuta.slug}`} />
           </div>
 
-          {/* Links por pacote */}
-          {pacotes.filter(p => p.ativo && p.publico).map(p => (
-            <div key={p.id} className="bg-white rounded-xl border border-sage-200 px-4 py-3 flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-xs font-medium text-gray-500 mb-0.5">{p.nome}</p>
-                <p className="text-sm text-sage-700 truncate">{SITE}/t/{terapeuta.slug}?pacote={p.id}</p>
+          {/* Links por pacote — usa link curto se disponível */}
+          {pacotes.filter(p => p.ativo && p.publico).map(p => {
+            const linkCurto = p.codigo ? `${SITE}/p/${p.codigo}` : `${SITE}/t/${terapeuta.slug}?pacote=${p.id}`
+            return (
+              <div key={p.id} className="bg-white rounded-xl border border-sage-200 px-4 py-3 flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-gray-500 mb-0.5">{p.nome}</p>
+                  <p className="text-sm font-semibold text-sage-700 truncate">{linkCurto}</p>
+                </div>
+                <CopyButton text={linkCurto} />
               </div>
-              <CopyButton text={`${SITE}/t/${terapeuta.slug}?pacote=${p.id}`} />
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
@@ -280,11 +285,11 @@ export default function PacotesPage() {
                   <p className="text-sm text-sage-700 font-medium">Proposta criada! Partilhe o link abaixo.</p>
                 </div>
 
-                {/* Link em destaque */}
-                <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
-                  <p className="text-xs text-gray-500 mb-1.5 font-medium">Link de pagamento</p>
-                  <p className="text-xs text-sage-700 break-all mb-2">{proposta.link}</p>
-                  <CopyButton text={proposta.link} />
+                {/* Link curto em destaque */}
+                <div className="bg-sage-50 border border-sage-200 rounded-xl p-3">
+                  <p className="text-xs text-gray-500 mb-1.5 font-medium">🔗 Link de partilha</p>
+                  <p className="text-base font-semibold text-sage-700 mb-2">{proposta.linkCurto}</p>
+                  <CopyButton text={proposta.linkCurto} />
                 </div>
 
                 {/* Enviar por email */}

@@ -93,6 +93,19 @@ router.get('/creditos', async (req: Request, res: Response) => {
   res.json({ creditos: data, hasExperimental, sessoes_restantes: (data ?? []).reduce((acc, c) => acc + c.sessoes_restantes, 0) })
 })
 
+// ─── GET /pacotes/p/:codigo — link curto de divulgação ───────────────────
+// Devolve { pacote_id, terapeuta_slug } para o frontend redirecionar
+router.get('/p/:codigo', async (req: Request, res: Response) => {
+  const { data, error } = await supabaseAdmin
+    .from('pacotes')
+    .select('id, ativo, terapeuta_id, terapeutas(slug)')
+    .eq('codigo', req.params.codigo.toLowerCase())
+    .single()
+  if (error || !data || !data.ativo) { res.status(404).json({ error: 'Link não encontrado' }); return }
+  const slug = (data.terapeutas as unknown as { slug: string } | null)?.slug ?? null
+  res.json({ pacote_id: data.id, terapeuta_slug: slug })
+})
+
 // ─── GET /pacotes/public/:id — pacote específico por ID (link directo) ──
 router.get('/public/:id', async (req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin
@@ -419,6 +432,16 @@ router.post('/meus', requireTerapeutaJwt, async (req: Request, res: Response) =>
   if (!nome || !numero_sessoes || validade_dias === undefined) {
     res.status(400).json({ error: 'nome, numero_sessoes e validade_dias são obrigatórios' }); return
   }
+  // Gerar código curto único de 6 chars para link de divulgação
+  const gerarCodigo = () => Math.random().toString(36).slice(2, 8)
+  let codigo = gerarCodigo()
+  // garantir unicidade (tentativas simples)
+  for (let i = 0; i < 5; i++) {
+    const { data: existe } = await supabaseAdmin.from('pacotes').select('id').eq('codigo', codigo).single()
+    if (!existe) break
+    codigo = gerarCodigo()
+  }
+
   const { data, error } = await supabaseAdmin.from('pacotes').insert({
     terapeuta_id:   req.terapeutaId!,
     tipo:           tipo ?? 'pacote',
@@ -432,6 +455,7 @@ router.post('/meus', requireTerapeutaJwt, async (req: Request, res: Response) =>
     descricao:      descricao ?? null,
     publico:        publico !== false,
     ativo:          true,
+    codigo,
   }).select().single()
   if (error) { res.status(500).json({ error: error.message }); return }
   res.json(data)
