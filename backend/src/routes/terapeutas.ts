@@ -217,31 +217,37 @@ router.post('/me/stripe-connect', requireTerapeuta, async (req: Request, res: Re
   if (!process.env.STRIPE_SECRET_KEY) {
     res.status(500).json({ error: 'Stripe não configurado.' }); return
   }
-  const { data: t } = await supabaseAdmin
-    .from('terapeutas').select('stripe_account_id, email, nome').eq('id', req.terapeutaId!).single()
-  if (!t) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
+  try {
+    const { data: t } = await supabaseAdmin
+      .from('terapeutas').select('stripe_account_id, email, nome').eq('id', req.terapeutaId!).single()
+    if (!t) { res.status(404).json({ error: 'Terapeuta não encontrada.' }); return }
 
-  let accountId = t.stripe_account_id as string | null
-  if (!accountId) {
-    const account = await stripe.accounts.create({
-      type: 'express',
-      email: t.email,
-      capabilities: { card_payments: { requested: true }, transfers: { requested: true } },
-      business_profile: { url: 'https://euthycare.com' },
-      metadata: { terapeuta_id: req.terapeutaId! },
+    let accountId = t.stripe_account_id as string | null
+    if (!accountId) {
+      const account = await stripe.accounts.create({
+        type: 'express',
+        email: t.email,
+        capabilities: { card_payments: { requested: true }, transfers: { requested: true } },
+        business_profile: { url: 'https://euthycare.com' },
+        metadata: { terapeuta_id: req.terapeutaId! },
+      })
+      accountId = account.id
+      await supabaseAdmin.from('terapeutas').update({ stripe_account_id: accountId }).eq('id', req.terapeutaId!)
+    }
+
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://euthycare.com'
+    const link = await stripe.accountLinks.create({
+      account: accountId,
+      refresh_url: `${siteUrl}/terapeuta/perfil?stripe=refresh`,
+      return_url:  `${siteUrl}/terapeuta/perfil?stripe=success`,
+      type: 'account_onboarding',
     })
-    accountId = account.id
-    await supabaseAdmin.from('terapeutas').update({ stripe_account_id: accountId }).eq('id', req.terapeutaId!)
+    res.json({ url: link.url })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Erro ao criar conta Stripe'
+    console.error('[stripe-connect] Erro:', msg)
+    res.status(500).json({ error: msg })
   }
-
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://euthycare.com'
-  const link = await stripe.accountLinks.create({
-    account: accountId,
-    refresh_url: `${siteUrl}/terapeuta/perfil?stripe=refresh`,
-    return_url:  `${siteUrl}/terapeuta/perfil?stripe=success`,
-    type: 'account_onboarding',
-  })
-  res.json({ url: link.url })
 })
 
 // GET /me/stripe-connect/status → estado da conta Connect
