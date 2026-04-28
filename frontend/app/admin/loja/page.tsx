@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Plus, Pencil, Trash2, EyeOff, Eye, X, Check, Loader2, Upload, FileText } from 'lucide-react'
+import { Plus, Pencil, Trash2, EyeOff, Eye, X, Check, Loader2, Upload, FileText, Download } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 const SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET ?? ''
@@ -136,6 +136,22 @@ export default function AdminLojaPage() {
     setUploading(false)
   }
 
+  async function gerarLinkTeste(produtoId: string) {
+    const email = prompt('Email para receber o link de teste:')
+    if (!email) return
+    const r = await fetch(`${API}/loja/admin/pedido-teste`, {
+      method: 'POST', headers: h(),
+      body: JSON.stringify({ produto_id: produtoId, email }),
+    })
+    const d = await r.json()
+    if (d.download_url) {
+      const copiado = confirm(`Link gerado:\n\n${d.download_url}\n\nClicar OK para copiar.`)
+      if (copiado) navigator.clipboard.writeText(d.download_url)
+    } else {
+      alert(d.error ?? 'Erro ao gerar link')
+    }
+  }
+
   async function toggleAtivo(p: Produto) {
     await fetch(`${API}/loja/admin/produto/${p.id}`, {
       method: 'PATCH',
@@ -222,6 +238,10 @@ export default function AdminLojaPage() {
                     <button onClick={() => openEdit(p)} title="Editar"
                       className="p-1.5 rounded-lg hover:bg-cream-300 text-gray-400 hover:text-gray-700 transition-colors">
                       <Pencil className="h-4 w-4" />
+                    </button>
+                    <button onClick={() => gerarLinkTeste(p.id)} title="Gerar link de teste"
+                      className="p-1.5 rounded-lg hover:bg-sage-50 text-gray-400 hover:text-sage-600 transition-colors">
+                      <Download className="h-4 w-4" />
                     </button>
                     <button onClick={() => toggleAtivo(p)} title={p.ativo ? 'Desactivar' : 'Activar'}
                       className="p-1.5 rounded-lg hover:bg-cream-300 text-gray-400 hover:text-gray-700 transition-colors">

@@ -627,4 +627,43 @@ router.get('/admin/downloads', async (req: Request, res: Response) => {
   res.json({ total: count, offset, limit, downloads: data })
 })
 
+// ── Admin: gerar pedido de teste (sem pagamento) ──────────────
+router.post('/admin/pedido-teste', async (req: Request, res: Response) => {
+  if (!isAdmin(req)) { res.status(403).json({ error: 'Acesso restrito.' }); return }
+
+  const { produto_id, email } = req.body
+  if (!produto_id || !email) {
+    res.status(400).json({ error: 'produto_id e email são obrigatórios' }); return
+  }
+
+  const { data: produto } = await supabaseAdmin.from('produtos').select('id, nome').eq('id', produto_id).single()
+  if (!produto) { res.status(404).json({ error: 'Produto não encontrado' }); return }
+
+  const token = crypto.randomUUID()
+  const expira = new Date()
+  expira.setDate(expira.getDate() + 7)
+
+  const { data: pedido, error } = await supabaseAdmin.from('pedidos').insert({
+    usuario_email:         email,
+    produto_id,
+    status:                'paid',
+    stripe_session_id:     `teste_admin_${Date.now()}`,
+    stripe_payment_intent: null,
+    download_token:        token,
+    token_expira_em:       expira.toISOString(),
+    email_enviado:         false,
+    download_count:        0,
+  }).select().single()
+
+  if (error) { res.status(500).json({ error: error.message }); return }
+
+  const siteUrl = process.env.FRONTEND_URL ?? 'https://euthycare.com'
+  res.json({
+    ok: true,
+    pedido_id: pedido.id,
+    download_url: `${siteUrl}/loja/download/${token}`,
+    expira_em: expira.toISOString(),
+  })
+})
+
 export default router
