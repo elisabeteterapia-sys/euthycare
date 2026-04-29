@@ -1,14 +1,56 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import {
   ArrowLeft, FileText, ShoppingCart, Loader2, CheckCircle2,
-  Lock, Download, Star, BookOpen, ChevronRight,
+  Lock, Download, Star, BookOpen, ChevronRight, Clock,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAppCurrency } from '@/lib/currency-context'
+
+const COUNTDOWN_MINUTES = 15
+
+// Contador de urgência — persiste em sessionStorage para não reiniciar ao recarregar
+function useCountdown(produtoId: string) {
+  const key = `countdown_${produtoId}`
+  const [segundos, setSegundos] = useState<number>(COUNTDOWN_MINUTES * 60)
+
+  useEffect(() => {
+    const agora = Date.now()
+    const salvo = sessionStorage.getItem(key)
+    let expira: number
+
+    if (salvo) {
+      expira = Number(salvo)
+      if (expira <= agora) {
+        // Expirou — reinicia
+        expira = agora + COUNTDOWN_MINUTES * 60 * 1000
+        sessionStorage.setItem(key, String(expira))
+      }
+    } else {
+      expira = agora + COUNTDOWN_MINUTES * 60 * 1000
+      sessionStorage.setItem(key, String(expira))
+    }
+
+    const tick = () => {
+      const restam = Math.max(0, Math.round((expira - Date.now()) / 1000))
+      setSegundos(restam)
+      if (restam <= 0) {
+        expira = Date.now() + COUNTDOWN_MINUTES * 60 * 1000
+        sessionStorage.setItem(key, String(expira))
+      }
+    }
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [key])
+
+  const m = String(Math.floor(segundos / 60)).padStart(2, '0')
+  const s = String(segundos % 60).padStart(2, '0')
+  return { display: `${m}:${s}`, urgente: segundos < 120 }
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
@@ -25,8 +67,9 @@ interface Produto {
 export default function ProdutoDetail({ produto }: { produto: Produto }) {
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
-  const { formatPrice }        = useAppCurrency()
-  const t                      = useTranslations('shop')
+  const { formatPrice }          = useAppCurrency()
+  const t                        = useTranslations('shop')
+  const { display: tempo, urgente } = useCountdown(produto.id)
 
   async function handleComprar() {
     if (loading) return
@@ -114,7 +157,21 @@ export default function ProdutoDetail({ produto }: { produto: Produto }) {
               </p>
 
               {/* Box de compra */}
-              <div className="bg-white rounded-3xl border border-sage-200 shadow-card p-6 mb-8">
+              <div className={`bg-white rounded-3xl border shadow-card p-6 mb-8 ${urgente ? 'border-red-300' : 'border-sage-200'}`}>
+
+                {/* Contador de urgência */}
+                <div className={`flex items-center justify-between rounded-2xl px-4 py-3 mb-5 ${urgente ? 'bg-red-50 border border-red-200' : 'bg-amber-50 border border-amber-200'}`}>
+                  <div className="flex items-center gap-2">
+                    <Clock className={`h-4 w-4 ${urgente ? 'text-red-500 animate-pulse' : 'text-amber-600'}`} />
+                    <span className={`text-sm font-medium ${urgente ? 'text-red-700' : 'text-amber-700'}`}>
+                      {urgente ? 'Oferta a expirar!' : 'Oferta por tempo limitado'}
+                    </span>
+                  </div>
+                  <span className={`text-2xl font-bold tabular-nums ${urgente ? 'text-red-600' : 'text-amber-700'}`}>
+                    {tempo}
+                  </span>
+                </div>
+
                 <div className="flex items-baseline gap-3 mb-5">
                   <span className="text-5xl font-bold text-gray-900">
                     {formatPrice(produto.preco_cents / 100)}
