@@ -13,14 +13,15 @@ interface Produto {
 }
 
 async function getProduto(id: string): Promise<Produto | null> {
-  const API = process.env.BACKEND_URL ?? 'http://localhost:3001'
+  const API = process.env.NEXT_PUBLIC_API_URL ?? process.env.BACKEND_URL ?? 'http://localhost:3001'
   try {
     const res = await fetch(`${API}/loja/produto/${id}`, {
       next: { revalidate: 300 },
     })
     if (!res.ok) return null
     const data = await res.json()
-    return data.produto ?? null
+    // backend pode retornar { produto: {...} } ou o objecto directo
+    return data.produto ?? data ?? null
   } catch {
     return null
   }
