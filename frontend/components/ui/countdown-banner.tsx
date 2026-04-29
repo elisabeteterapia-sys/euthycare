@@ -44,46 +44,38 @@ export function CountdownBanner({ buyHref = '#' }: { buyHref?: string }) {
   const urgente = segundos < 120
 
   return (
-    <div className={`w-full py-4 px-4 transition-colors ${urgente ? 'bg-red-600' : 'bg-orange-500'}`}>
-      <div className="container-app max-w-4xl">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div className={`w-full py-2.5 px-4 transition-colors ${urgente ? 'bg-red-600' : 'bg-orange-500'}`}>
+      <div className="container-app">
+        <div className="flex items-center justify-center gap-4 flex-wrap">
 
-          {/* Mensagem + contador */}
-          <div className="flex items-center gap-3">
+          {/* Ícone + mensagem */}
+          <div className="flex items-center gap-2 text-white">
             {urgente
-              ? <Zap className="h-6 w-6 text-white animate-pulse flex-shrink-0" />
-              : <Clock className="h-6 w-6 text-white flex-shrink-0" />
+              ? <Zap className="h-4 w-4 animate-pulse flex-shrink-0" />
+              : <Clock className="h-4 w-4 flex-shrink-0" />
             }
-            <div className="text-white">
-              <p className="text-xs font-semibold uppercase tracking-widest opacity-90">
-                {urgente ? '⚡ A expirar!' : '🎁 Oferta por tempo limitado'}
-              </p>
-              <p className="text-sm font-medium opacity-90">
-                Esta promoção termina em
-              </p>
-            </div>
+            <span className="text-sm font-medium">
+              {urgente ? '⚡ A expirar!' : '🎁 Oferta por tempo limitado —'}
+            </span>
           </div>
 
-          {/* Contador grande */}
-          <div className="flex items-center gap-3">
-            <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-5 py-2 text-white text-center min-w-[100px]">
-              <span className={`font-bold tabular-nums text-4xl leading-none ${urgente ? 'animate-pulse' : ''}`}>
-                {m}:{s}
-              </span>
-              <p className="text-[10px] uppercase tracking-widest opacity-80 mt-0.5">min : seg</p>
-            </div>
+          {/* Contador */}
+          <div className="bg-white/25 rounded-xl px-3 py-1 text-white text-center">
+            <span className={`font-bold tabular-nums text-xl leading-none ${urgente ? 'animate-pulse' : ''}`}>
+              {m}:{s}
+            </span>
           </div>
 
-          {/* Botão CTA */}
+          {/* Botão CTA compacto */}
           <a
             href={buyHref}
-            className={`flex items-center gap-2 font-bold text-sm px-6 py-3 rounded-2xl transition-all shadow-lg ${
+            className={`flex items-center gap-1.5 font-bold text-xs px-4 py-1.5 rounded-xl transition-all shadow ${
               urgente
                 ? 'bg-white text-red-600 hover:bg-red-50 animate-bounce'
                 : 'bg-white text-orange-600 hover:bg-orange-50 hover:scale-105'
             }`}
           >
-            <ShoppingBag className="h-4 w-4" />
+            <ShoppingBag className="h-3.5 w-3.5" />
             Comprar agora
           </a>
         </div>
