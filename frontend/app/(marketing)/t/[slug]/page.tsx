@@ -10,7 +10,6 @@ import {
   Mail, Shield, ChevronDown, ChevronUp, Star, Leaf, User,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { CountdownBanner } from '@/components/ui/countdown-banner'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -550,9 +549,6 @@ export default function TerapeutaPublicaPage() {
 
   return (
     <>
-      {/* Countdown banner */}
-      <CountdownBanner buyHref="#pacotes" />
-
       {/* Header mínimo */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-cream-200">
         <div className="container-app flex h-14 items-center justify-between">
