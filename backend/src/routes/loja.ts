@@ -198,36 +198,40 @@ router.post('/checkout', async (req: Request, res: Response) => {
     return
   }
 
-  const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000'
+  const frontendUrl = process.env.FRONTEND_URL ?? 'https://euthycare.com'
 
-  const session = await stripe.checkout.sessions.create({
-    mode: 'payment',
-    line_items: [
-      {
+  let session
+  try {
+    session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items: [{
         price_data: {
           currency: 'eur',
           product_data: {
-            name: produto.nome,
-            description: produto.descricao,
-            ...(produto.capa_url ? { images: [produto.capa_url] } : {}),
+            name:        produto.nome,
+            description: produto.descricao ?? undefined,
+            // Não incluir imagem — URLs assinadas do Supabase são rejeitadas pelo Stripe
           },
           unit_amount: produto.preco_cents,
         },
         quantity: 1,
-      },
-    ],
-    billing_address_collection: 'auto',
-    success_url: `${frontendUrl}/loja/sucesso?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url:  `${frontendUrl}/produto/${produto.id}`,
-    metadata: { produto_id: produto.id },
-  })
+      }],
+      billing_address_collection: 'auto',
+      success_url: `${frontendUrl}/loja/sucesso?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url:  `${frontendUrl}/produto/${produto.id}`,
+      metadata:    { produto_id: produto.id },
+    })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Erro ao criar sessão Stripe'
+    console.error('[loja/checkout] Stripe error:', msg)
+    res.status(500).json({ error: msg }); return
+  }
 
-  // Create pedido with status 'pending' so we have a record from the start
   await supabaseAdmin.from('pedidos').insert({
-    usuario_email:    '',           // filled in after payment
-    produto_id:       produto.id,
+    usuario_email:     '',
+    produto_id:        produto.id,
     stripe_session_id: session.id,
-    status:           'pending',
+    status:            'pending',
   })
 
   res.json({ url: session.url })
