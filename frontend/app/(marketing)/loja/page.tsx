@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ShoppingBag, FileText, Download, Shield, Star, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { CountdownBanner } from '@/components/ui/countdown-banner'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -39,6 +40,9 @@ export default async function LojaPage() {
 
   return (
     <>
+      {/* ── Countdown banner ─────────────────────────── */}
+      <CountdownBanner />
+
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="bg-gradient-to-br from-sage-50 via-cream-100 to-lilac-50 py-16 text-center border-b border-cream-300">
         <div className="container-app max-w-xl">
