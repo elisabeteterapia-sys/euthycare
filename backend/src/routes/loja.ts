@@ -231,8 +231,16 @@ router.post('/checkout', async (req: Request, res: Response) => {
 
     res.json({ url: session.url })
   } catch (err) {
-    const msg = err instanceof Error ? err.message : 'Erro desconhecido'
-    console.error('[loja/checkout] erro:', msg)
+    // Log detalhado para diagnóstico no Railway
+    const stripeErr = err as Record<string, unknown>
+    console.error('[loja/checkout] ERRO DETALHADO:', JSON.stringify({
+      message:  stripeErr?.message,
+      type:     stripeErr?.type,
+      code:     stripeErr?.code,
+      status:   stripeErr?.statusCode,
+      raw:      stripeErr?.raw,
+    }))
+    const msg = (stripeErr?.message as string) ?? 'Erro desconhecido'
     res.status(500).json({ error: msg })
   }
 })
