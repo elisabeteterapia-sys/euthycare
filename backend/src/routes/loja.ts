@@ -133,14 +133,25 @@ async function sendDownloadEmail(
   }).catch(err => console.error('[email] failed to send:', err))
 }
 
-// Converte capa_url de path de storage para URL pública assinada (1 ano de TTL)
+// Converte capa_url para URL assinada acessível (bucket privado)
+// Aceita tanto paths simples como URLs completas do Supabase Storage
 async function resolverCapaUrl(capaUrl: string | null): Promise<string | null> {
   if (!capaUrl) return null
-  if (capaUrl.startsWith('http')) return capaUrl  // já é URL completa
-  // É um path de storage (ex: capas/1234-file.jpg) — gera signed URL
+
+  let path = capaUrl
+  if (capaUrl.startsWith('http')) {
+    // Extrair path de URLs do tipo: .../object/public/bucket/caminho ou .../object/authenticated/bucket/caminho
+    const m = capaUrl.match(/\/storage\/v1\/object\/(?:public|authenticated|sign)\/[^/]+\/(.+?)(?:\?.*)?$/)
+    if (m) {
+      path = decodeURIComponent(m[1])
+    } else {
+      return capaUrl // URL externa, usar tal como está
+    }
+  }
+
   const { data } = await supabaseAdmin.storage
     .from(BUCKET)
-    .createSignedUrl(capaUrl, 60 * 60 * 24 * 365) // 1 ano
+    .createSignedUrl(path, 60 * 60 * 24 * 365) // 1 ano de TTL
   return data?.signedUrl ?? null
 }
 
