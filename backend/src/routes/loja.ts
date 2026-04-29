@@ -238,11 +238,14 @@ router.post('/checkout', async (req: Request, res: Response) => {
     res.status(500).json({ error: msg }); return
   }
 
-  await supabaseAdmin.from('pedidos').insert({
+  // Registar pedido pendente — não-bloqueante (falha silenciosa)
+  supabaseAdmin.from('pedidos').insert({
     usuario_email:     '',
     produto_id:        produto.id,
     stripe_session_id: session.id,
     status:            'pending',
+  }).then(({ error }) => {
+    if (error) console.error('[loja/checkout] pedido insert error:', error.message)
   })
 
   res.json({ url: session.url })
