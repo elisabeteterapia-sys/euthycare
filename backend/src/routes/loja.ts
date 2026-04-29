@@ -190,65 +190,51 @@ router.get('/produto/:id', async (req: Request, res: Response) => {
 // ── POST /loja/checkout ───────────────────────────────────────
 
 router.post('/checkout', async (req: Request, res: Response) => {
-  const { produto_id } = req.body
-
-  if (!produto_id) {
-    res.status(400).json({ error: 'produto_id obrigatório.' })
-    return
-  }
-
-  const { data: produto, error: prodErr } = await supabaseAdmin
-    .from('produtos')
-    .select('*')
-    .eq('id', produto_id)
-    .eq('ativo', true)
-    .single()
-
-  if (prodErr || !produto) {
-    res.status(404).json({ error: 'Produto não encontrado.' })
-    return
-  }
-
-  const frontendUrl = process.env.FRONTEND_URL ?? 'https://euthycare.com'
-
-  let session
   try {
-    session = await stripe.checkout.sessions.create({
+    const { produto_id } = req.body
+    if (!produto_id) { res.status(400).json({ error: 'produto_id obrigatório.' }); return }
+
+    const { data: produto, error: prodErr } = await supabaseAdmin
+      .from('produtos').select('*').eq('id', produto_id).eq('ativo', true).single()
+    if (prodErr || !produto) { res.status(404).json({ error: 'Produto não encontrado.' }); return }
+
+    // URLs fixas para produção — não depender de env var para evitar erros
+    const successUrl = 'https://euthycare.com/loja/sucesso?session_id={CHECKOUT_SESSION_ID}'
+    const cancelUrl  = `https://euthycare.com/produto/${produto.id}`
+
+    const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [{
         price_data: {
           currency: 'eur',
           product_data: {
-            name:        produto.nome,
-            description: produto.descricao ?? undefined,
-            // Não incluir imagem — URLs assinadas do Supabase são rejeitadas pelo Stripe
+            name: String(produto.nome).slice(0, 250), // Stripe limita 250 chars
           },
-          unit_amount: produto.preco_cents,
+          unit_amount: Math.round(Number(produto.preco_cents)), // garantir inteiro
         },
         quantity: 1,
       }],
-      billing_address_collection: 'auto',
-      success_url: `${frontendUrl}/loja/sucesso?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:  `${frontendUrl}/produto/${produto.id}`,
-      metadata:    { produto_id: produto.id },
+      success_url: successUrl,
+      cancel_url:  cancelUrl,
+      metadata:    { produto_id: String(produto.id) },
     })
+
+    // Registar pedido pendente — não-bloqueante
+    supabaseAdmin.from('pedidos').insert({
+      usuario_email:     '',
+      produto_id:        produto.id,
+      stripe_session_id: session.id,
+      status:            'pending',
+    }).then(({ error }) => {
+      if (error) console.error('[loja/checkout] pedido insert:', error.message)
+    })
+
+    res.json({ url: session.url })
   } catch (err) {
-    const msg = err instanceof Error ? err.message : 'Erro ao criar sessão Stripe'
-    console.error('[loja/checkout] Stripe error:', msg)
-    res.status(500).json({ error: msg }); return
+    const msg = err instanceof Error ? err.message : 'Erro desconhecido'
+    console.error('[loja/checkout] erro:', msg)
+    res.status(500).json({ error: msg })
   }
-
-  // Registar pedido pendente — não-bloqueante (falha silenciosa)
-  supabaseAdmin.from('pedidos').insert({
-    usuario_email:     '',
-    produto_id:        produto.id,
-    stripe_session_id: session.id,
-    status:            'pending',
-  }).then(({ error }) => {
-    if (error) console.error('[loja/checkout] pedido insert error:', error.message)
-  })
-
-  res.json({ url: session.url })
 })
 
 // ── GET /loja/pedido/:sessionId ───────────────────────────────
