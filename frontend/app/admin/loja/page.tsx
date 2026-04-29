@@ -81,7 +81,7 @@ export default function AdminLojaPage() {
       body: JSON.stringify({ filename: file.name, tipo }),
     })
     if (!urlRes.ok) throw new Error('Erro ao obter URL de upload')
-    const { signedUrl, path } = await urlRes.json()
+    const { signedUrl, path, publicUrl, bucket } = await urlRes.json()
 
     const up = await fetch(signedUrl, {
       method: 'PUT',
@@ -90,10 +90,11 @@ export default function AdminLojaPage() {
     })
     if (!up.ok) throw new Error('Erro ao enviar ficheiro')
 
-    // Return Supabase public URL
-    const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
-    const BUCKET = process.env.NEXT_PUBLIC_STORAGE_BUCKET ?? 'produtos-pdf'
-    return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`
+    // Para capas: usar URL pública do bucket capas-produtos
+    if (publicUrl) return publicUrl
+
+    // Para PDFs: devolver path (o backend gera signed URL quando necessário)
+    return path
   }
 
   async function guardar() {

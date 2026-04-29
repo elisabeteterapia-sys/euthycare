@@ -52,7 +52,8 @@ setInterval(() => {
   }
 }, 10 * 60 * 1000).unref()
 
-const BUCKET = process.env.STORAGE_BUCKET_PRODUTOS ?? 'produtos-pdf'
+const BUCKET       = process.env.STORAGE_BUCKET_PRODUTOS ?? 'produtos-pdf'
+const BUCKET_CAPAS = process.env.STORAGE_BUCKET_CAPAS   ?? 'capas-produtos'
 
 const router = Router()
 
@@ -133,25 +134,29 @@ async function sendDownloadEmail(
   }).catch(err => console.error('[email] failed to send:', err))
 }
 
-// Converte capa_url para URL assinada acessível (bucket privado)
-// Aceita tanto paths simples como URLs completas do Supabase Storage
+// Converte capa_url para URL pública do bucket capas-produtos
+// Se a URL já for pública (bucket capas-produtos), devolve tal como está
+// Fallback: gera signed URL do bucket privado (compatibilidade com uploads antigos)
 async function resolverCapaUrl(capaUrl: string | null): Promise<string | null> {
   if (!capaUrl) return null
 
-  let path = capaUrl
-  if (capaUrl.startsWith('http')) {
-    // Extrair path de URLs do tipo: .../object/public/bucket/caminho ou .../object/authenticated/bucket/caminho
-    const m = capaUrl.match(/\/storage\/v1\/object\/(?:public|authenticated|sign)\/[^/]+\/(.+?)(?:\?.*)?$/)
-    if (m) {
-      path = decodeURIComponent(m[1])
-    } else {
-      return capaUrl // URL externa, usar tal como está
-    }
+  // Se a URL já é pública (bucket capas-produtos), retornar directamente
+  if (capaUrl.includes(BUCKET_CAPAS) || capaUrl.includes('capas-produtos')) {
+    return capaUrl
   }
 
-  const { data } = await supabaseAdmin.storage
-    .from(BUCKET)
-    .createSignedUrl(path, 60 * 60 * 24 * 365) // 1 ano de TTL
+  if (capaUrl.startsWith('http')) {
+    // Extrair path de URLs do Supabase Storage (bucket privado antigo)
+    const m = capaUrl.match(/\/storage\/v1\/object\/(?:public|authenticated|sign)\/[^/]+\/(.+?)(?:\?.*)?$/)
+    if (!m) return capaUrl
+    const path = decodeURIComponent(m[1])
+    // Tentar gerar signed URL do bucket privado (capas antigas)
+    const { data } = await supabaseAdmin.storage.from(BUCKET).createSignedUrl(path, 60 * 60 * 24 * 365)
+    return data?.signedUrl ?? capaUrl
+  }
+
+  // Path simples: gerar signed URL
+  const { data } = await supabaseAdmin.storage.from(BUCKET).createSignedUrl(capaUrl, 60 * 60 * 24 * 365)
   return data?.signedUrl ?? null
 }
 
@@ -593,16 +598,23 @@ router.post('/admin/upload-url', async (req: Request, res: Response) => {
   const { filename, tipo } = req.body as { filename: string; tipo: 'pdf' | 'capa' }
   if (!filename) { res.status(400).json({ error: 'filename é obrigatório.' }); return }
 
-  const folder = tipo === 'capa' ? 'capas' : 'pdfs'
+  const isCapa  = tipo === 'capa'
+  const bucket  = isCapa ? BUCKET_CAPAS : BUCKET
+  const folder  = isCapa ? '' : 'pdfs'
   const safeName = filename.replace(/[^a-z0-9._-]/gi, '_')
-  const path = `${folder}/${Date.now()}-${safeName}`
+  const path = folder ? `${folder}/${Date.now()}-${safeName}` : `${Date.now()}-${safeName}`
 
   const { data, error } = await supabaseAdmin.storage
-    .from(BUCKET)
+    .from(bucket)
     .createSignedUploadUrl(path)
 
   if (error || !data) { res.status(500).json({ error: 'Erro ao gerar URL de upload.' }); return }
-  res.json({ signedUrl: data.signedUrl, path, token: data.token })
+
+  // Para capas: devolver URL pública directamente (bucket público)
+  const supabaseUrl = process.env.SUPABASE_URL ?? ''
+  const publicUrl   = isCapa ? `${supabaseUrl}/storage/v1/object/public/${bucket}/${path}` : null
+
+  res.json({ signedUrl: data.signedUrl, path, token: data.token, publicUrl, bucket })
 })
 
 // ── Admin: list orders ────────────────────────────────────────
