@@ -202,15 +202,23 @@ router.post('/checkout', async (req: Request, res: Response) => {
     const successUrl = 'https://euthycare.com/loja/sucesso?session_id={CHECKOUT_SESSION_ID}'
     const cancelUrl  = `https://euthycare.com/produto/${produto.id}`
 
+    const unitAmount = Math.round(Number(produto.preco_cents))
+    console.log('[loja/checkout] produto_id:', produto.id, '| preco_cents raw:', produto.preco_cents, '| unit_amount:', unitAmount)
+
+    if (unitAmount < 50) {
+      res.status(400).json({ error: `Preço inválido: ${unitAmount} cêntimos (mínimo 50). O preço deve ser inserido em cêntimos (ex: 2499 para €24,99).` })
+      return
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [{
         price_data: {
           currency: 'eur',
           product_data: {
-            name: String(produto.nome).slice(0, 250), // Stripe limita 250 chars
+            name: String(produto.nome).slice(0, 250),
           },
-          unit_amount: Math.round(Number(produto.preco_cents)), // garantir inteiro
+          unit_amount: unitAmount,
         },
         quantity: 1,
       }],
