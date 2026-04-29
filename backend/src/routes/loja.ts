@@ -133,6 +133,17 @@ async function sendDownloadEmail(
   }).catch(err => console.error('[email] failed to send:', err))
 }
 
+// Converte capa_url de path de storage para URL pública assinada (1 ano de TTL)
+async function resolverCapaUrl(capaUrl: string | null): Promise<string | null> {
+  if (!capaUrl) return null
+  if (capaUrl.startsWith('http')) return capaUrl  // já é URL completa
+  // É um path de storage (ex: capas/1234-file.jpg) — gera signed URL
+  const { data } = await supabaseAdmin.storage
+    .from(BUCKET)
+    .createSignedUrl(capaUrl, 60 * 60 * 24 * 365) // 1 ano
+  return data?.signedUrl ?? null
+}
+
 // ── GET /loja/produtos ────────────────────────────────────────
 
 router.get('/produtos', async (_req: Request, res: Response) => {
@@ -142,30 +153,27 @@ router.get('/produtos', async (_req: Request, res: Response) => {
     .eq('ativo', true)
     .order('ordem', { ascending: true })
 
-  if (error) {
-    res.status(500).json({ error: error.message })
-    return
-  }
-  res.json({ produtos: data })
+  if (error) { res.status(500).json({ error: error.message }); return }
+
+  const produtos = await Promise.all(
+    (data ?? []).map(async p => ({ ...p, capa_url: await resolverCapaUrl(p.capa_url) }))
+  )
+  res.json({ produtos })
 })
 
 // ── GET /loja/produto/:id ─────────────────────────────────────
 
 router.get('/produto/:id', async (req: Request, res: Response) => {
   const { id } = req.params
-
   const { data, error } = await supabaseAdmin
     .from('produtos')
     .select('id, nome, descricao, conteudo, preco_cents, capa_url, tipo')
-    .eq('id', id)
-    .eq('ativo', true)
-    .single()
+    .eq('id', id).eq('ativo', true).single()
 
-  if (error || !data) {
-    res.status(404).json({ error: 'Produto não encontrado.' })
-    return
-  }
-  res.json({ produto: data })
+  if (error || !data) { res.status(404).json({ error: 'Produto não encontrado.' }); return }
+
+  const produto = { ...data, capa_url: await resolverCapaUrl(data.capa_url) }
+  res.json({ produto })
 })
 
 // ── POST /loja/checkout ───────────────────────────────────────
