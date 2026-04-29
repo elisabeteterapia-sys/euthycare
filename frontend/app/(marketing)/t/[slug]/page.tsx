@@ -551,7 +551,7 @@ export default function TerapeutaPublicaPage() {
   return (
     <>
       {/* Countdown banner */}
-      <CountdownBanner />
+      <CountdownBanner buyHref="#pacotes" />
 
       {/* Header mínimo */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-cream-200">

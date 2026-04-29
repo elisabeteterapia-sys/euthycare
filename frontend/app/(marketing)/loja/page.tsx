@@ -41,7 +41,7 @@ export default async function LojaPage() {
   return (
     <>
       {/* ── Countdown banner ─────────────────────────── */}
-      <CountdownBanner />
+      <CountdownBanner buyHref={destaque ? `/produto/${destaque.id}` : '#'} />
 
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="bg-gradient-to-br from-sage-50 via-cream-100 to-lilac-50 py-16 text-center border-b border-cream-300">
