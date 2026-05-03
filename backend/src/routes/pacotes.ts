@@ -99,7 +99,7 @@ router.get('/p/:codigo', async (req: Request, res: Response) => {
   const { data, error } = await supabaseAdmin
     .from('pacotes')
     .select('id, ativo, terapeuta_id, terapeutas(slug)')
-    .eq('codigo', req.params.codigo.toLowerCase())
+    .eq('codigo', String(req.params.codigo).toLowerCase())
     .single()
   if (error || !data || !data.ativo) { res.status(404).json({ error: 'Link não encontrado' }); return }
   const slug = (data.terapeutas as unknown as { slug: string } | null)?.slug ?? null
