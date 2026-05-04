@@ -222,10 +222,12 @@ router.post('/checkout', async (req: Request, res: Response) => {
       : 'eur'
 
     // Para Pix (Stripe exige BRL); Multibanco exige EUR.
-    // automatic_payment_methods deixa o Stripe mostrar o método certo por país/moeda.
+    const paymentMethods: Stripe.Checkout.SessionCreateParams.PaymentMethodType[] =
+      moeda === 'brl' ? ['card', 'pix'] : ['card', 'multibanco']
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      automatic_payment_methods: { enabled: true },
+      payment_method_types: paymentMethods,
       line_items: [{
         price_data: {
           currency: moeda,
