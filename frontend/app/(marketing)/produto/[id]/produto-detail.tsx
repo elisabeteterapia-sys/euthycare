@@ -67,7 +67,7 @@ interface Produto {
 export default function ProdutoDetail({ produto }: { produto: Produto }) {
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
-  const { formatPrice }          = useAppCurrency()
+  const { formatPrice, currency } = useAppCurrency()
   const t                        = useTranslations('shop')
   const { display: tempo, urgente } = useCountdown(produto.id)
 
@@ -78,7 +78,7 @@ export default function ProdutoDetail({ produto }: { produto: Produto }) {
       const res  = await fetch(`${API_URL}/loja/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ produto_id: produto.id }),
+        body: JSON.stringify({ produto_id: produto.id, currency: currency.toLowerCase() }),
       })
       const data = await res.json()
       if (!res.ok || !data.url) {

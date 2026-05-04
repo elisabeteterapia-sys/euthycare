@@ -215,11 +215,20 @@ router.post('/checkout', async (req: Request, res: Response) => {
       return
     }
 
+    // Moeda pedida pelo frontend (eur | brl | usd) — fallback eur
+    const moedaReq = (req.body as Record<string, string>).currency ?? 'eur'
+    const moeda    = ['eur', 'brl', 'usd'].includes(moedaReq.toLowerCase())
+      ? moedaReq.toLowerCase()
+      : 'eur'
+
+    // Para Pix (Stripe exige BRL); Multibanco exige EUR.
+    // automatic_payment_methods deixa o Stripe mostrar o método certo por país/moeda.
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
+      automatic_payment_methods: { enabled: true },
       line_items: [{
         price_data: {
-          currency: 'eur',
+          currency: moeda,
           product_data: {
             name: String(produto.nome).slice(0, 250),
           },
@@ -229,7 +238,7 @@ router.post('/checkout', async (req: Request, res: Response) => {
       }],
       success_url: successUrl,
       cancel_url:  cancelUrl,
-      metadata:    { produto_id: String(produto.id) },
+      metadata:    { produto_id: String(produto.id), moeda },
     })
 
     // Registar pedido pendente — não-bloqueante
