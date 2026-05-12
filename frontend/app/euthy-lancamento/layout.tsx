@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'EuthyApp — Plataforma de Gestão Clínica para Terapeutas',
+  title: 'EuthyApp — A Gestão Clínica nas Tuas Mãos',
   description:
-    'Gerencie pacientes, consultas, registos clínicos e financeiro numa plataforma pensada para terapeutas portugueses. Acesso imediato após pagamento.',
+    'Agenda, pacientes, cobranças e IA de apoio clínico — tudo automatizado. Chega de ligar a cobrar ou a confirmar consultas. Começa hoje, acesso imediato.',
 }
 
 export default function LancamentoLayout({ children }: { children: React.ReactNode }) {

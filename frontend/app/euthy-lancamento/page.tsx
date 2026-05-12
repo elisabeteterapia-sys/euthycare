@@ -310,9 +310,13 @@ export default function EuthyLancamentoPage() {
             <span className="text-sage-500">O EuthyApp faz isso por ti.</span>
           </h1>
 
-          <p className="text-lg text-gray-500 max-w-xl mx-auto mb-6 leading-relaxed">
-            A plataforma que os terapeutas portugueses precisavam — pacientes, agenda, clínica, financeiro e IA de apoio, tudo automatizado.
-            Começas hoje, acesso imediato após o pagamento.
+          <p className="text-lg text-gray-500 max-w-xl mx-auto mb-4 leading-relaxed">
+            A gestão da tua prática clínica nas tuas mãos — simples, directa e com todas as soluções que precisas.
+            Agenda, pacientes, cobranças e IA de apoio, tudo num só lugar.
+          </p>
+
+          <p className="text-base font-semibold text-sage-600 max-w-lg mx-auto mb-6">
+            Dedica o teu tempo ao que importa: os teus pacientes.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
