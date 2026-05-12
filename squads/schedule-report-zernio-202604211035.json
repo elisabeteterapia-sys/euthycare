@@ -1,0 +1,134 @@
+[
+  {
+    "slot": "2026-04-21 19:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-04-21 19:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-04-23 10:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-04-23 10:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-04-28 19:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-04-28 19:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-04-30 10:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-04-30 10:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-02 12:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-02 12:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-05 19:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-05 19:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-07 10:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-07 10:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-09 12:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-09 12:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-12 19:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-12 19:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-14 10:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-14 10:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-16 12:00",
+    "account": "elisabete-terapia",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  },
+  {
+    "slot": "2026-05-16 12:30",
+    "account": "euthycare",
+    "status": "error",
+    "error": "400 Client Error: Bad Request for url: https://zernio.com/api/v1/media/upload"
+  }
+]

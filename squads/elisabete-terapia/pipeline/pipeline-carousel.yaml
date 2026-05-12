@@ -1,0 +1,24 @@
+name: "Elisabete Terapia — Pipeline Carrossel"
+squad: "elisabete-terapia"
+version: "1.0.0"
+
+steps:
+  - step: 1
+    name: "gerar-conteudo-carrossel"
+    type: agent
+    agent: sofia-criadora
+    execution: inline
+    file: steps/step-01-gerar-conteudo-carrossel.md
+
+  - step: 2
+    name: "criar-imagens-slides"
+    type: script
+    execution: inline
+    file: steps/step-02-criar-imagens-slides.md
+
+  - step: 3
+    name: "publicar-carrossel-instagram"
+    type: agent
+    agent: paulo-publisher
+    execution: inline
+    file: steps/step-03-publicar-carrossel-instagram.md

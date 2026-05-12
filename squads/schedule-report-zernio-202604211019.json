@@ -1,0 +1,200 @@
+[
+  {
+    "slot": "2026-04-21 19:00",
+    "account": "@elisabete.terapia",
+    "type": "simples",
+    "topic": "Ansiedade e stress",
+    "scheduled_utc": "2026-04-21T18:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-04-21 19:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "Flexibilidade e estilo de vida",
+    "scheduled_utc": "2026-04-21T18:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-04-23 10:00",
+    "account": "@elisabete.terapia",
+    "type": "carrossel",
+    "topic": "Sinais que ignoramos",
+    "scheduled_utc": "2026-04-23T09:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-04-23 10:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "Crescimento profissional",
+    "scheduled_utc": "2026-04-23T09:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-04-28 19:00",
+    "account": "@elisabete.terapia",
+    "type": "carrossel",
+    "topic": "O que é mesmo a terapia?",
+    "scheduled_utc": "2026-04-28T18:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-04-28 19:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "Credibilidade e segurança",
+    "scheduled_utc": "2026-04-28T18:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-04-30 10:00",
+    "account": "@elisabete.terapia",
+    "type": "simples",
+    "topic": "Relações e comunicação",
+    "scheduled_utc": "2026-04-30T09:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-04-30 10:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "CTA forte (candidatura)",
+    "scheduled_utc": "2026-04-30T09:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-02 12:00",
+    "account": "@elisabete.terapia",
+    "type": "carrossel",
+    "topic": "Padrões que se repetem",
+    "scheduled_utc": "2026-05-02T11:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-02 12:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "Benefícios práticos",
+    "scheduled_utc": "2026-05-02T11:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-05 19:00",
+    "account": "@elisabete.terapia",
+    "type": "simples",
+    "topic": "Autoconhecimento",
+    "scheduled_utc": "2026-05-05T18:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-05 19:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "Flexibilidade (2ª volta)",
+    "scheduled_utc": "2026-05-05T18:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-07 10:00",
+    "account": "@elisabete.terapia",
+    "type": "carrossel",
+    "topic": "Limites na prática",
+    "scheduled_utc": "2026-05-07T09:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-07 10:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "Crescimento profissional",
+    "scheduled_utc": "2026-05-07T09:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-09 12:00",
+    "account": "@elisabete.terapia",
+    "type": "simples",
+    "topic": "Desmistificar a terapia",
+    "scheduled_utc": "2026-05-09T11:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-09 12:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "Credibilidade e segurança",
+    "scheduled_utc": "2026-05-09T11:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-12 19:00",
+    "account": "@elisabete.terapia",
+    "type": "carrossel",
+    "topic": "Ansiedade o que ninguém diz",
+    "scheduled_utc": "2026-05-12T18:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-12 19:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "CTA forte",
+    "scheduled_utc": "2026-05-12T18:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-14 10:00",
+    "account": "@elisabete.terapia",
+    "type": "simples",
+    "topic": "Bem-estar emocional quotidiano",
+    "scheduled_utc": "2026-05-14T09:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-14 10:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "Benefícios práticos",
+    "scheduled_utc": "2026-05-14T09:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-16 12:00",
+    "account": "@elisabete.terapia",
+    "type": "carrossel",
+    "topic": "Relações que esgotam",
+    "scheduled_utc": "2026-05-16T11:00:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  },
+  {
+    "slot": "2026-05-16 12:30",
+    "account": "@euthycare",
+    "type": "simples",
+    "topic": "Flexibilidade",
+    "scheduled_utc": "2026-05-16T11:30:00Z",
+    "post_id": "dry-run-post-id",
+    "status": "scheduled"
+  }
+]

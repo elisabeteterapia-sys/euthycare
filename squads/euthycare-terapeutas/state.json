@@ -1,0 +1,12 @@
+{
+  "squad": "euthycare-terapeutas",
+  "status": "running",
+  "step": { "current": 1, "total": 3, "label": "gerar-post" },
+  "agents": [
+    { "id": "ana-criadora", "name": "Ana Criadora", "icon": "✍️", "status": "working", "desk": { "col": 1, "row": 1 } },
+    { "id": "paulo-publisher", "name": "Paulo Publisher", "icon": "📲", "status": "idle", "desk": { "col": 2, "row": 1 } }
+  ],
+  "handoff": null,
+  "startedAt": "2026-04-17T10:38:58Z",
+  "updatedAt": "2026-04-17T10:38:58Z"
+}

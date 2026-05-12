@@ -1,0 +1,23 @@
+name: "EuthyCare Terapeutas Squad"
+code: "euthycare-terapeutas"
+description: "Gera e publica posts no Instagram @euthycare para atrair terapeutas a aderir à plataforma. Conteúdo educativo e de valor sobre trabalhar online com a EuthyCare."
+icon: "🧠"
+version: "1.0.0"
+created: "2026-04-17"
+
+skills:
+  - web_search
+
+data:
+  - pipeline/data/brand-voice.md
+  - pipeline/data/post-topics.md
+
+agents:
+  - agents/ana-criadora.agent.md
+  - agents/paulo-publisher.agent.md
+
+pipeline: pipeline/pipeline.yaml
+
+memory:
+  squad: _memory/memories.md
+  runs: _memory/runs.md

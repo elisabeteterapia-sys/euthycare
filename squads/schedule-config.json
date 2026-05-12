@@ -1,0 +1,34 @@
+{
+  "_comment": "Calendário de agendamento automático — Late API. Horários em Lisboa (UTC+1 verão / UTC+0 inverno). O script converte para UTC antes de enviar.",
+  "timezone": "Europe/Lisbon",
+  "accounts": {
+    "elisabete-terapia": {
+      "account_id": "69e616717dea335c2b14501f",
+      "profile_id": "69e61664ff10da6020b9586f",
+      "squad": "elisabete-terapia",
+      "handle": "@elisabete.terapia"
+    },
+    "euthycare": {
+      "account_id": "69e614df7dea335c2b1445d7",
+      "squad": "euthycare-terapeutas",
+      "handle": "@euthycare"
+    }
+  },
+  "_pattern": "Alternado — cada dia só 1 conta publica. Elisabete: 28Abr, 2Mai, 7Mai, 12Mai, 16Mai. Euthycare: 30Abr, 5Mai, 9Mai, 14Mai.",
+  "slots": [
+    { "date": "2026-04-21", "time": "19:00", "account": "elisabete-terapia", "type": "simples",   "topic_hint": "Ansiedade e stress",             "status": "published" },
+    { "date": "2026-04-21", "time": "19:30", "account": "euthycare",          "type": "simples",   "topic_hint": "Flexibilidade e estilo de vida",  "status": "published" },
+    { "date": "2026-04-23", "time": "10:00", "account": "elisabete-terapia", "type": "carrossel", "topic_hint": "Sinais que ignoramos",             "status": "published" },
+    { "date": "2026-04-23", "time": "10:30", "account": "euthycare",          "type": "simples",   "topic_hint": "Crescimento profissional",         "status": "published" },
+
+    { "date": "2026-04-28", "time": "19:00", "account": "elisabete-terapia", "type": "carrossel", "topic_hint": "O que é mesmo a terapia?",         "status": "scheduled" },
+    { "date": "2026-04-30", "time": "10:00", "account": "euthycare",          "type": "simples",   "topic_hint": "CTA forte (candidatura)",          "status": "scheduled" },
+    { "date": "2026-05-02", "time": "12:00", "account": "elisabete-terapia", "type": "carrossel", "topic_hint": "Padrões que se repetem",            "status": "scheduled" },
+    { "date": "2026-05-05", "time": "19:00", "account": "euthycare",          "type": "simples",   "topic_hint": "Flexibilidade (2ª volta)",         "status": "scheduled" },
+    { "date": "2026-05-07", "time": "10:00", "account": "elisabete-terapia", "type": "carrossel", "topic_hint": "Limites na prática",               "status": "scheduled" },
+    { "date": "2026-05-09", "time": "12:00", "account": "euthycare",          "type": "simples",   "topic_hint": "Credibilidade e segurança",        "status": "scheduled" },
+    { "date": "2026-05-12", "time": "19:00", "account": "elisabete-terapia", "type": "carrossel", "topic_hint": "Ansiedade o que ninguém diz",      "status": "scheduled" },
+    { "date": "2026-05-14", "time": "10:00", "account": "euthycare",          "type": "simples",   "topic_hint": "Benefícios práticos",              "status": "pending" },
+    { "date": "2026-05-16", "time": "12:00", "account": "elisabete-terapia", "type": "carrossel", "topic_hint": "Relações que esgotam",             "status": "pending" }
+  ]
+}

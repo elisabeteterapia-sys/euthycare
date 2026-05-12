@@ -1,0 +1,26 @@
+name: "EuthyCare Terapeutas Pipeline"
+squad: "euthycare-terapeutas"
+version: "1.0.0"
+
+steps:
+  - step: 1
+    name: "gerar-post"
+    type: agent
+    agent: ana-criadora
+    execution: inline
+    file: steps/step-01-gerar-post.md
+
+  - step: 2
+    name: "checkpoint-aprovar-post"
+    type: checkpoint
+    file: steps/step-02-checkpoint-aprovar-post.md
+
+  - step: 3
+    name: "publicar-instagram"
+    type: agent
+    agent: paulo-publisher
+    execution: inline
+    file: steps/step-03-publicar-instagram.md
+
+checkpoints:
+  - step-02-checkpoint-aprovar-post

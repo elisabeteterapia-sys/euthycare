@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import {
   CalendarDays, Users, FileText, CreditCard, Brain, Building2,
-  CheckCircle2, Loader2, Leaf, Mail, Star,
+  CheckCircle2, Loader2, Leaf, Mail, Star, Phone,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -12,45 +12,96 @@ import { Card } from '@/components/ui/card'
 const APP_URL = 'https://app.euthycare.com'
 
 const beneficios = [
-  { icon: Users,       titulo: 'Gestão de Pacientes',    descricao: 'Fichas completas, histórico clínico e acompanhamento de evolução terapêutica.' },
-  { icon: CalendarDays, titulo: 'Agenda de Consultas',   descricao: 'Calendário integrado, lembretes automáticos e controlo de disponibilidade.' },
-  { icon: FileText,    titulo: 'Registo Terapêutico',    descricao: 'Notas de sessão estruturadas, templates clínicos e histórico seguro.' },
-  { icon: CreditCard,  titulo: 'Cobrança de Consultas',  descricao: 'Faturação simplificada, recibos automáticos e controlo financeiro da prática.' },
-  { icon: Brain,       titulo: 'IA de Apoio Clínico',    descricao: 'Sugestões inteligentes, resumos de sessão e identificação de padrões emocionais.' },
-  { icon: Building2,   titulo: 'Gestão de Clínica',      descricao: 'Para clínicas com múltiplos terapeutas: painel centralizado e permissões por equipa.' },
+  { icon: Users,        titulo: 'Gestão de Pacientes',   descricao: 'Fichas completas, histórico clínico e acompanhamento de evolução terapêutica.' },
+  { icon: CalendarDays, titulo: 'Agenda Inteligente',     descricao: 'Calendário integrado, lembretes automáticos e controlo de disponibilidade.' },
+  { icon: FileText,     titulo: 'Arquivo Clínico Total',  descricao: 'Notas de sessão estruturadas, anamnese TRG digital e histórico seguro.' },
+  { icon: CreditCard,   titulo: 'Cobrança de Consultas',  descricao: 'Faturação simplificada, recibos automáticos e controlo financeiro.' },
+  { icon: Brain,        titulo: 'IA de Apoio Clínico',    descricao: 'Rascunho de notas, plano terapêutico, recursos e relatório — tudo gerado pela IA.' },
+  { icon: Building2,    titulo: 'Gestão de Clínica',      descricao: 'Para clínicas com múltiplos terapeutas: painel centralizado e permissões por equipa.' },
 ]
 
 const plans = [
   {
-    slug: 'essencial',
-    name: 'Essencial',
-    price: 29,
-    description: 'Ideal para terapeuta individual a começar.',
-    features: ['1 terapeuta', 'Agenda e calendário', 'Registo clínico completo', 'Anamnese digital', 'Financeiro básico', 'Backup PDF', 'Suporte por email'],
+    slug: 'solo-pdf',
+    name: 'Solo PDF',
+    priceMonthly: 17,
+    priceAnnual: 13.5,
+    annualTotal: 162,
+    description: 'Para o terapeuta individual a começar.',
+    hasAI: false,
     highlight: false,
+    features: [
+      '1 terapeuta',
+      'Fichas e registo clínico completo',
+      'Agenda com lembretes automáticos',
+      'Anamnese TRG digital',
+      'Exportação PDF individual',
+      'Financeiro básico',
+      'Suporte por email',
+    ],
   },
   {
-    slug: 'profissional',
-    name: 'Profissional',
-    price: 69,
-    description: 'Para clínicas com até 3 terapeutas e funcionalidades IA.',
-    features: ['3 terapeutas', 'Tudo do Essencial', 'IA de sugestões clínicas', 'Backup BKO completo', 'Analytics e relatórios', 'Notificações automáticas', 'Suporte prioritário'],
-    highlight: true,
+    slug: 'solo-ia',
+    name: 'Solo + IA',
+    priceMonthly: 34,
+    priceAnnual: 27,
+    annualTotal: 324,
+    description: 'Com assistente IA e arquivo total.',
+    hasAI: true,
+    highlight: false,
+    features: [
+      '1 terapeuta',
+      'Tudo do Solo PDF',
+      'Assistente IA clínico (5 modos)',
+      'Arquivo total BKP do terapeuta',
+      'Relatórios avançados',
+      'Suporte prioritário',
+    ],
   },
   {
-    slug: 'clinica',
+    slug: 'clinica-5',
     name: 'Clínica',
-    price: 129,
-    description: 'Para clínicas com múltiplos terapeutas e volume elevado.',
-    features: ['Terapeutas ilimitados', 'Até 3 clínicas', 'Tudo do Profissional', 'Backup BKO semanal automático', 'Relatórios avançados', 'Página pública da clínica', 'Suporte 24h'],
+    priceMonthly: 49,
+    priceAnnual: 39,
+    annualTotal: 468,
+    description: 'Para clínicas com até 5 terapeutas.',
+    hasAI: false,
     highlight: false,
+    features: [
+      '5 terapeutas',
+      'Arquivo total BKP da clínica',
+      'Painel centralizado de gestão',
+      'Fichas e registo completo',
+      'BKO semanal automático',
+      'Suporte prioritário',
+    ],
+  },
+  {
+    slug: 'clinica-ia',
+    name: 'Clínica + IA',
+    priceMonthly: 79,
+    priceAnnual: 63,
+    annualTotal: 756,
+    description: 'IA para toda a equipa + arquivo total.',
+    hasAI: true,
+    highlight: true,
+    features: [
+      '5 terapeutas',
+      'Tudo da Clínica',
+      'IA para todos os terapeutas',
+      'Arquivo total BKP da clínica',
+      'Relatórios avançados',
+      'Suporte 24h',
+    ],
   },
 ]
 
-function PlanCard({ plan }: { plan: typeof plans[0] }) {
-  const [email, setEmail]       = useState('')
-  const [loading, setLoading]   = useState(false)
-  const [error, setError]       = useState('')
+function PlanCard({ plan, annual }: { plan: typeof plans[0]; annual: boolean }) {
+  const [email, setEmail]     = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError]     = useState('')
+
+  const price = annual ? plan.priceAnnual : plan.priceMonthly
 
   async function handleBuy(e: React.FormEvent) {
     e.preventDefault()
@@ -61,7 +112,11 @@ function PlanCard({ plan }: { plan: typeof plans[0] }) {
       const res = await fetch(`${APP_URL}/api/stripe/create-plan-checkout`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ plan_slug: plan.slug, customer_email: email.trim() }),
+        body:    JSON.stringify({
+          plan_slug:      plan.slug,
+          customer_email: email.trim(),
+          period:         annual ? 'annual' : 'monthly',
+        }),
       })
       const data = await res.json()
       if (!res.ok || !data.checkout_url) {
@@ -77,7 +132,7 @@ function PlanCard({ plan }: { plan: typeof plans[0] }) {
   }
 
   return (
-    <div className={`rounded-3xl border-2 bg-white p-7 flex flex-col gap-5 ${plan.highlight ? 'border-sage-400 shadow-lg' : 'border-cream-200 shadow-sm'}`}>
+    <div className={`rounded-3xl border-2 bg-white p-7 flex flex-col gap-5 ${plan.highlight ? 'border-sage-400 shadow-xl' : 'border-cream-200 shadow-sm'}`}>
       {plan.highlight && (
         <div className="flex items-center gap-1.5 text-xs font-bold text-sage-600 uppercase tracking-wide">
           <Star className="h-3.5 w-3.5" /> Mais popular
@@ -85,13 +140,25 @@ function PlanCard({ plan }: { plan: typeof plans[0] }) {
       )}
 
       <div>
-        <h3 className="text-xl font-bold text-gray-900">{plan.name}</h3>
-        <p className="text-sm text-gray-500 mt-1">{plan.description}</p>
+        <div className="flex items-center gap-2 mb-1">
+          <h3 className="text-xl font-bold text-gray-900">{plan.name}</h3>
+          {plan.hasAI && (
+            <span className="text-xs font-semibold bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full flex items-center gap-1">
+              <Brain className="h-3 w-3" /> IA
+            </span>
+          )}
+        </div>
+        <p className="text-sm text-gray-500">{plan.description}</p>
       </div>
 
       <div className="flex items-end gap-1">
-        <span className="text-4xl font-bold text-gray-900">€{plan.price}</span>
+        <span className="text-4xl font-bold text-gray-900">€{price % 1 === 0 ? price : price.toFixed(1)}</span>
         <span className="text-gray-400 text-sm mb-1">/mês</span>
+        {annual && (
+          <span className="text-xs text-sage-600 font-semibold ml-2 mb-1">
+            €{plan.annualTotal}/ano
+          </span>
+        )}
       </div>
 
       <ul className="space-y-2 flex-1">
@@ -122,18 +189,63 @@ function PlanCard({ plan }: { plan: typeof plans[0] }) {
           disabled={loading}
           className={`w-full gap-2 ${plan.highlight ? 'bg-sage-500 hover:bg-sage-600' : ''}`}
         >
-          {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> A processar...</> : 'Comprar agora →'}
+          {loading
+            ? <><Loader2 className="h-4 w-4 animate-spin" /> A processar...</>
+            : annual ? 'Subscrever anualmente →' : 'Comprar agora →'}
         </Button>
       </form>
     </div>
   )
 }
 
+function EnterpriseCard() {
+  return (
+    <div className="rounded-3xl border-2 border-slate-200 bg-slate-50 p-7 flex flex-col gap-5">
+      <div>
+        <h3 className="text-xl font-bold text-gray-900">Enterprise</h3>
+        <p className="text-sm text-gray-500 mt-1">Para clínicas com mais de 5 terapeutas.</p>
+      </div>
+
+      <div className="flex items-end gap-1">
+        <span className="text-2xl font-bold text-gray-700">Sob consulta</span>
+      </div>
+
+      <ul className="space-y-2 flex-1">
+        {[
+          'Mais de 5 terapeutas',
+          'Múltiplas clínicas',
+          'IA personalizada',
+          'Arquivo total da organização',
+          'Integração sob medida',
+          'Gestor de conta dedicado',
+        ].map(f => (
+          <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
+            <CheckCircle2 className="h-4 w-4 text-slate-400 shrink-0" />
+            {f}
+          </li>
+        ))}
+      </ul>
+
+      <div className="pt-2 border-t border-slate-200">
+        <a
+          href="mailto:geral@euthycare.com"
+          className="flex items-center justify-center gap-2 w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold px-4 py-3 rounded-xl text-sm transition-colors"
+        >
+          <Phone className="h-4 w-4" />
+          Entrar em contacto →
+        </a>
+      </div>
+    </div>
+  )
+}
+
 export default function EuthyLancamentoPage() {
+  const [annual, setAnnual] = useState(false)
+
   return (
     <div className="bg-cream-50 min-h-screen">
 
-      {/* ── Navbar ───────────────────────────────────────────── */}
+      {/* ── Navbar ─────────────────────────────────── */}
       <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-sm border-b border-cream-200">
         <div className="container-app flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2 font-bold text-gray-900">
@@ -148,7 +260,7 @@ export default function EuthyLancamentoPage() {
         </div>
       </nav>
 
-      {/* ── Hero ─────────────────────────────────────────────── */}
+      {/* ── Hero ───────────────────────────────────── */}
       <section className="page-section text-center bg-gradient-to-b from-sage-50 to-cream-50 pt-20 pb-16">
         <div className="container-app max-w-3xl">
           <div className="inline-flex items-center gap-2 bg-sage-100 text-sage-700 text-sm font-medium px-4 py-1.5 rounded-full mb-8">
@@ -157,38 +269,62 @@ export default function EuthyLancamentoPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-6">
-            A plataforma completa para<br />
-            <span className="text-sage-500">terapeutas</span>
+            Gira a tua prática clínica<br />
+            <span className="text-sage-500">sem papelada, sem stress</span>
           </h1>
 
           <p className="text-lg text-gray-500 max-w-xl mx-auto mb-6 leading-relaxed">
-            Gerencie pacientes, registe consultas, organize a sua prática e receba pagamentos online.
-            Receba a sua chave de acesso imediatamente após o pagamento.
+            Pacientes, agenda, registos clínicos, financeiro e IA de apoio — tudo numa plataforma pensada para terapeutas portugueses.
+            Recebe a chave de acesso imediatamente após o pagamento.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Chave de acesso por email</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Sem contratos</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Chave por email imediata</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Contrato anual com desconto</span>
             <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Cancele quando quiser</span>
           </div>
         </div>
       </section>
 
-      {/* ── Planos ───────────────────────────────────────────── */}
+      {/* ── Planos ─────────────────────────────────── */}
       <section className="page-section">
         <div className="container-app">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Escolha o seu plano</h2>
-            <p className="text-gray-500">Após o pagamento recebe a chave de ativação no email e ativa em <strong>app.euthycare.com</strong></p>
+            <p className="text-gray-500 mb-6">
+              Após o pagamento recebe a chave de ativação no email e ativa em <strong>app.euthycare.com</strong>
+            </p>
+
+            {/* Toggle mensal / anual */}
+            <div className="inline-flex items-center gap-3 bg-cream-100 rounded-2xl p-1.5">
+              <button
+                onClick={() => setAnnual(false)}
+                className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all ${!annual ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                Mensal
+              </button>
+              <button
+                onClick={() => setAnnual(true)}
+                className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${annual ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                Anual
+                <span className="text-xs bg-sage-100 text-sage-700 font-bold px-2 py-0.5 rounded-full">−20%</span>
+              </button>
+            </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {plans.map(plan => <PlanCard key={plan.slug} plan={plan} />)}
+          <div className="grid sm:grid-cols-2 xl:grid-cols-5 gap-6 max-w-6xl mx-auto">
+            {plans.map(plan => <PlanCard key={plan.slug} plan={plan} annual={annual} />)}
+            <EnterpriseCard />
           </div>
+
+          <p className="text-center text-xs text-gray-400 mt-6">
+            Preços em EUR, IVA não incluído. Contrato anual cobrado uma vez por ano.
+          </p>
         </div>
       </section>
 
-      {/* ── Como funciona ────────────────────────────────────── */}
+      {/* ── Como funciona ──────────────────────────── */}
       <section className="page-section bg-gradient-to-b from-cream-100 to-sage-50">
         <div className="container-app max-w-3xl">
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-10">Como funciona</h2>
@@ -208,7 +344,7 @@ export default function EuthyLancamentoPage() {
         </div>
       </section>
 
-      {/* ── Benefícios ───────────────────────────────────────── */}
+      {/* ── Benefícios ─────────────────────────────── */}
       <section className="page-section">
         <div className="container-app">
           <div className="text-center mb-10">
@@ -231,9 +367,12 @@ export default function EuthyLancamentoPage() {
         </div>
       </section>
 
-      {/* ── Footer ───────────────────────────────────────────── */}
+      {/* ── Footer ─────────────────────────────────── */}
       <footer className="border-t border-cream-200 py-8 text-center text-sm text-gray-400">
-        © {new Date().getFullYear()} EuthyCare · <Link href="/privacidade" className="hover:text-sage-600">Privacidade</Link> · <Link href="/termos" className="hover:text-sage-600">Termos</Link>
+        © {new Date().getFullYear()} EuthyCare ·{' '}
+        <Link href="/privacidade" className="hover:text-sage-600">Privacidade</Link> ·{' '}
+        <Link href="/termos" className="hover:text-sage-600">Termos</Link> ·{' '}
+        <a href="mailto:geral@euthycare.com" className="hover:text-sage-600">geral@euthycare.com</a>
       </footer>
     </div>
   )

@@ -1,0 +1,678 @@
+{"ts":"2026-04-17T09:48:49.221Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":154,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T09:49:13.794Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T09:49:13.911Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":129,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:08:39.009Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":91,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:08:39.807Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":855,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T10:08:53.771Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/squads/euthycare-terapeutas/_memory/memories.md\""}
+{"ts":"2026-04-17T10:08:53.772Z","hook":"descriptive-name","event":"PreToolUse","tool":"Write","target":"","note":"","dur":1,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T10:08:53.804Z","hook":"privacy-block","event":"PreToolUse","tool":"Write","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T10:08:54.041Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Write","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T10:08:54.054Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Write","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:08:54.056Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Write","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:09:27.980Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:09:28.067Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":91,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:10:14.104Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":86,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:10:14.788Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":781,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T10:10:38.069Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:10:38.137Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":85,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:12:34.829Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":90,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:12:35.298Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":548,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T10:13:36.916Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"compact","dur":207,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T10:13:52.654Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":112,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:13:53.181Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":649,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T10:15:44.013Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":94,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T10:15:44.330Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":387,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T11:05:49.891Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"context-injected","dur":216,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T11:05:49.948Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":894,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:54:44.302Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"resume","dur":294,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:54:44.866Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"fetched","dur":789,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:55:09.709Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T12:55:09.896Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"context-injected","dur":187,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:01.401Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":87,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:02.066Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":754,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:06.544Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:06.549Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:06.776Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:06.779Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:11.467Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:11.470Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:11.759Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:11.761Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:14.850Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app\""}
+{"ts":"2026-04-17T12:56:14.864Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:15.301Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:19.550Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/t/[slug]/page.tsx\""}
+{"ts":"2026-04-17T12:56:19.556Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:28.868Z","hook":"privacy-block","event":"PreToolUse","tool":"Grep","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:28.874Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes\""}
+{"ts":"2026-04-17T12:56:31.643Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/terapeutas.ts\""}
+{"ts":"2026-04-17T12:56:31.644Z","hook":"privacy-block","event":"PreToolUse","tool":"Grep","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:37.769Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T12:56:37.773Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:08:05.805Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":163,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:08:06.303Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":676,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:08:11.428Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:08:11.448Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/.env\""}
+{"ts":"2026-04-17T13:08:11.871Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:08:14.590Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:08:14.594Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/.env\""}
+{"ts":"2026-04-17T13:08:15.161Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:08:18.068Z","hook":"scout-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:08:18.086Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:08:52.392Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:08:57.589Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":".env.local\"","note":"bash-sensitive-file","dur":3,"status":"warn","exit":0,"error":""}
+{"ts":"2026-04-17T13:08:57.592Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/.env\""}
+{"ts":"2026-04-17T13:09:00.490Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:00.502Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T13:09:01.767Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:05.370Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/.env\""}
+{"ts":"2026-04-17T13:09:05.373Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:05.806Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:09.987Z","hook":"scout-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:09.989Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:30.205Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/.env\""}
+{"ts":"2026-04-17T13:09:30.213Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":".env.local\"","note":"bash-sensitive-file","dur":4,"status":"warn","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:30.630Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:34.267Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/.env\""}
+{"ts":"2026-04-17T13:09:34.280Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":".env.local\"","note":"bash-sensitive-file","dur":3,"status":"warn","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:34.714Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:37.211Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/.env\""}
+{"ts":"2026-04-17T13:09:37.219Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:37.675Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:09:53.034Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/terapeutas.ts\""}
+{"ts":"2026-04-17T13:09:53.036Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:00.424Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin\""}
+{"ts":"2026-04-17T13:10:00.431Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:00.973Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:10.688Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes*\""}
+{"ts":"2026-04-17T13:10:10.700Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:14.315Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T13:10:14.334Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:14.759Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:27.438Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T13:10:27.445Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:36.362Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/migrations/*.sql\""}
+{"ts":"2026-04-17T13:10:36.367Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:40.342Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:40.345Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T13:10:41.492Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:44.849Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/supabase\""}
+{"ts":"2026-04-17T13:10:44.866Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:45.365Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:48.467Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/supabase/migrations/013_terapeuta_slug_pacotes.sql\""}
+{"ts":"2026-04-17T13:10:48.482Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:10:51.536Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/supabase/migrations/003_pacotes.sql\""}
+{"ts":"2026-04-17T13:10:51.544Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:01.482Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:01.547Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T13:11:12.121Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T13:11:12.125Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:12.497Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:12.499Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:12.514Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:17.260Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:11:17.278Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:21.820Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:11:21.830Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:22.217Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:22.228Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:22.244Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:30.170Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:11:30.177Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:30.552Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:30.574Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:30.562Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:36.107Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:11:36.120Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:36.495Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":13,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:36.497Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:36.528Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:45.979Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:11:45.993Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:46.239Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:46.254Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:46.251Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:52.473Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:11:52.476Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:52.790Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:52.807Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:11:52.792Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:12:19.593Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:12:19.597Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:12:19.888Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:12:19.891Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":12,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:12:19.893Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:12:23.181Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend\""}
+{"ts":"2026-04-17T13:12:23.189Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:05.946Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"fetched","dur":1529,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:08.291Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:08.294Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend\""}
+{"ts":"2026-04-17T13:23:15.886Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:21.563Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:23:21.570Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:21.832Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":8,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:21.831Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:21.855Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:26.107Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:23:26.113Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:26.351Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:26.352Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:26.354Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:29.422Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:29.424Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend\""}
+{"ts":"2026-04-17T13:23:34.887Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:38.025Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:23:38.026Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend\""}
+{"ts":"2026-04-17T13:23:59.354Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:24:01.921Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend\""}
+{"ts":"2026-04-17T13:24:01.926Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:24:30.130Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:24:33.236Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T13:24:33.244Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:02.465Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:05.165Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T13:28:05.166Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:06.795Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"fetched","dur":636,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:09.686Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:09.687Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/.claude/.env\""}
+{"ts":"2026-04-17T13:28:10.035Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:12.447Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/.claude/.env\""}
+{"ts":"2026-04-17T13:28:12.449Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:12.872Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:15.247Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:15.253Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/.claude/skills/deploy/SKILL.md\""}
+{"ts":"2026-04-17T13:28:15.588Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:21.531Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/docs/deployment*\""}
+{"ts":"2026-04-17T13:28:21.532Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:24.998Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:24.998Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/C:/Users/elisa/.claude/projects/c--Claude-IA-EUTHYCARE/memory/project_deployment.md\""}
+{"ts":"2026-04-17T13:28:30.076Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"C:/Users/elisa/.claude/projects/c--Claude-IA-EUTHYCARE/memory/project_deployment.md\""}
+{"ts":"2026-04-17T13:28:30.078Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:34.383Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T13:28:34.393Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:36.091Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:40.742Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T13:28:40.746Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:28:44.831Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:29:50.317Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":88,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:29:50.947Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":718,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:19.077Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/supabase/migrations\""}
+{"ts":"2026-04-17T13:30:19.081Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:19.504Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:24.615Z","hook":"descriptive-name","event":"PreToolUse","tool":"Write","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:24.631Z","hook":"privacy-block","event":"PreToolUse","tool":"Write","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:24.631Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/supabase/migrations/015_pacotes_publico.sql\""}
+{"ts":"2026-04-17T13:30:24.895Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Write","target":"","note":"tracked-edit","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:24.919Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Write","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:24.920Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Write","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:30.454Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T13:30:30.468Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:35.592Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:35.597Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T13:30:52.070Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T13:30:52.084Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:52.324Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:52.339Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:30:52.326Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:04.220Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T13:31:04.225Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:04.464Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:04.472Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:04.473Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:11.129Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/terapeutas.ts\""}
+{"ts":"2026-04-17T13:31:11.147Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:11.372Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:11.433Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:11.440Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":8,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:15.898Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/t/[slug]/page.tsx\""}
+{"ts":"2026-04-17T13:31:15.900Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:23.595Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/t/[slug]/page.tsx\""}
+{"ts":"2026-04-17T13:31:23.601Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:23.881Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":14,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:23.891Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:23.911Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:30.629Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:30.636Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:31:30.895Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:30.917Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:30.900Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:35.731Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:35.735Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:31:35.983Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:35.986Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:35.985Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:51.319Z","hook":"privacy-block","event":"PreToolUse","tool":"Grep","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:51.326Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:31:53.969Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:53.969Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:31:58.263Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:31:58.269Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:58.513Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:58.514Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:31:58.515Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:03.873Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:03.880Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:32:04.147Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":9,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:04.149Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:04.165Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:08.663Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:32:08.666Z","hook":"privacy-block","event":"PreToolUse","tool":"Grep","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:11.733Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:32:11.734Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:19.351Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:19.353Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:32:19.611Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:19.612Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:19.613Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:25.622Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T13:32:25.626Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:25.856Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:25.862Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:25.866Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:32.499Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend\""}
+{"ts":"2026-04-17T13:32:32.510Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:37.372Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:39.991Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:40.000Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend\""}
+{"ts":"2026-04-17T13:32:46.950Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:32:52.938Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T13:32:52.939Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:33:01.024Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:33:28.310Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":96,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:33:28.844Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":637,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:35:16.359Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":101,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:35:17.061Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":801,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:35:57.695Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:35:57.805Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":114,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:36:05.662Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/terapeuta\""}
+{"ts":"2026-04-17T13:36:05.667Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:36:06.135Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":2,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:36:09.483Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/terapeuta/perfil/page.tsx\""}
+{"ts":"2026-04-17T13:36:09.484Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:36:09.811Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:36:44.546Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":92,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:36:45.301Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":836,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:36:49.380Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:36:49.478Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":103,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:36:53.080Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:36:53.085Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/terapeuta/perfil/page.tsx\""}
+{"ts":"2026-04-17T13:39:59.776Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":85,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:00.638Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":946,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:04.985Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:04.987Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing\""}
+{"ts":"2026-04-17T13:40:05.326Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:09.249Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:09.253Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/page.tsx\""}
+{"ts":"2026-04-17T13:40:11.417Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:15.299Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:15.302Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/page.tsx\""}
+{"ts":"2026-04-17T13:40:15.608Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:17.878Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/page.tsx\""}
+{"ts":"2026-04-17T13:40:17.891Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:18.190Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:27.849Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/servicos/page.tsx\""}
+{"ts":"2026-04-17T13:40:27.858Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:28.158Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:48.404Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:40:48.410Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/faq/page.tsx\""}
+{"ts":"2026-04-17T13:40:49.355Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:06.714Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/servicos/page.tsx\""}
+{"ts":"2026-04-17T13:41:06.720Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:20.961Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/faq/page.tsx\""}
+{"ts":"2026-04-17T13:41:20.974Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:28.596Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/page.tsx\""}
+{"ts":"2026-04-17T13:41:28.610Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:28.894Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:28.916Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:28.904Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:33.427Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/servicos/page.tsx\""}
+{"ts":"2026-04-17T13:41:33.433Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:39.462Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/servicos/page.tsx\""}
+{"ts":"2026-04-17T13:41:39.467Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:39.731Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:39.734Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:41:39.736Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:04.314Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:04.319Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/servicos/page.tsx\""}
+{"ts":"2026-04-17T13:42:04.554Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:04.576Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:04.573Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:13.745Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:13.754Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/servicos/page.tsx\""}
+{"ts":"2026-04-17T13:42:13.977Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:13.987Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:13.988Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:22.540Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/servicos/page.tsx\""}
+{"ts":"2026-04-17T13:42:22.544Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:22.818Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:22.820Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:22.830Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:26.781Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:26.783Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/faq/page.tsx\""}
+{"ts":"2026-04-17T13:42:29.716Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/faq/page.tsx\""}
+{"ts":"2026-04-17T13:42:29.719Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:42.153Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:42.155Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/faq/page.tsx\""}
+{"ts":"2026-04-17T13:42:42.425Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:42.441Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:42.437Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:46.307Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:42:46.307Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/faq/page.tsx\""}
+{"ts":"2026-04-17T13:43:11.769Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/faq/page.tsx\""}
+{"ts":"2026-04-17T13:43:11.781Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:12.062Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:12.066Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:12.064Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:17.670Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:17.677Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/faq/page.tsx\""}
+{"ts":"2026-04-17T13:43:17.966Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:17.959Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":8,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:17.978Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:22.598Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:22.599Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend\""}
+{"ts":"2026-04-17T13:43:27.849Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:30.691Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:30.693Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend\""}
+{"ts":"2026-04-17T13:43:47.808Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T13:43:53.235Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T13:43:53.243Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T13:44:14.912Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:10:55.863Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":102,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:10:56.524Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":749,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:11:58.978Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":95,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:11:59.558Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":670,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:12:03.040Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:12:03.053Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/.claude/skills/*/SKILL.md\""}
+{"ts":"2026-04-17T14:12:09.024Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/.claude/skills\""}
+{"ts":"2026-04-17T14:12:09.037Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:12:09.389Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:13:14.837Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"compact","dur":208,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:24:58.097Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"context-injected","dur":190,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:24:58.653Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":728,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:13.355Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:13.358Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/plans/260417-1524-plano-divulgacao-euthycare\""}
+{"ts":"2026-04-17T14:25:16.262Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/plans/260417-1524-plano-divulgacao-euthycare\""}
+{"ts":"2026-04-17T14:25:16.266Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:18.737Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:18.740Z","hook":"scout-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:21.147Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:21.148Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T14:25:23.586Z","hook":"scout-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:23.593Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:26.048Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:26.048Z","hook":"scout-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:28.158Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:25:28.159Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:26:08.247Z","hook":"descriptive-name","event":"PreToolUse","tool":"Write","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:26:08.282Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/plans/260417-1524-plano-divulgacao-euthycare/plan.md\""}
+{"ts":"2026-04-17T14:26:08.273Z","hook":"privacy-block","event":"PreToolUse","tool":"Write","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:26:08.529Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Write","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:26:08.538Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Write","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:26:08.557Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Write","target":"","note":"tracked-edit","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:06.174Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":102,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:06.845Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":758,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:24.192Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:24.236Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:24.209Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:24.231Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:28.517Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/blog/page.tsx\""}
+{"ts":"2026-04-17T14:29:28.528Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:29.151Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/layout.tsx\""}
+{"ts":"2026-04-17T14:29:29.163Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:31.605Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:31.661Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/components/layout/footer.tsx\""}
+{"ts":"2026-04-17T14:29:31.880Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:31.895Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:35.022Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/blog.ts\""}
+{"ts":"2026-04-17T14:29:35.050Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:35.130Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/components/layout/header.tsx\""}
+{"ts":"2026-04-17T14:29:35.150Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:57.561Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:29:57.563Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:21.412Z","hook":"descriptive-name","event":"PreToolUse","tool":"Write","target":"","note":"","dur":1,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:21.434Z","hook":"privacy-block","event":"PreToolUse","tool":"Write","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:21.433Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/supabase/migrations/016_newsletter_subscribers.sql\""}
+{"ts":"2026-04-17T14:30:21.801Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Write","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:21.809Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Write","target":"","note":"tracked-edit","dur":9,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:21.828Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Write","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:25.262Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:25.262Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:25.652Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/index.ts\""}
+{"ts":"2026-04-17T14:30:25.663Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:41.237Z","hook":"descriptive-name","event":"PreToolUse","tool":"Write","target":"","note":"","dur":1,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:41.264Z","hook":"privacy-block","event":"PreToolUse","tool":"Write","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:41.259Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/newsletter.ts\""}
+{"ts":"2026-04-17T14:30:41.556Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Write","target":"","note":"tracked-edit","dur":8,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:41.573Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Write","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:41.559Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Write","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:46.192Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/index.ts\""}
+{"ts":"2026-04-17T14:30:46.198Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:46.451Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:46.454Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":10,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:46.466Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:50.320Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:50.325Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/index.ts\""}
+{"ts":"2026-04-17T14:30:50.574Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:50.574Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:50.581Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:59.404Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:30:59.413Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:12.226Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/components/marketing/newsletter-form.tsx\""}
+{"ts":"2026-04-17T14:31:12.230Z","hook":"descriptive-name","event":"PreToolUse","tool":"Write","target":"","note":"","dur":1,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:12.239Z","hook":"privacy-block","event":"PreToolUse","tool":"Write","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:12.498Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Write","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:12.523Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Write","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:12.511Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Write","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:16.781Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/page.tsx\""}
+{"ts":"2026-04-17T14:31:16.786Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:21.796Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:21.800Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/page.tsx\""}
+{"ts":"2026-04-17T14:31:22.087Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:22.097Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:22.087Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:32.784Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/page.tsx\""}
+{"ts":"2026-04-17T14:31:32.787Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:33.024Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:33.029Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:33.042Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:37.358Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/components/layout/footer.tsx\""}
+{"ts":"2026-04-17T14:31:37.363Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:37.610Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:37.619Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:37.631Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:57.567Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/components/layout/footer.tsx\""}
+{"ts":"2026-04-17T14:31:57.574Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:57.846Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:57.849Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:31:57.855Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:05.604Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:05.613Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/components/layout/footer.tsx\""}
+{"ts":"2026-04-17T14:32:05.869Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:05.882Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":7,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:05.881Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:17.540Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:17.540Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/blog/page.tsx\""}
+{"ts":"2026-04-17T14:32:17.833Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:17.833Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:17.846Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:25.019Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/page.tsx\""}
+{"ts":"2026-04-17T14:32:25.030Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:25.284Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:25.292Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":8,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:25.286Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:30.998Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/servicos/page.tsx\""}
+{"ts":"2026-04-17T14:32:31.006Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:31.252Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:31.269Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:32:31.255Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:37:25.202Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":123,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:37:25.908Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":817,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:37:57.251Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:37:57.355Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":108,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:39:54.324Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":95,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:39:54.960Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":749,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:39:58.920Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Users/elisa/.claude/projects/c--Claude-IA-EUTHYCARE/memory/project_deployment.md\""}
+{"ts":"2026-04-17T14:39:58.923Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:08.984Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:08.988Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:09.038Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:09.040Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:12.641Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:12.656Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":5,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:15.858Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:15.871Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:15.912Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:15.895Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:18.703Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/railway.json\""}
+{"ts":"2026-04-17T14:40:18.704Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:36.080Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:40:36.184Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":102,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T14:59:39.664Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"startup","dur":1531,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T14:59:40.078Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"fetched","dur":2025,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T16:08:31.867Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"startup","dur":988,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T16:08:32.492Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"fetched","dur":1603,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T16:28:47.596Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"resume","dur":257,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T16:28:48.158Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"fetched","dur":812,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T16:53:05.489Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"resume","dur":194,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T16:53:05.999Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"fetched","dur":728,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T16:53:10.914Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T16:53:11.118Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"resume","dur":221,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T16:53:40.258Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T16:53:40.496Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"resume","dur":239,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T16:53:59.106Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T16:53:59.292Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"resume","dur":183,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T16:54:05.548Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T16:54:05.734Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"resume","dur":186,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:19:59.617Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"resume","dur":271,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:00.155Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"fetched","dur":819,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:27.170Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:27.362Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"context-injected","dur":200,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:33.769Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend\""}
+{"ts":"2026-04-17T17:20:33.784Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:34.029Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src\""}
+{"ts":"2026-04-17T17:20:34.034Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:36.045Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:37.695Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:41.748Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:41.752Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/t/[slug]/page.tsx\""}
+{"ts":"2026-04-17T17:20:51.079Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/dashboard\""}
+{"ts":"2026-04-17T17:20:51.095Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:51.390Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/agendamento.ts\""}
+{"ts":"2026-04-17T17:20:51.394Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:20:51.505Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:21:09.013Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/agendamento/page.tsx\""}
+{"ts":"2026-04-17T17:21:09.022Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:21:27.015Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/index.ts\""}
+{"ts":"2026-04-17T17:21:27.015Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:21:27.271Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin\""}
+{"ts":"2026-04-17T17:21:27.284Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:21:27.655Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:21:34.071Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/dashboard/agendamento/page.tsx\""}
+{"ts":"2026-04-17T17:21:34.076Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:21:47.228Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas\""}
+{"ts":"2026-04-17T17:21:47.236Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:21:47.582Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:21:59.586Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:21:59.590Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/terapeutas.ts\""}
+{"ts":"2026-04-17T17:23:28.073Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:28.076Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/terapeutas.ts\""}
+{"ts":"2026-04-17T17:23:28.345Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:28.359Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:28.370Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:41.651Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/agendamento.ts\""}
+{"ts":"2026-04-17T17:23:41.651Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:41.893Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:41.906Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:41.916Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:47.061Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:47.067Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/agendamento.ts\""}
+{"ts":"2026-04-17T17:23:47.327Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:47.336Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:47.352Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:52.141Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:52.143Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/agendamento.ts\""}
+{"ts":"2026-04-17T17:23:52.435Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:52.440Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:52.445Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:23:55.914Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend\""}
+{"ts":"2026-04-17T17:23:55.918Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:03.174Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:06.055Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:06.060Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T17:24:09.641Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:14.676Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/docs/deployment.md\""}
+{"ts":"2026-04-17T17:24:14.684Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:16.990Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:16.996Z","hook":"scout-block","event":"PreToolUse","tool":"Glob","target":"*.toml","note":"Pattern '*.toml' is too broad for c:/Claude IA/EUTHYCARE","dur":2,"status":"block","exit":2,"error":""}
+{"ts":"2026-04-17T17:24:20.365Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T17:24:20.369Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:20.771Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:23.519Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:23.527Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/railway.json\""}
+{"ts":"2026-04-17T17:24:23.822Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:29.002Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T17:24:29.007Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:34.842Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:46.040Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":78,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:46.573Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":615,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:24:50.179Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/agendamento.ts\""}
+{"ts":"2026-04-17T17:24:50.192Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:03.317Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T17:25:03.330Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:06.980Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:09.162Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T17:25:09.164Z","hook":"privacy-block","event":"PreToolUse","tool":"Glob","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:12.855Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/supabase/migrations/008_agendamento.sql\""}
+{"ts":"2026-04-17T17:25:12.863Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:13.250Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:45.491Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/agendamento.ts\""}
+{"ts":"2026-04-17T17:25:45.503Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:45.763Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:45.768Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:45.799Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:56.392Z","hook":"privacy-block","event":"PreToolUse","tool":"Edit","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:56.402Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/agendamento.ts\""}
+{"ts":"2026-04-17T17:25:56.651Z","hook":"plan-format-kanban","event":"PostToolUse","tool":"Edit","target":"","note":"non-plan-file","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:56.662Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Edit","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:25:56.662Z","hook":"post-edit-simplify-reminder","event":"PostToolUse","tool":"Edit","target":"","note":"tracked-edit","dur":6,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:26:00.182Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T17:26:00.190Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:26:02.774Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:26:02.776Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T17:26:24.449Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/admin/terapeutas/page.tsx\""}
+{"ts":"2026-04-17T17:26:24.449Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:26:28.306Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:26:28.317Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/frontend/app/(marketing)/t/[slug]/page.tsx\""}
+{"ts":"2026-04-17T17:26:28.696Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:26:32.683Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":".env","note":"bash-sensitive-file","dur":3,"status":"warn","exit":0,"error":""}
+{"ts":"2026-04-17T17:26:32.683Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/.env\""}
+{"ts":"2026-04-17T17:26:33.017Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:01.176Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:01.183Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend\""}
+{"ts":"2026-04-17T17:27:07.798Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:11.770Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:11.777Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE\""}
+{"ts":"2026-04-17T17:27:17.096Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:20.854Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/.env\""}
+{"ts":"2026-04-17T17:27:20.859Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:21.294Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:46.350Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":4,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:46.352Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T17:27:46.691Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:50.381Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:50.385Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T17:27:50.667Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:27:53.014Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/backend/src/routes/pacotes.ts\""}
+{"ts":"2026-04-17T17:27:53.013Z","hook":"privacy-block","event":"PreToolUse","tool":"Read","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:28:08.872Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":3,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:28:08.878Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/supabase/migrations/003_pacotes.sql\""}
+{"ts":"2026-04-17T17:28:09.200Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:28:29.746Z","hook":"privacy-block","event":"PreToolUse","tool":"Bash","target":"","note":"","dur":2,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-17T17:28:29.751Z","hook":"scout-block","event":"PreToolUse","tool":"","target":"","note":"","dur":0,"status":"crash","exit":0,"error":"path should be a `path.relative()`d string, but got \"c:/Claude IA/EUTHYCARE/supabase/migrations/013_terapeuta_slug_pacotes.sql\""}
+{"ts":"2026-04-17T17:28:30.111Z","hook":"usage-quota-cache-refresh","event":"PostToolUse","tool":"Bash","target":"","note":"throttled","dur":0,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:31:06.975Z","hook":"dev-rules-reminder","event":"UserPromptSubmit","tool":"","target":"","note":"recently-injected","dur":107,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-17T17:31:07.660Z","hook":"usage-quota-cache-refresh","event":"UserPromptSubmit","tool":"","target":"","note":"fetched","dur":773,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-19T16:49:08.837Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"startup","dur":565,"status":"ok","exit":0,"error":""}
+{"ts":"2026-04-19T16:49:08.850Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"http-429","dur":237,"status":"warn","exit":0,"error":""}
+{"ts":"2026-04-19T16:49:13.157Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"throttled","dur":1,"status":"skip","exit":0,"error":""}
+{"ts":"2026-04-19T16:49:13.338Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"resume","dur":180,"status":"ok","exit":0,"error":""}
