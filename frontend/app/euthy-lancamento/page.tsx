@@ -185,13 +185,15 @@ function PlanCard({ plan, annual }: { plan: typeof plans[0]; annual: boolean }) 
         <p className="text-sm text-gray-500">{plan.description}</p>
       </div>
 
-      <div className="flex items-end gap-1">
-        <span className="text-4xl font-bold text-gray-900">€{price % 1 === 0 ? price : price.toFixed(2)}</span>
-        <span className="text-gray-400 text-sm mb-1">/mês</span>
+      <div>
+        <div className="flex items-end gap-1">
+          <span className="text-4xl font-bold text-gray-900">€{price % 1 === 0 ? price : price.toFixed(2)}</span>
+          <span className="text-gray-400 text-sm mb-1">/mês</span>
+        </div>
         {annual && (
-          <span className="text-xs text-sage-600 font-semibold ml-2 mb-1">
-            €{plan.annualTotal}/ano
-          </span>
+          <p className="text-sm text-sage-600 font-semibold mt-1">
+            Total anual: €{plan.annualTotal} — poupas €{Math.round((plan.priceMonthly * 12) - plan.annualTotal)}/ano
+          </p>
         )}
       </div>
 
@@ -381,7 +383,7 @@ export default function EuthyLancamentoPage() {
           </div>
 
           <p className="text-center text-xs text-gray-400 mt-6">
-            Preços em EUR, IVA não incluído. Contrato anual cobrado uma vez por ano.
+            Preços em EUR, IVA não incluído. Plano anual cobrado uma vez por ano. Cancele quando quiser.
           </p>
         </div>
       </section>
