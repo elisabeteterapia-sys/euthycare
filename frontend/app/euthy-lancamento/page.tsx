@@ -304,18 +304,18 @@ export default function EuthyLancamentoPage() {
             Disponível agora — Preço especial de lançamento
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-6">
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-loose mb-8">
             Chega de ligar a cobrar.<br />
             Chega de ligar a confirmar.<br />
             <span className="text-sage-500">O EuthyApp faz isso por ti.</span>
           </h1>
 
-          <p className="text-lg text-gray-500 max-w-xl mx-auto mb-4 leading-relaxed">
+          <p className="text-xl text-gray-500 max-w-xl mx-auto mb-4 leading-relaxed">
             A gestão da tua prática clínica nas tuas mãos — simples, directa e com todas as soluções que precisas.
             Agenda, pacientes, cobranças e IA de apoio, tudo num só lugar.
           </p>
 
-          <p className="text-base font-semibold text-sage-600 max-w-lg mx-auto mb-6">
+          <p className="text-lg font-semibold text-sage-600 max-w-lg mx-auto mb-8">
             Dedica o teu tempo ao que importa: os teus pacientes.
           </p>
 
