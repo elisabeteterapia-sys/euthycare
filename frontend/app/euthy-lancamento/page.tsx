@@ -67,9 +67,10 @@ const plans = [
     features: [
       '1 terapeuta',
       'Fichas clínicas completas',
+      'Cobrança online de consultas',
       'Agenda com lembretes automáticos',
-      'Anamnese TRG digital',
-      'Exportação e arquivo PDF',
+      'Anamnese digital',
+      'Exportação em PDF',
       'Controlo financeiro',
       'Suporte por email',
     ],
