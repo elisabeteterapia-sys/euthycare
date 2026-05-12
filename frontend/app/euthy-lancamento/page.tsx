@@ -315,9 +315,9 @@ export default function EuthyLancamentoPage() {
             Agenda, pacientes, cobranças e IA de apoio, tudo num só lugar.
           </p>
 
-          <p className="text-lg font-semibold text-sage-600 max-w-lg mx-auto mb-8">
+          <div className="inline-block bg-sage-500 text-white text-lg font-bold px-8 py-4 rounded-2xl mb-8 shadow-md">
             Dedica o teu tempo ao que importa: os teus pacientes.
-          </p>
+          </div>
 
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
             <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Lembretes automáticos aos pacientes</span>
