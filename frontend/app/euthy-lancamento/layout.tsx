@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Euthy está chegando — Lista de Espera',
+  title: 'EuthyApp — Plataforma de Gestão Clínica para Terapeutas',
   description:
-    'Seja um dos primeiros terapeutas a testar o Euthy. Gerencie pacientes, agenda e consultas numa plataforma pensada para quem cuida.',
+    'Gerencie pacientes, consultas, registos clínicos e financeiro numa plataforma pensada para terapeutas portugueses. Acesso imediato após pagamento.',
 }
 
 export default function LancamentoLayout({ children }: { children: React.ReactNode }) {

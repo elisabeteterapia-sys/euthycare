@@ -23,74 +23,74 @@ const beneficios = [
 const plans = [
   {
     slug: 'solo-pdf',
-    name: 'Solo PDF',
+    name: 'Terapeuta Essencial',
     priceMonthly: 17,
-    priceAnnual: 13.5,
+    priceAnnual: 13.50,
     annualTotal: 162,
-    description: 'Para o terapeuta individual a começar.',
+    description: 'Tudo o que precisas para gerir a tua prática sozinho.',
     hasAI: false,
     highlight: false,
     features: [
       '1 terapeuta',
-      'Fichas e registo clínico completo',
+      'Fichas clínicas completas',
       'Agenda com lembretes automáticos',
       'Anamnese TRG digital',
-      'Exportação PDF individual',
-      'Financeiro básico',
+      'Exportação e arquivo PDF',
+      'Controlo financeiro',
       'Suporte por email',
     ],
   },
   {
     slug: 'solo-ia',
-    name: 'Solo + IA',
+    name: 'Terapeuta Pro',
     priceMonthly: 34,
     priceAnnual: 27,
     annualTotal: 324,
-    description: 'Com assistente IA e arquivo total.',
+    description: 'Com IA clínica e arquivo total — para crescer sem limite.',
     hasAI: true,
     highlight: false,
     features: [
       '1 terapeuta',
-      'Tudo do Solo PDF',
+      'Tudo do Terapeuta Essencial',
       'Assistente IA clínico (5 modos)',
       'Arquivo total BKP do terapeuta',
-      'Relatórios avançados',
+      'Relatórios e análise de evolução',
       'Suporte prioritário',
     ],
   },
   {
     slug: 'clinica-5',
-    name: 'Clínica',
+    name: 'Clínica Essencial',
     priceMonthly: 49,
     priceAnnual: 39,
     annualTotal: 468,
-    description: 'Para clínicas com até 5 terapeutas.',
+    description: 'Gestão centralizada para equipas de até 5 terapeutas.',
     hasAI: false,
     highlight: false,
     features: [
-      '5 terapeutas',
+      '5 terapeutas incluídos',
+      'Painel centralizado da clínica',
+      'Fichas e registos de toda a equipa',
       'Arquivo total BKP da clínica',
-      'Painel centralizado de gestão',
-      'Fichas e registo completo',
-      'BKO semanal automático',
+      'Backup semanal automático',
       'Suporte prioritário',
     ],
   },
   {
     slug: 'clinica-ia',
-    name: 'Clínica + IA',
+    name: 'Clínica Pro',
     priceMonthly: 79,
     priceAnnual: 63,
     annualTotal: 756,
-    description: 'IA para toda a equipa + arquivo total.',
+    description: 'IA para toda a equipa e arquivo completo da clínica.',
     hasAI: true,
     highlight: true,
     features: [
-      '5 terapeutas',
-      'Tudo da Clínica',
-      'IA para todos os terapeutas',
+      '5 terapeutas incluídos',
+      'Tudo da Clínica Essencial',
+      'IA clínica para toda a equipa',
       'Arquivo total BKP da clínica',
-      'Relatórios avançados',
+      'Relatórios avançados e analytics',
       'Suporte 24h',
     ],
   },
@@ -152,7 +152,7 @@ function PlanCard({ plan, annual }: { plan: typeof plans[0]; annual: boolean }) 
       </div>
 
       <div className="flex items-end gap-1">
-        <span className="text-4xl font-bold text-gray-900">€{price % 1 === 0 ? price : price.toFixed(1)}</span>
+        <span className="text-4xl font-bold text-gray-900">€{price % 1 === 0 ? price : price.toFixed(2)}</span>
         <span className="text-gray-400 text-sm mb-1">/mês</span>
         {annual && (
           <span className="text-xs text-sage-600 font-semibold ml-2 mb-1">
@@ -269,19 +269,19 @@ export default function EuthyLancamentoPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-6">
-            Gira a tua prática clínica<br />
-            <span className="text-sage-500">sem papelada, sem stress</span>
+            A plataforma que os terapeutas<br />
+            <span className="text-sage-500">precisavam em Portugal</span>
           </h1>
 
           <p className="text-lg text-gray-500 max-w-xl mx-auto mb-6 leading-relaxed">
-            Pacientes, agenda, registos clínicos, financeiro e IA de apoio — tudo numa plataforma pensada para terapeutas portugueses.
-            Recebe a chave de acesso imediatamente após o pagamento.
+            Pacientes, agenda, registos clínicos, financeiro e IA de apoio clínico — tudo numa plataforma feita para terapeutas de todo o país.
+            Acesso imediato após o pagamento, em euros, em português.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Chave por email imediata</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Contrato anual com desconto</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Cancele quando quiser</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Chave de acesso por email imediata</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Contrato de fidelidade anual com 20% desconto</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Pagamento em euros — Stripe, MB WAY, Multibanco</span>
           </div>
         </div>
       </section>
@@ -292,7 +292,8 @@ export default function EuthyLancamentoPage() {
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Escolha o seu plano</h2>
             <p className="text-gray-500 mb-6">
-              Após o pagamento recebe a chave de ativação no email e ativa em <strong>app.euthycare.com</strong>
+              Após o pagamento recebe a chave de ativação no email e ativa em <strong>app.euthycare.com</strong><br />
+              <span className="text-sm text-sage-600 font-medium">Contrato anual = compromisso de fidelidade com 20% de desconto garantido.</span>
             </p>
 
             {/* Toggle mensal / anual */}
@@ -307,7 +308,7 @@ export default function EuthyLancamentoPage() {
                 onClick={() => setAnnual(true)}
                 className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${annual ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
               >
-                Anual
+                Contrato Anual
                 <span className="text-xs bg-sage-100 text-sage-700 font-bold px-2 py-0.5 rounded-full">−20%</span>
               </button>
             </div>

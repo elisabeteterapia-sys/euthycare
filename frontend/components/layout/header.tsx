@@ -15,7 +15,7 @@ const navLinks = [
   { href: '/loja', label: 'Loja' },
   { href: '/blog', label: 'Blog' },
   { href: '/contato', label: 'Contato' },
-  { href: '/euthy-lancamento', label: 'Lista de espera' },
+  { href: '/euthy-lancamento', label: 'EuthyApp' },
 ]
 
 export function Header() {
