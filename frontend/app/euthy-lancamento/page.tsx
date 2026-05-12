@@ -326,9 +326,12 @@ export default function EuthyLancamentoPage() {
         <div className="container-app">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-gray-900 mb-3">
-              O que muda quando usas o EuthyApp
+              O teu tempo vale demasiado<br />para ser gasto em burocracia
             </h2>
-            <p className="text-gray-500">Os problemas do dia-a-dia do terapeuta, resolvidos de uma vez.</p>
+            <p className="text-gray-500 max-w-xl mx-auto">
+              Cada minuto que passas a ligar, a cobrar ou a preencher papéis é um minuto que não estás a ajudar quem precisa de ti.<br />
+              <strong className="text-sage-600">O EuthyApp elimina as burocracias. O teu tempo fica inteiro para os teus pacientes.</strong>
+            </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {doresResolvidas.map((d) => (
