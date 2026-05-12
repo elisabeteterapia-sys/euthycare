@@ -280,7 +280,7 @@ export default function EuthyLancamentoPage() {
 
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
             <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Chave de acesso por email imediata</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Contrato de fidelidade anual com 20% desconto</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Plano anual com 20% desconto</span>
             <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Pagamento em euros — Stripe, MB WAY, Multibanco</span>
           </div>
         </div>
@@ -293,7 +293,7 @@ export default function EuthyLancamentoPage() {
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Escolha o seu plano</h2>
             <p className="text-gray-500 mb-6">
               Após o pagamento recebe a chave de ativação no email e ativa em <strong>app.euthycare.com</strong><br />
-              <span className="text-sm text-sage-600 font-medium">Contrato anual = compromisso de fidelidade com 20% de desconto garantido.</span>
+              <span className="text-sm text-sage-600 font-medium">Plano anual com 20% de desconto — cancele quando quiser.</span>
             </p>
 
             {/* Toggle mensal / anual */}
@@ -308,7 +308,7 @@ export default function EuthyLancamentoPage() {
                 onClick={() => setAnnual(true)}
                 className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${annual ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
               >
-                Contrato Anual
+                Anual
                 <span className="text-xs bg-sage-100 text-sage-700 font-bold px-2 py-0.5 rounded-full">−20%</span>
               </button>
             </div>
