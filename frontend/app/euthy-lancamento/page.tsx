@@ -302,7 +302,7 @@ export default function EuthyLancamentoPage() {
         <div className="container-app max-w-3xl">
           <div className="inline-flex items-center gap-2 bg-sage-100 text-sage-700 text-sm font-medium px-4 py-1.5 rounded-full mb-8">
             <span className="h-1.5 w-1.5 rounded-full bg-sage-400 animate-pulse" />
-            Disponível agora — Preço especial de lançamento
+            7 dias grátis — sem cartão — acesso imediato
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-loose mb-8">
@@ -320,10 +320,21 @@ export default function EuthyLancamentoPage() {
             Dedica o teu tempo ao que importa: os teus pacientes.
           </div>
 
+          {/* CTA trial */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+            <a
+              href={`${APP_URL}/signup`}
+              className="inline-flex items-center gap-2 bg-sage-500 hover:bg-sage-600 text-white font-bold text-lg px-10 py-4 rounded-2xl shadow-lg transition-colors"
+            >
+              Experimenta 7 dias grátis →
+            </a>
+            <span className="text-sm text-gray-400">Sem cartão. Acesso imediato.</span>
+          </div>
+
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
             <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Lembretes automáticos aos pacientes</span>
             <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Cobrança online sem constrangimentos</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> IA que escreve as tuas notas clínicas</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> IA que redige notas e relatórios clínicos</span>
           </div>
         </div>
       </section>
