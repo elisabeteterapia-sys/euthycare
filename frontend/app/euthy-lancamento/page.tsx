@@ -5,11 +5,45 @@ import Link from 'next/link'
 import {
   CalendarDays, Users, FileText, CreditCard, Brain, Building2,
   CheckCircle2, Loader2, Leaf, Mail, Star, Phone,
+  BellOff, PhoneOff, Clock, Smile, Lock, Zap,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
 const APP_URL = 'https://app.euthycare.com'
+
+const doresResolvidas = [
+  {
+    icon: PhoneOff,
+    problema: 'Acabou o "ligo a confirmar a consulta"',
+    solucao: 'O EuthyApp envia lembretes automáticos 24h e 30 minutos antes. O paciente confirma. Tu não fazes nada.',
+  },
+  {
+    icon: CreditCard,
+    problema: 'Acabou o "ligo a cobrar"',
+    solucao: 'Link de pagamento enviado ao paciente. Recebe online, sem constrangimentos, sem ligações incómodas.',
+  },
+  {
+    icon: FileText,
+    problema: 'Acabou a papelada e os ficheiros perdidos',
+    solucao: 'Fichas, anamnese, evolução e documentos — tudo num só lugar, seguro, acessível de qualquer dispositivo.',
+  },
+  {
+    icon: Brain,
+    problema: 'Acabou o tempo perdido a escrever notas',
+    solucao: 'A IA clínica redige o rascunho das tuas notas, plano de tratamento e relatório. Tu revês e assinares.',
+  },
+  {
+    icon: Clock,
+    problema: 'Acabou o esquecer do histórico do paciente',
+    solucao: 'Toda a evolução terapêutica em gráficos. Abre a ficha e tens o contexto completo antes de cada sessão.',
+  },
+  {
+    icon: Smile,
+    problema: 'Acabou o stress de gerir uma clínica',
+    solucao: 'Agenda, financeiro, equipa e pacientes num único painel. Focas-te em ajudar — o app trata do resto.',
+  },
+]
 
 const beneficios = [
   { icon: Users,        titulo: 'Gestão de Pacientes',   descricao: 'Fichas completas, histórico clínico e acompanhamento de evolução terapêutica.' },
@@ -269,19 +303,43 @@ export default function EuthyLancamentoPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-6">
-            A plataforma que os terapeutas<br />
-            <span className="text-sage-500">precisavam em Portugal</span>
+            Chega de ligar a cobrar.<br />
+            Chega de ligar a confirmar.<br />
+            <span className="text-sage-500">O EuthyApp faz isso por ti.</span>
           </h1>
 
           <p className="text-lg text-gray-500 max-w-xl mx-auto mb-6 leading-relaxed">
-            Pacientes, agenda, registos clínicos, financeiro e IA de apoio clínico — tudo numa plataforma feita para terapeutas de todo o país.
-            Acesso imediato após o pagamento, em euros, em português.
+            A plataforma que os terapeutas portugueses precisavam — pacientes, agenda, clínica, financeiro e IA de apoio, tudo automatizado.
+            Começas hoje, acesso imediato após o pagamento.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Chave de acesso por email imediata</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Plano anual com 20% desconto</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Pagamento em euros — Stripe, MB WAY, Multibanco</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Lembretes automáticos aos pacientes</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> Cobrança online sem constrangimentos</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-sage-400" /> IA que escreve as tuas notas clínicas</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Dores resolvidas ───────────────────────── */}
+      <section className="page-section bg-white">
+        <div className="container-app">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">
+              O que muda quando usas o EuthyApp
+            </h2>
+            <p className="text-gray-500">Os problemas do dia-a-dia do terapeuta, resolvidos de uma vez.</p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {doresResolvidas.map((d) => (
+              <div key={d.problema} className="rounded-2xl border border-cream-200 bg-cream-50 p-6 flex flex-col gap-3">
+                <div className="h-10 w-10 rounded-xl bg-sage-100 flex items-center justify-center">
+                  <d.icon className="h-5 w-5 text-sage-600" />
+                </div>
+                <p className="font-bold text-gray-900 text-sm leading-snug">{d.problema}</p>
+                <p className="text-sm text-gray-500 leading-relaxed">{d.solucao}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
