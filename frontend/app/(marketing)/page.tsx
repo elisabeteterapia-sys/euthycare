@@ -7,13 +7,13 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'EuthyCare — Terapia Emocional Online',
-  description: 'Sessões de terapia emocional online em português. Apoio para ansiedade, burnout e bem-estar emocional. Consulta experimental a €25, sem compromisso.',
+  description: 'Sessões de terapia emocional online. Apoio para ansiedade, burnout e bem-estar emocional. Consulta experimental sem compromisso.',
   openGraph: {
     title: 'EuthyCare — Terapia Emocional Online',
-    description: 'Apoio emocional profissional, no conforto da sua casa. Primeira consulta a €25.',
+    description: 'Apoio emocional profissional, no conforto da sua casa.',
     url: 'https://euthycare.com',
     siteName: 'EuthyCare',
-    locale: 'pt_PT',
+    locale: 'pt',
     type: 'website',
   },
   twitter: {
@@ -31,13 +31,13 @@ export default function HomePage() {
       <section className="bg-gradient-to-b from-cream-200 to-cream-100 py-20 px-4">
         <div className="container-app text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-sage-100 text-sage-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
-            <Leaf className="h-3.5 w-3.5" /> Psicoterapia Online · Portugal
+            <Leaf className="h-3.5 w-3.5" /> Saúde Mental Online
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-5">
             Cuidado mental <span className="text-sage-500">acolhedor</span> e acessível
           </h1>
           <p className="text-lg text-gray-500 mb-8 max-w-xl mx-auto">
-            Sessões de psicoterapia online, no conforto da sua casa. Apoio profissional para ansiedade, burnout, relações e bem-estar emocional.
+            Sessões de terapia online, no conforto da sua casa. Apoio profissional para ansiedade, burnout, relações e bem-estar emocional.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/agendamento">
@@ -51,7 +51,7 @@ export default function HomePage() {
               </Button>
             </Link>
           </div>
-          <p className="text-xs text-gray-400 mt-4">Primeira consulta experimental · €25 · Sem compromisso</p>
+          <p className="text-xs text-gray-400 mt-4">Primeira consulta experimental · Sem compromisso</p>
         </div>
       </section>
 
