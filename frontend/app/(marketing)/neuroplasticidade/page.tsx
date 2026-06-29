@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * Página pública /blog/neuroplasticidade
+ * Página pública /neuroplasticidade
  * Lê estudos publicados pelo EuthyApp (tabelas app_neuro_* via /neuro/estudos).
  * Sem auth — qualquer visitante vê estudo de hoje + recentes + próximos temas.
  */
@@ -91,7 +91,7 @@ export default function NeuroplasticidadePage() {
               {estudoHoje.texto_referencia}
             </p>
             <Link
-              href={`/blog/neuroplasticidade/${estudoHoje.id}`}
+              href={`/neuroplasticidade/${estudoHoje.id}`}
               className="inline-flex items-center gap-2 rounded-lg bg-sage-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-sage-700"
             >
               Ler estudo completo
@@ -158,7 +158,7 @@ export default function NeuroplasticidadePage() {
             {recentes.map(e => (
               <Link
                 key={e.id}
-                href={`/blog/neuroplasticidade/${e.id}`}
+                href={`/neuroplasticidade/${e.id}`}
                 className="block rounded-lg border border-gray-200 bg-white px-4 py-3 transition-colors hover:border-sage-300 hover:bg-sage-50/30"
               >
                 <div className="flex items-start justify-between gap-3">

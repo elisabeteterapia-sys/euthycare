@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * Detalhe público /blog/neuroplasticidade/[id]
+ * Detalhe público /neuroplasticidade/[id]
  * Mostra os 7 blocos do estudo. Sem favoritos/reflexões (público sem login).
  * Estudos com data futura devolvem 403 → mensagem "ainda não disponível".
  */
@@ -76,7 +76,7 @@ export default function NeuroEstudoDetalhePage() {
     return (
       <div className="mx-auto max-w-2xl p-6">
         <Link
-          href="/blog/neuroplasticidade"
+          href="/neuroplasticidade"
           className="mb-6 flex items-center gap-1 text-sm text-gray-500 hover:text-sage-600"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -105,7 +105,7 @@ export default function NeuroEstudoDetalhePage() {
     <div className="mx-auto max-w-4xl space-y-6 px-4 py-12">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
-        <Link href="/blog/neuroplasticidade" className="flex items-center gap-1 text-gray-500 hover:text-sage-600">
+        <Link href="/neuroplasticidade" className="flex items-center gap-1 text-gray-500 hover:text-sage-600">
           <ChevronLeft className="h-4 w-4" />
           Neuroplasticidade
         </Link>

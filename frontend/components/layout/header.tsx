@@ -13,8 +13,7 @@ const navLinks = [
   { href: '/', label: 'Home', exact: true },
   { href: '/agendamento', label: 'Consultas' },
   { href: '/loja', label: 'Loja' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/blog/neuroplasticidade', label: 'Neuroplasticidade' },
+  { href: '/neuroplasticidade', label: 'Neuroplasticidade' },
   { href: '/contato', label: 'Contato' },
   { href: '/euthy-lancamento', label: 'EuthyApp' },
 ]

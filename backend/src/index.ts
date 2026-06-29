@@ -18,7 +18,6 @@ import agendamentoRouter, { enviarLembretes } from './routes/agendamento'
 import pacotesRouter from './routes/pacotes'
 import conteudoRouter from './routes/conteudo'
 import terapeutasRouter from './routes/terapeutas'
-import blogRouter from './routes/blog'
 import newsletterRouter from './routes/newsletter'
 import ofertaTokenRouter from './routes/oferta-token'
 
@@ -78,7 +77,6 @@ app.use('/agendamento', agendamentoRouter)
 app.use('/pacotes',     pacotesRouter)
 app.use('/conteudo',    conteudoRouter)
 app.use('/terapeutas', terapeutasRouter)
-app.use('/blog',       blogRouter)
 app.use('/newsletter', newsletterRouter)
 app.use('/oferta',     ofertaTokenRouter)
 

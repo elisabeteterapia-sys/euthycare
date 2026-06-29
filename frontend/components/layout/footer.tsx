@@ -9,7 +9,7 @@ const links = {
     { href: '/euthy-lancamento', label: 'App Euthy — Em breve' },
   ],
   Empresa: [
-    { href: '/blog', label: 'Blog' },
+    { href: '/neuroplasticidade', label: 'Neuroplasticidade' },
     { href: '/contato', label: 'Contato' },
     { href: '/faq', label: 'FAQ' },
   ],

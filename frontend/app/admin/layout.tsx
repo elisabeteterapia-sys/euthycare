@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, CalendarDays, Users, ShoppingBag,
-  FileText, Settings, LogOut, Leaf, ChevronRight, Mail, Type,
-  Lock, Eye, EyeOff, UserRound,
+  Settings, LogOut, Leaf, ChevronRight, Mail, Type,
+  Lock, Eye, EyeOff, UserRound, Brain,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -19,7 +19,7 @@ const navItems = [
   { href: '/admin/utilizadores',  icon: Users,           label: 'Utilizadores' },
   { href: '/admin/waitlist',      icon: Mail,            label: 'Lista de espera' },
   { href: '/admin/loja',          icon: ShoppingBag,     label: 'Loja' },
-  { href: '/admin/blog',          icon: FileText,        label: 'Blog' },
+  { href: '/admin/neuroplasticidade', icon: Brain,       label: 'Neuroplasticidade' },
   { href: '/admin/conteudo',      icon: Type,            label: 'Conteúdo' },
   { href: '/admin/configuracoes', icon: Settings,        label: 'Configurações' },
 ]
