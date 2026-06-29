@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * Detalhe público /neuroplasticidade/[id]
+ * Detalhe público /blog/neuroplasticidade/[id]
  * Mostra os 7 blocos do estudo. Sem favoritos/reflexões (público sem login).
  * Estudos com data futura devolvem 403 → mensagem "ainda não disponível".
  */
@@ -12,7 +12,7 @@ import { Brain, ChevronLeft, BookOpen, Clock, Activity, Heart, Sparkles, Library
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
+// Route local Next.js (Vercel) — Supabase directo, sem passar pelo backend Express
 
 interface Estudo {
   id: string
@@ -46,7 +46,7 @@ export default function NeuroEstudoDetalhePage() {
 
   useEffect(() => {
     if (!params?.id) return
-    fetch(`${API}/neuro/estudos/${params.id}`)
+    fetch(`/api/neuro/estudos/${params.id}`)
       .then(async r => {
         const body = await r.json()
         if (r.ok) {
@@ -76,7 +76,7 @@ export default function NeuroEstudoDetalhePage() {
     return (
       <div className="mx-auto max-w-2xl p-6">
         <Link
-          href="/neuroplasticidade"
+          href="/blog/neuroplasticidade"
           className="mb-6 flex items-center gap-1 text-sm text-gray-500 hover:text-sage-600"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -105,7 +105,7 @@ export default function NeuroEstudoDetalhePage() {
     <div className="mx-auto max-w-4xl space-y-6 px-4 py-12">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
-        <Link href="/neuroplasticidade" className="flex items-center gap-1 text-gray-500 hover:text-sage-600">
+        <Link href="/blog/neuroplasticidade" className="flex items-center gap-1 text-gray-500 hover:text-sage-600">
           <ChevronLeft className="h-4 w-4" />
           Neuroplasticidade
         </Link>

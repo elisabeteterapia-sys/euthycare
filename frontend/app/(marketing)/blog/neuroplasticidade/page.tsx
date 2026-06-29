@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * Página pública /neuroplasticidade
+ * Página pública /blog/neuroplasticidade
  * Lê estudos publicados pelo EuthyApp (tabelas app_neuro_* via /neuro/estudos).
  * Sem auth — qualquer visitante vê estudo de hoje + recentes + próximos temas.
  */
@@ -11,7 +11,7 @@ import { Brain, ChevronRight, Lock, Sparkles, CalendarCheck, Loader2 } from 'luc
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
+// Route local Next.js (Vercel) — Supabase directo, sem passar pelo backend Express
 
 interface EstudoResumo {
   id: string
@@ -40,7 +40,7 @@ export default function NeuroplasticidadePage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`${API}/neuro/estudos`)
+    fetch('/api/neuro/estudos')
       .then(r => r.json())
       .then(d => setData(d as NeuroPayload))
       .finally(() => setLoading(false))
@@ -91,7 +91,7 @@ export default function NeuroplasticidadePage() {
               {estudoHoje.texto_referencia}
             </p>
             <Link
-              href={`/neuroplasticidade/${estudoHoje.id}`}
+              href={`/blog/neuroplasticidade/${estudoHoje.id}`}
               className="inline-flex items-center gap-2 rounded-lg bg-sage-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-sage-700"
             >
               Ler estudo completo
@@ -158,7 +158,7 @@ export default function NeuroplasticidadePage() {
             {recentes.map(e => (
               <Link
                 key={e.id}
-                href={`/neuroplasticidade/${e.id}`}
+                href={`/blog/neuroplasticidade/${e.id}`}
                 className="block rounded-lg border border-gray-200 bg-white px-4 py-3 transition-colors hover:border-sage-300 hover:bg-sage-50/30"
               >
                 <div className="flex items-start justify-between gap-3">
