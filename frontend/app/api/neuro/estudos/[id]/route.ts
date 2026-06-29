@@ -13,13 +13,15 @@ function todayLisbon(): string {
   return new Date().toLocaleString('sv-SE', { timeZone: LISBON_TZ }).slice(0, 10)
 }
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!SUPABASE_URL || !SERVICE_KEY) {
     return NextResponse.json({ error: 'Supabase env vars não configuradas no servidor.' }, { status: 500 })
   }
 
+  const { id } = await params
+
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/app_neuro_estudos?select=*&id=eq.${encodeURIComponent(params.id)}&limit=1`,
+    `${SUPABASE_URL}/rest/v1/app_neuro_estudos?select=*&id=eq.${encodeURIComponent(id)}&limit=1`,
     {
       headers: {
         apikey:        SERVICE_KEY,
