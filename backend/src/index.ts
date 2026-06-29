@@ -21,6 +21,7 @@ import terapeutasRouter from './routes/terapeutas'
 import blogRouter from './routes/blog'
 import newsletterRouter from './routes/newsletter'
 import ofertaTokenRouter from './routes/oferta-token'
+import neuroRouter from './routes/neuro'
 
 const app = express()
 const PORT = process.env.PORT ?? 3001
@@ -81,6 +82,7 @@ app.use('/terapeutas', terapeutasRouter)
 app.use('/blog',       blogRouter)
 app.use('/newsletter', newsletterRouter)
 app.use('/oferta',     ofertaTokenRouter)
+app.use('/neuro',      neuroRouter)
 
 // 404
 app.use((_req, res) => {

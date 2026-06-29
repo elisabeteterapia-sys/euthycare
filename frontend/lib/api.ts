@@ -60,6 +60,36 @@ export const billing = {
   subscription: () => request<{ plan: string; stripeSubscriptionId: string | null }>('/billing/subscription'),
 }
 
+// ─── Neuroplasticidade ───────────────────────────────────────
+export interface NeuroEstudoResumo {
+  id: string
+  titulo: string
+  tema_principal: string
+  data_publicacao: string
+}
+export interface NeuroEstudoDestaque extends NeuroEstudoResumo {
+  texto_referencia: string
+}
+export interface NeuroEstudoDetalhe extends NeuroEstudoDestaque {
+  contexto_historico: string
+  analise_neuroplasticidade: string
+  analise_psicologica: string
+  analise_psicanalitica: string
+  referencias_bibliograficas: string
+  exercicio_terapeutico: string
+}
+export interface NeuroCronograma {
+  id: string
+  tema: string
+  data_programada: string
+  status: string
+}
+export const neuro = {
+  estudos: () =>
+    request<{ today: string; estudo_hoje: NeuroEstudoDestaque | null; recentes: NeuroEstudoResumo[]; proximos: NeuroCronograma[] }>('/neuro/estudos'),
+  estudo: (id: string) => request<NeuroEstudoDetalhe>(`/neuro/estudos/${id}`),
+}
+
 // ─── Geo ─────────────────────────────────────────────────────
 export const geo = {
   currency: () => request<{ currency: string; country?: string; source: string }>('/geo/currency'),
